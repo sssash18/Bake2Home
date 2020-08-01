@@ -1,10 +1,12 @@
 import 'package:bake2home/constants.dart';
 import 'package:flutter/material.dart';
-
 class HomeTile extends StatefulWidget {
+  final double height,width,radius;
+  HomeTile({this.height,this.width,this.radius}) ;
   @override
   _HomeTileState createState() => _HomeTileState();
 }
+
 
 class _HomeTileState extends State<HomeTile> {
   @override
@@ -14,28 +16,28 @@ class _HomeTileState extends State<HomeTile> {
           Container(
             decoration: BoxDecoration(
               color: base,
-              borderRadius: BorderRadius.circular(30.0),
+              borderRadius: BorderRadius.circular(border),
             ),
-            margin: EdgeInsets.fromLTRB(5.0, 40.0, 5.0, 0.0),
-            height: 200.0,
-            width: 120.0,
+            margin: EdgeInsets.fromLTRB(10.0, 40.0, 10.0, 0.0),
+            height: widget.height,
+            width: widget.width,
             child: Container(
               alignment: Alignment.topCenter,
-              margin: EdgeInsets.fromLTRB(0.0, 50.0, 0.0, 0.0),
+              margin: EdgeInsets.fromLTRB(0.0, 65.0, 0.0, 0.0),
               child: Column(
                 children:<Widget>[
                   Text(
-                    'Cookies',
+                    'Arijit Singh',
                     style: TextStyle(
                       color: white,
                       fontSize: 20.0,
                     )
                   ),
                   SizedBox(
-                    height: 15.0,
+                    height: 5.0,
                   ),
                   Text(
-                    '(20)',
+                    '4.5 star',
                     style: TextStyle(
                       color: white,
                       fontSize: 20.0,
@@ -46,14 +48,14 @@ class _HomeTileState extends State<HomeTile> {
             ), 
             ),
             Container(
-                margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
-                height:200.0,
-                width: 120.0,
+                margin: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
+                height:widget.height,
+                width: widget.width,
                 child:Align(
                   alignment: Alignment.topCenter,
                   child: CircleAvatar(
-                    radius: 40.0,
-                    backgroundImage: AssetImage("assets/images/cookie.jpeg"),
+                    radius: widget.radius,
+                    backgroundImage: AssetImage("assets/images/profile.jpg"),
                   ),
                 )
               ),
