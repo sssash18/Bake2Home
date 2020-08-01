@@ -7,7 +7,7 @@ class Homeheading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.fromLTRB(25.0, 25.0, 0.0, 25.0),
+        margin: EdgeInsets.fromLTRB(25.0, 20.0, 0.0, 20.0),
         alignment: Alignment.topLeft,
         child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -17,6 +17,7 @@ class Homeheading extends StatelessWidget {
           style : TextStyle(
             color: text,
             fontSize: head,
+            fontWeight: FontWeight.bold
           )
           ),
           Align(

@@ -1,5 +1,7 @@
 import 'package:bake2home/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+
 class HomeTile extends StatefulWidget {
   final double height,width,radius;
   HomeTile({this.height,this.width,this.radius}) ;
@@ -30,19 +32,25 @@ class _HomeTileState extends State<HomeTile> {
                     'Arijit Singh',
                     style: TextStyle(
                       color: white,
-                      fontSize: 20.0,
+                      fontSize: 16.0,
                     )
                   ),
                   SizedBox(
                     height: 5.0,
-                  ),
-                  Text(
-                    '4.5 star',
-                    style: TextStyle(
-                      color: white,
-                      fontSize: 20.0,
-                    )
-                  ),
+                  ),   
+                  RatingBar(
+                    initialRating: 3.2,
+                    itemSize: 15.0,
+                    itemCount: 5,
+                    glow: true,
+                    itemBuilder: (BuildContext context, int index){
+                      return Icon(
+                        Icons.star,
+                        color: Colors.amber,
+                      );
+                    },
+                    onRatingUpdate: (rating){}
+                  )
                 ]
               ),
             ), 

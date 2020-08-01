@@ -1,12 +1,22 @@
-import 'package:bake2home/screens/SellerTile.dart';
+import 'package:bake2home/screens/ProfilePage.dart';
+import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/constants.dart';
 import 'package:bake2home/widgets/HomeTile.dart';
 import 'package:bake2home/widgets/HomeHeading.dart';
+import 'package:bake2home/widgets/RecipeTile.dart';
+
 
 import 'package:bake2home/widgets/PastryTile.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int _index = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,8 +53,8 @@ class HomePage extends StatelessWidget {
                   style: TextStyle(
                     color: text,
                     fontSize: 45.0,
-                    fontStyle: FontStyle.italic,
                     fontWeight: FontWeight.bold,
+                    fontFamily: 'Sora'
                   ),
                 ),
               ),
@@ -84,10 +94,57 @@ class HomePage extends StatelessWidget {
                   return HomeTile(height: 140,width:120,radius: 50.0,);
                 }
               )
+            ),
+            Homeheading(heading: 'Try these Recipes'),
+            Container(
+              margin: EdgeInsets.fromLTRB(15.0, 0.0, 0.0, 0.0),
+              height: 180.0,
+              child: ListView.builder(
+                itemCount: 5,
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (BuildContext context, int index){
+                  return RecipeTile();
+                }
+              )
             )
             
           ],
         ),
+      ),
+      bottomNavigationBar: FloatingNavbar(
+        onTap: (int val) => setState((){
+          _index = val;
+          if(_index == 3){
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage()));
+          }
+        } ),
+        currentIndex: _index,
+        fontSize: 0.0,
+        borderRadius: 40.0,
+        itemBorderRadius: 80.0,
+        backgroundColor: base,
+        selectedBackgroundColor: white,
+        unselectedItemColor: white,
+        iconSize: 25.0,
+        items: [
+          FloatingNavbarItem(
+            icon: Icons.home,
+            title: ''
+          ),
+          FloatingNavbarItem(
+            icon: Icons.receipt,
+            title: ''
+          ),
+          FloatingNavbarItem(
+            icon: Icons.shopping_cart,
+            title: ''
+          ),
+          FloatingNavbarItem(
+            icon: Icons.person,
+            title: ''
+          ),
+
+        ],
       )
     );
   }
