@@ -1,10 +1,12 @@
 import 'package:bake2home/screens/ProfilePage.dart';
+import 'package:bake2home/screens/VendorListPage.dart';
 import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/constants.dart';
 import 'package:bake2home/widgets/HomeTile.dart';
 import 'package:bake2home/widgets/HomeHeading.dart';
 import 'package:bake2home/widgets/RecipeTile.dart';
+import 'package:bake2home/widgets/buildAppBar.dart';
 
 
 import 'package:bake2home/widgets/PastryTile.dart';
@@ -16,27 +18,41 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _index = 0;
+  Icon icon  = Icon(Icons.search,color: base,);
+  Widget appBarTitle = Text('');
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: white,
+        title: appBarTitle,
         elevation: 0.0,
         actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.search), 
-            onPressed: (){},
-            color: base,
-          ),
           Container(
-              margin: EdgeInsets.fromLTRB(15.0, 0, 15.0, 0),
+              margin: EdgeInsets.fromLTRB(5.0, 0, 15.0, 0),
               child: IconButton(
-              icon: Icon(
-                Icons.shopping_cart,
-                color: base,
-              ), 
-              onPressed: (){},
+              icon: icon,
+              onPressed: (){
+                setState((){
+                  if(this.icon.icon == Icons.search){
+                    this.icon = Icon(Icons.close,color: base);
+                    this.appBarTitle = new TextField(
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.search,color: base,),
+                        hintText: "Search....",
+                        
+                      ),
+                      
+                    );
+
+                  }else{
+                    this.icon = Icon(Icons.search,color: base,);
+                    this.appBarTitle = Text('');
+                  }
+                  
+                });
+              },
             ),
           )
         ],
@@ -67,7 +83,12 @@ class _HomePageState extends State<HomePage> {
                 scrollDirection: Axis.horizontal,
                 itemCount: 5,
                 itemBuilder: (BuildContext context, int index){
-                  return HomeTile(height: 200.0,width: 105.0,radius: 40.0,);
+                  return GestureDetector(
+                    child: HomeTile(height: 200.0,width: 105.0,radius: 40.0,),
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => VendorListPage()));
+                    },
+                  );
                 }
               ),
             ),

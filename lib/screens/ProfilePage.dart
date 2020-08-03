@@ -1,3 +1,4 @@
+import 'package:bake2home/screens/ProfileOrders.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/constants.dart';
 
@@ -6,6 +7,7 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0.0,
         iconTheme: IconThemeData(
           color: base,
         ),
@@ -21,7 +23,7 @@ class ProfilePage extends StatelessWidget {
         title: Text(
           'Profile',
           style: TextStyle(
-            color: base
+            color: text,
           )
         ),
         centerTitle: true,
@@ -91,12 +93,35 @@ class ProfilePage extends StatelessWidget {
                 ),
                 ListTile(
                   leading:Icon(
+                    Icons.history,
+                    color: base,
+                    size: 30.0,
+                  ),
+                  title: Text(
+                    "History",
+                  ),
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder:(BuildContext context) =>  ProfileOrder()));
+                  },
+                ),
+                ListTile(
+                  leading:Icon(
                     Icons.settings,
                     color: base,
                     size: 30.0,
                   ),
                   title: Text(
                     "Settings",
+                  )
+                ),
+                ListTile(
+                  leading:Icon(
+                    Icons.help_outline,
+                    color: base,
+                    size: 30.0,
+                  ),
+                  title: Text(
+                    "Help and Support",
                   )
                 ),
                 ListTile(

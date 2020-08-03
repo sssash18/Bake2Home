@@ -36,6 +36,7 @@ class PastryTile extends StatelessWidget {
                 'Bournville',
                 style: TextStyle(
                 color: base,
+                fontWeight: FontWeight.bold,
                 )
               ),
               Text(

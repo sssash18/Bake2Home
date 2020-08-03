@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bake2home/screens/homepage.dart';
+import 'package:bake2home/constants.dart';
+
 
 void main() {
   runApp(MyApp());
@@ -11,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Bake2Home',
       theme: ThemeData(
-        primarySwatch: Colors.indigo,
+        primaryColor: base,
         visualDensity: VisualDensity.adaptivePlatformDensity,
         fontFamily: 'Sora'
       ),

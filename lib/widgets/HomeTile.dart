@@ -19,6 +19,11 @@ class _HomeTileState extends State<HomeTile> {
             decoration: BoxDecoration(
               color: base,
               borderRadius: BorderRadius.circular(border),
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xffeaafc8),Color(0xff654ea3)]
+              )
             ),
             margin: EdgeInsets.fromLTRB(10.0, 40.0, 10.0, 0.0),
             height: widget.height,
