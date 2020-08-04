@@ -38,7 +38,6 @@ class HistoryTile extends StatelessWidget {
                         fit: BoxFit.fill,
                     ),
                   ),
-                  //child: Image.asset("assets/images/cookie.jpeg"),
                 ),
                 Container(
                   alignment: Alignment.center,

@@ -6,10 +6,8 @@ import 'package:bake2home/constants.dart';
 import 'package:bake2home/widgets/HomeTile.dart';
 import 'package:bake2home/widgets/HomeHeading.dart';
 import 'package:bake2home/widgets/RecipeTile.dart';
-import 'package:bake2home/widgets/buildAppBar.dart';
-
-
 import 'package:bake2home/widgets/PastryTile.dart';
+import 'package:bake2home/screens/Cart.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -41,7 +39,6 @@ class _HomePageState extends State<HomePage> {
                       decoration: InputDecoration(
                         prefixIcon: Icon(Icons.search,color: base,),
                         hintText: "Search....",
-                        
                       ),
                       
                     );
@@ -138,7 +135,11 @@ class _HomePageState extends State<HomePage> {
           if(_index == 3){
             Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage()));
           }
-        } ),
+          if(_index == 2){
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Cart()));
+          }
+        } 
+        ),
         currentIndex: _index,
         fontSize: 0.0,
         borderRadius: 40.0,
