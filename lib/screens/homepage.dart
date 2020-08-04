@@ -8,6 +8,7 @@ import 'package:bake2home/widgets/HomeHeading.dart';
 import 'package:bake2home/widgets/RecipeTile.dart';
 import 'package:bake2home/widgets/PastryTile.dart';
 import 'package:bake2home/screens/Cart.dart';
+import 'package:bake2home/screens/VendorProfile.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -109,7 +110,12 @@ class _HomePageState extends State<HomePage> {
                 scrollDirection: Axis.horizontal,
                 itemCount: 5,
                 itemBuilder: (BuildContext context,int index){
-                  return HomeTile(height: 140,width:120,radius: 50.0,);
+                  return GestureDetector(
+                    child: HomeTile(height: 140,width:120,radius: 50.0,),
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=> VendorProfile()));
+                    },
+                  );
                 }
               )
             ),
