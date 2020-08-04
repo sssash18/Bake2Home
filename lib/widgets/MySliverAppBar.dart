@@ -78,8 +78,7 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate{
                         ),
                       ),
                       SizedBox(height: 30),
-                      Text(
-                        
+                      Text(  
                         'The Dessert Town',
                         textAlign: TextAlign.center,
                         style: TextStyle(

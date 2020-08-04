@@ -214,6 +214,41 @@ class VendorProfile extends StatelessWidget {
                   )
                 )
               ),
+              SliverToBoxAdapter(
+                child: Homeheading(heading: "Categories"),
+              ),
+              SliverToBoxAdapter(
+                child: ListView.builder(
+                  physics: ScrollPhysics(
+                    parent: NeverScrollableScrollPhysics(),
+                  ),
+                  shrinkWrap: true,
+                  itemCount: 3,
+                  itemBuilder: (BuildContext context, int index){
+                  return  Container(
+                  margin: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 0),
+                  height: 180,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/images/cake.jpeg"),
+                      fit: BoxFit.fill
+                    ),
+                    borderRadius: BorderRadius.circular(border)
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    "Cakes",
+                    style: TextStyle(
+                      color: white,
+                      fontSize: 30.0,
+                      fontWeight: FontWeight.w900
+                    ),
+                  ),
+                );
+                  }
+                )
+              )
+              
               
             
             ],
