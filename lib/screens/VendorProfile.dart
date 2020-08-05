@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bake2home/constants.dart';
 import 'package:bake2home/widgets/MySliverAppBar.dart';
-import 'package:bake2home/widgets/HomeTile.dart';
 import 'package:bake2home/widgets/HomeHeading.dart';
 import 'package:bake2home/screens/ItemList.dart';
 

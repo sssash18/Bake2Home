@@ -1,3 +1,4 @@
+import 'package:bake2home/screens/ItemPage.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/constants.dart';
 import 'package:bake2home/widgets/ItemTile.dart';
@@ -28,7 +29,9 @@ class ItemList extends StatelessWidget {
         body: ListView.builder(
         itemCount: 5,
         itemBuilder: (BuildContext context,int index){
-          return ItemTile();
+          return GestureDetector(child: ItemTile(),onTap: (){
+            Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ItemPage()));
+          },);
         }
       )
         
