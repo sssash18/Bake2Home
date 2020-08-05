@@ -3,6 +3,7 @@ import 'package:bake2home/constants.dart';
 import 'package:bake2home/widgets/MySliverAppBar.dart';
 import 'package:bake2home/widgets/HomeTile.dart';
 import 'package:bake2home/widgets/HomeHeading.dart';
+import 'package:bake2home/screens/ItemList.dart';
 
 class VendorProfile extends StatelessWidget {
   @override
@@ -225,26 +226,31 @@ class VendorProfile extends StatelessWidget {
                   shrinkWrap: true,
                   itemCount: 3,
                   itemBuilder: (BuildContext context, int index){
-                  return  Container(
-                  margin: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 0),
-                  height: 180,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage("assets/images/cake.jpeg"),
-                      fit: BoxFit.fill
+                  return  GestureDetector(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ItemList()));
+                    },
+                    child: Container(
+                    margin: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 0),
+                    height: 180,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage("assets/images/cake.jpeg"),
+                        fit: BoxFit.fill
+                      ),
+                      borderRadius: BorderRadius.circular(border)
                     ),
-                    borderRadius: BorderRadius.circular(border)
-                  ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    "Cakes",
-                    style: TextStyle(
-                      color: white,
-                      fontSize: 30.0,
-                      fontWeight: FontWeight.w900
+                    alignment: Alignment.center,
+                    child: Text(
+                      "Cakes",
+                      style: TextStyle(
+                        color: white,
+                        fontSize: 30.0,
+                        fontWeight: FontWeight.w900
+                      ),
                     ),
-                  ),
-                );
+                ),
+                  );
                   }
                 )
               )

@@ -14,6 +14,20 @@ class MyApp extends StatelessWidget {
       title: 'Bake2Home',
       theme: ThemeData(
         primaryColor: base,
+        tabBarTheme: TabBarTheme(
+          unselectedLabelColor: Colors.black,
+          labelColor: white,
+          indicatorSize: TabBarIndicatorSize.tab,
+          indicator : BoxDecoration(
+               color: base,
+               borderRadius: BorderRadius.circular(40),
+               gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xffeaafc8),Color(0xff654ea3)]
+              )
+          )
+        ),
         visualDensity: VisualDensity.adaptivePlatformDensity,
         fontFamily: 'Sora'
       ),
