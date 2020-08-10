@@ -1,6 +1,10 @@
 import 'package:bake2home/constants.dart';
+import 'package:bake2home/services/database.dart';
+import 'package:bake2home/widgets/VendorList.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/widgets/VendorTile.dart';
+import 'package:provider/provider.dart';
+import 'package:bake2home/functions/shop.dart';
 
 class VendorListPage extends StatelessWidget {
   @override
@@ -19,12 +23,7 @@ class VendorListPage extends StatelessWidget {
           )
         )
       ),
-      body: ListView.builder(
-        itemCount: 5,
-        itemBuilder: (BuildContext context,int index){
-          return VendorTile();
-        }
-      )
+      body: VendorList(),
       );
   }
 }

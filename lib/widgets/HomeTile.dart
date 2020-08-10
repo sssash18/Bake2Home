@@ -1,10 +1,12 @@
 import 'package:bake2home/constants.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class HomeTile extends StatefulWidget {
   final double height,width,radius;
-  HomeTile({this.height,this.width,this.radius}) ;
+  final String title,photo;
+  HomeTile({this.height,this.width,this.radius,this.title,this.photo}) ;
   @override
   _HomeTileState createState() => _HomeTileState();
 }
@@ -34,7 +36,7 @@ class _HomeTileState extends State<HomeTile> {
               child: Column(
                 children:<Widget>[
                   Text(
-                    'Arijit Singh',
+                    '${widget.title}',
                     style: TextStyle(
                       color: white,
                       fontSize: 16.0,
@@ -68,7 +70,7 @@ class _HomeTileState extends State<HomeTile> {
                   alignment: Alignment.topCenter,
                   child: CircleAvatar(
                     radius: widget.radius,
-                    backgroundImage: AssetImage("assets/images/profile.jpg"),
+                    backgroundImage: CachedNetworkImageProvider("${widget.photo}"),
                   ),
                 )
               ),

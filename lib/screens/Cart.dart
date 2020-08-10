@@ -22,24 +22,24 @@ class Cart extends StatelessWidget {
         child: Column(
           children: <Widget> [
             Container(
-                margin: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 0.0),
-                height: 110.0,
+                margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width/30,  MediaQuery.of(context).size.height/50, MediaQuery.of(context).size.width/30, 0.0),
+                height: MediaQuery.of(context).size.height/6,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [Color(0xffeaafc8),Color(0xff654ea3)]
                   ),
-                  borderRadius: BorderRadius.circular(20.0),
+                  borderRadius: BorderRadius.circular(border),
                 ),
                 child: Stack(
                   children: <Widget>[
                     Container(
-                      margin: EdgeInsets.fromLTRB(40.0, 0.0, 0.0, 0.0),
+                      margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width/9, 0.0, 0.0, 0.0),
                       child: Column(
                       children: <Widget>[
                         Container(
-                          margin: EdgeInsets.fromLTRB(15.0, 20.0, 15.0, 0.0),
+                          margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width/30, MediaQuery.of(context).size.height/35, MediaQuery.of(context).size.width/30, 0.0),
                           width: double.infinity,
                           child: Text(
                             'Shopping Cart',
@@ -51,7 +51,7 @@ class Cart extends StatelessWidget {
                           ),
                       ),
                       Container(
-                        margin: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 0.0),
+                        margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width/30, MediaQuery.of(context).size.height/80, MediaQuery.of(context).size.width/30, 0.0),
                         child: Text(
                           'Verify your quantities and proceed to checkout',
                           style: TextStyle(
@@ -64,12 +64,12 @@ class Cart extends StatelessWidget {
                     ),
                     Container(
                         height: double.infinity,
-                        margin: EdgeInsets.fromLTRB(10.0, 20.0, 0.0, 0.0),
+                        margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width/30, MediaQuery.of(context).size.height/35, 0.0, 0.0),
                         alignment: Alignment.topLeft,
                         child: Icon(
                         Icons.shopping_cart,
                         color: white,
-                        size: 40.0,
+                        size: MediaQuery.of(context).size.height/20,
                       ),
                     )
                   ]
@@ -78,8 +78,7 @@ class Cart extends StatelessWidget {
             Expanded(
                 child: Container(
                 width: double.infinity,
-                //height: 350.0,
-                margin: EdgeInsets.fromLTRB(15.0, 5.0, 15.0, 0.0),
+                margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width/30, MediaQuery.of(context).size.height/200, MediaQuery.of(context).size.width/30, 0.0),
                 color: white,
                 child: ListView.builder(
                   itemCount: 5,
@@ -90,8 +89,8 @@ class Cart extends StatelessWidget {
               ),
             ) ,
             Container(
-              height: 140.0,
-              margin: EdgeInsets.fromLTRB(15.0, 5.0, 15.0, 0.0),
+              height: MediaQuery.of(context).size.height/5.5,
+              margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width/30, MediaQuery.of(context).size.height/200, MediaQuery.of(context).size.width/30, 0.0),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
@@ -104,14 +103,12 @@ class Cart extends StatelessWidget {
                 children: <Widget>[
                   Container(
                     child: Stack(
-                      //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         Container(
                           alignment: Alignment.centerLeft,
-                          margin: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 0) ,
+                          margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width/20, MediaQuery.of(context).size.height/80, MediaQuery.of(context).size.width/20, 0) ,
                           child: Text(
                             'SubTotal',
-                            //textAlign: TextAlign.left,
                             style: TextStyle(
                               color: white,
                               fontSize: 18.0,
@@ -120,11 +117,10 @@ class Cart extends StatelessWidget {
                           ),
                         ),
                         Container(
-                          margin: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 0) ,
+                          margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width/20, MediaQuery.of(context).size.height/80, MediaQuery.of(context).size.width/20, 0) ,
                           alignment: Alignment.centerRight,
                           child: Text(
                             'Rs 3500',
-                            //textAlign: TextAlign.right,
                             style: TextStyle(
                               color: white,
                               fontSize: 18.0,
@@ -138,14 +134,12 @@ class Cart extends StatelessWidget {
                   
                   Container(
                     child: Stack(
-                      //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         Container(
                           alignment: Alignment.centerLeft,
-                          margin: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 0) ,
+                          margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width/20, MediaQuery.of(context).size.height/80, MediaQuery.of(context).size.width/20, 0) ,
                           child: Text(
                             'Delivery charges',
-                            //textAlign: TextAlign.left,
                             style: TextStyle(
                               color: white,
                               fontSize: 12.0,
@@ -154,7 +148,7 @@ class Cart extends StatelessWidget {
                           ),
                         ),
                         Container(
-                          margin: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 0) ,
+                          margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width/20, MediaQuery.of(context).size.height/80, MediaQuery.of(context).size.width/20, 0) ,
                           alignment: Alignment.centerRight,
                           child: Text(
                             'Rs 50',
@@ -170,9 +164,9 @@ class Cart extends StatelessWidget {
                     )
                   ),
                   
-                  SizedBox(height: 20.0),
+                  SizedBox(height: MediaQuery.of(context).size.height/50),
                   Container(
-                      margin:EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0) ,
+                      margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width/20, 0, MediaQuery.of(context).size.width/20, 0) ,
                       child: ButtonTheme(
                       minWidth: double.infinity,
                       child: FlatButton(

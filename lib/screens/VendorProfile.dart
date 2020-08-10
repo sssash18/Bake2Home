@@ -3,8 +3,12 @@ import 'package:bake2home/constants.dart';
 import 'package:bake2home/widgets/MySliverAppBar.dart';
 import 'package:bake2home/widgets/HomeHeading.dart';
 import 'package:bake2home/screens/ItemList.dart';
+import 'package:bake2home/functions/shop.dart';
 
 class VendorProfile extends StatelessWidget {
+
+  final Shop shop ;
+  VendorProfile({this.shop});
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -12,7 +16,7 @@ class VendorProfile extends StatelessWidget {
           child: CustomScrollView(
             slivers: <Widget>[
               SliverPersistentHeader(
-                delegate: MySliverAppBar(expandedHeight: 350),
+                delegate: MySliverAppBar(expandedHeight: 350,shop: shop),
                 pinned: true,
               ),
               SliverToBoxAdapter(
@@ -50,7 +54,7 @@ class VendorProfile extends StatelessWidget {
                                     child: Container(
                                       alignment: Alignment.center,
                                       child: Text(
-                                      '2+\nyears',
+                                      '${shop.experience}',
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         color: white,
@@ -138,7 +142,7 @@ class VendorProfile extends StatelessWidget {
                                     child: Container(
                                       alignment: Alignment.center,
                                       child: Text(
-                                      '1K+',
+                                      '${shop.numOrders}',
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         color: white,
@@ -223,11 +227,11 @@ class VendorProfile extends StatelessWidget {
                     parent: NeverScrollableScrollPhysics(),
                   ),
                   shrinkWrap: true,
-                  itemCount: 3,
+                  itemCount: shop.items.keys.length,
                   itemBuilder: (BuildContext context, int index){
                   return  GestureDetector(
                     onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ItemList()));
+                      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ItemList(itemType: shop.items.keys.elementAt(index),shop: shop)));
                     },
                     child: Container(
                     margin: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 0),
@@ -241,7 +245,7 @@ class VendorProfile extends StatelessWidget {
                     ),
                     alignment: Alignment.center,
                     child: Text(
-                      "Cakes",
+                      "${shop.items.keys.elementAt(index)}",
                       style: TextStyle(
                         color: white,
                         fontSize: 30.0,

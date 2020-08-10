@@ -1,8 +1,12 @@
 import 'package:bake2home/constants.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 
 class ItemTile extends StatelessWidget {
+
+  final Map item;
+  ItemTile({this.item});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -28,7 +32,7 @@ class ItemTile extends StatelessWidget {
                 Container(
                   margin: EdgeInsets.fromLTRB(0, 15.0, 0, 0),
                     child: Text(
-                    'Chocolate Cake',
+                    item['itemName'],
                     textAlign: TextAlign.right,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -39,7 +43,7 @@ class ItemTile extends StatelessWidget {
                 Container(
                   margin: EdgeInsets.fromLTRB(0, 10.0, 0, 0),
                     child: Text(
-                    'Rs 500',
+                    'Rs ${item['variants']['v1']['price']}',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -59,7 +63,7 @@ class ItemTile extends StatelessWidget {
           Container(
               margin: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 15.0),
               child: CircleAvatar(
-              backgroundImage: AssetImage("assets/images/cake.jpeg"),
+              backgroundImage: CachedNetworkImageProvider('${item['photoUrl']}'),
               radius: 45.0,
             ),
           ),

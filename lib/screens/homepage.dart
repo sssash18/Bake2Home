@@ -10,13 +10,20 @@ import 'package:bake2home/widgets/PastryTile.dart';
 import 'package:bake2home/screens/Cart.dart';
 import 'package:bake2home/screens/VendorProfile.dart';
 import 'package:bake2home/screens/TrendingPage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:bake2home/functions/shop.dart';
 
 class HomePage extends StatefulWidget {
+  
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+
+  
+  
+
   int _index = 0;
   Icon icon  = Icon(Icons.search,color: base,);
   Widget appBarTitle = Text('');
@@ -30,7 +37,7 @@ class _HomePageState extends State<HomePage> {
         elevation: 0.0,
         actions: <Widget>[
           Container(
-              margin: EdgeInsets.fromLTRB(5.0, 0, 15.0, 0),
+              margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width/100, 0, MediaQuery.of(context).size.width/80, 0),
               child: IconButton(
               icon: icon,
               onPressed: (){
@@ -74,27 +81,27 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-            Container(
-              margin: EdgeInsets.fromLTRB(15.0, 0.0, 0.0, 0.0),
-              height: 200.0,
-              color: white,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: 5,
-                itemBuilder: (BuildContext context, int index){
-                  return GestureDetector(
-                    child: HomeTile(height: 200.0,width: 105.0,radius: 40.0,),
-                    onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => VendorListPage()));
-                    },
-                  );
-                }
-              ),
-            ),
+            // Container(
+            //   margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width/30, 0.0, 0.0, 0.0),
+            //   height: MediaQuery.of(context).size.height/4,
+            //   color: white,
+            //   child: ListView.builder(
+            //     scrollDirection: Axis.horizontal,
+            //     itemCount: 5,
+            //     itemBuilder: (BuildContext context, int index){
+            //       return GestureDetector(
+            //         child: HomeTile(height: MediaQuery.of(context).size.height/4,width:MediaQuery.of(context).size.width/3.3,radius: MediaQuery.of(context).size.width/10,),
+            //         onTap: (){
+            //           Navigator.push(context, MaterialPageRoute(builder: (context) => VendorListPage()));                      
+            //         },
+            //       );
+            //     }
+            //   ),
+            // ),
             Homeheading(heading: "Delicious Chocolates"),
             Container(
-              height: 70.0,
-              margin: EdgeInsets.fromLTRB(15.0, 0, 0, 0),
+              height: MediaQuery.of(context).size.height/10,
+              margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width/30, 0, 0, 0),
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: 5,
@@ -110,16 +117,16 @@ class _HomePageState extends State<HomePage> {
             ),
             Homeheading(heading:'Top Picks For You'),
             Container(
-              margin: EdgeInsets.fromLTRB(15.0, 0.0, 0.0, 0.0),
-              height: 200.0,
+              margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width/30, 0.0, 0.0, 0.0),
+              height: MediaQuery.of(context).size.height/4,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: 5,
+                itemCount: topPickMap.length,
                 itemBuilder: (BuildContext context,int index){
                   return GestureDetector(
-                    child: HomeTile(height: 140,width:120,radius: 50.0,),
+                    child: HomeTile(height: MediaQuery.of(context).size.height/5,width: MediaQuery.of(context).size.width/3.3,radius: MediaQuery.of(context).size.width/8,title: topPickMap[topPickMap.keys.elementAt(index)].shopName,photo: topPickMap[topPickMap.keys.elementAt(index)].profilePhoto,),
                     onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=> VendorProfile()));
+                      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=> VendorProfile(shop: shopMap[shopMap.keys.elementAt(index)],)));
                     },
                   );
                 }
@@ -127,8 +134,8 @@ class _HomePageState extends State<HomePage> {
             ),
             Homeheading(heading: 'Try these Recipes'),
             Container(
-              margin: EdgeInsets.fromLTRB(15.0, 0.0, 0.0, 0.0),
-              height: 180.0,
+              margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width/30, 0.0, 0.0, 0.0),
+              height: MediaQuery.of(context).size.height/5,
               child: ListView.builder(
                 itemCount: 5,
                 scrollDirection: Axis.horizontal,

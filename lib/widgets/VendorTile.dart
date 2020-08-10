@@ -1,9 +1,15 @@
 import 'package:bake2home/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:bake2home/functions/shop.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+
 
 
 class VendorTile extends StatelessWidget {
+
+  final Shop shop;
+  VendorTile({this.shop});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -29,7 +35,7 @@ class VendorTile extends StatelessWidget {
                 Container(
                   margin: EdgeInsets.fromLTRB(0, 15.0, 0, 0),
                     child: Text(
-                    'The Magic Oven',
+                    '${shop.shopName}',
                     textAlign: TextAlign.right,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -40,7 +46,7 @@ class VendorTile extends StatelessWidget {
                 Container(
                   margin: EdgeInsets.fromLTRB(0, 10.0, 0, 0),
                     child: Text(
-                    'Utterly Butterly Delicious',
+                    '${shop.tagline}',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -67,7 +73,7 @@ class VendorTile extends StatelessWidget {
                   margin: EdgeInsets.fromLTRB(0.0, 5.0, 25.0, 0.0),
                   child: Stack(
                     children: <Widget>[
-                      Container(child: Text('5 hours'),margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0)),
+                      Container(child: Text('${shop.cookTime['cake']}'),margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0)),
                       Icon(
                         Icons.history,
                         size: 20.0,
@@ -84,7 +90,10 @@ class VendorTile extends StatelessWidget {
           Container(
               margin: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 15.0),
               child: CircleAvatar(
-              backgroundImage: AssetImage("assets/images/profile.jpg"),
+              backgroundImage: CachedNetworkImageProvider(
+                shop.profilePhoto,
+                
+              ),
               radius: 60.0,
             ),
           ),
