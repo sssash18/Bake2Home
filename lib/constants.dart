@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:bake2home/functions/shop.dart';
+import 'package:bake2home/functions/user.dart';
+
 
 Color base = Color(0xff654ea3);
 Color white = Colors.white;
@@ -16,3 +18,5 @@ double sideButton = 12.0;
 double border = 20.0;
 Map<String,Shop> shopMap  = new Map<String,Shop>();
 Map<String,Shop> topPickMap = new Map<String,Shop>();
+String currentUserID = "94ON8vhE5kxa7SfOyBWJ";
+User currentUser = new User();

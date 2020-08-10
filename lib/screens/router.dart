@@ -28,18 +28,24 @@ class _RouterState extends State<Router> {
     CollectionReference topCollection = instance.collection("TopPicks");
     void getTopPick() async{
       QuerySnapshot top  = await topCollection.getDocuments();
-     
         top.documents.forEach((element) {
           Shop shop = shopMap[element.data['shopID']];
           topPickMap.putIfAbsent(shop.shopID, () => shop);   
         });
     }
+
+    Future<bool> getUser() async{
+      DocumentSnapshot user = await instance.collection("Users").document('94ON8vhE5kxa7SfOyBWJ').get();   
+      currentUser.name = user.data['name'];
+      currentUser.address = user.data['address'];
+      currentUser.contact = user.data['contact'];   
+      return true;
+    }
   
     void getThings() async{
-      
       await getShops();
-      print(shopMap);
       getTopPick();
+      await getUser();
     }
     
     getThings();
