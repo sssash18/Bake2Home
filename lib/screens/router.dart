@@ -17,23 +17,32 @@ class _RouterState extends State<Router> {
     super.initState();
     Firestore instance = Firestore.instance;
     CollectionReference shopCollection = instance.collection("Shops");
-    Future<QuerySnapshot> shops = shopCollection.getDocuments();
-    shops.then((value){
-      value.documents.forEach((element) {
-        Shop shop = _shopFromSnapshot(element);
-        shopMap.putIfAbsent(shop.shopID, () => shop);
+    Future<bool> getShops() async{
+      QuerySnapshot shops = await shopCollection.getDocuments();
+      shops.documents.forEach((element) {
+          Shop shop = _shopFromSnapshot(element);
+          shopMap.putIfAbsent(shop.shopID, () => shop);
       });
-    });
+      return true;
+    }
     CollectionReference topCollection = instance.collection("TopPicks");
-    Future<QuerySnapshot> top  = topCollection.getDocuments();
-    top.then(
-      (value){
-        value.documents.forEach((element) {
+    void getTopPick() async{
+      QuerySnapshot top  = await topCollection.getDocuments();
+     
+        top.documents.forEach((element) {
           Shop shop = shopMap[element.data['shopID']];
           topPickMap.putIfAbsent(shop.shopID, () => shop);   
         });
-      }
-    );
+    }
+  
+    void getThings() async{
+      
+      await getShops();
+      print(shopMap);
+      getTopPick();
+    }
+    
+    getThings();
   // int i =0;
   // for(i=0;i<6;i++){
   //   shopCollection.document().setData(

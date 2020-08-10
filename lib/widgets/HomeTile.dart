@@ -46,6 +46,7 @@ class _HomeTileState extends State<HomeTile> {
                     height: 5.0,
                   ),   
                   RatingBar(
+                    ignoreGestures: true,
                     initialRating: 3.2,
                     itemSize: 15.0,
                     itemCount: 5,
