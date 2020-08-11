@@ -224,7 +224,7 @@ class _RouterState extends State<Router> {
       experience: doc.data['experience'],
       numOrders: doc.data['numOrders'],
       items: doc.data['items'],
-      rating: doc.data['rating'],
+      rating: doc.data['rating'].toDouble(),
     );
   }
 

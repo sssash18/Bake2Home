@@ -73,7 +73,7 @@ class _UserDetailsState extends State<UserDetails> {
            
           }
         });
-        if(!_editMode){
+        if(!_editMode && _formKey.currentState.validate()){
           await DatabaseService(uid : currentUserID).updateUserDetails(currentUser.name, currentUser.address);
           Navigator.pop(context);
         }

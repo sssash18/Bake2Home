@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:bake2home/functions/shop.dart';
 
 class DatabaseService{
 
@@ -10,10 +9,10 @@ class DatabaseService{
   DatabaseService({this.uid});
 
   void updateUserDetails(String name,String address) async{
-    await userCollection.document(uid).setData(
+    await userCollection.document(uid).updateData(
       {
         'name' : name,
-        'address' : address
+        'address' : address,
       }
     );
   }
