@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "336904239445",
+    "firebase_url": "https://bakemycake-1d1dc.firebaseio.com",
+    "project_id": "bakemycake-1d1dc",
+    "storage_bucket": "bakemycake-1d1dc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:336904239445:android:6360ea980fa07ee5a357dc",
+        "android_client_info": {
+          "package_name": "com.example.bake2home"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "336904239445-1ris0vmdt3hvsr9dq7bigtaspg3hbu1q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3fHT-Qjf8-FSVyMAvCv1tj6ZL92Tm9ZU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "336904239445-1ris0vmdt3hvsr9dq7bigtaspg3hbu1q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
