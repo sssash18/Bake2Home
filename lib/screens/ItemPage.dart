@@ -113,7 +113,7 @@ class _ItemPageState extends State<ItemPage> {
                         children: <Widget>[
                           createDropDown(widget.item),
                           FlatButton.icon(
-                            label: Text("Add to cart (Rs ${_price})"),
+                            label: Text("Add to cart"),
                             icon: Icon(Icons.add_shopping_cart),
                             onPressed: (){},
                           )
@@ -232,7 +232,7 @@ class _ItemPageState extends State<ItemPage> {
     List<String> itemList = [];
     item['variants'].keys.forEach(
       (value){
-        itemList.add("${item['variants'][value]['size']} pound");
+        itemList.add("${item['variants'][value]['size']} pound (Rs. ${item['variants'][value]['price']})");
       }
     );
 
