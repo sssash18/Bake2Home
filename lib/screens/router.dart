@@ -12,11 +12,8 @@ class Router extends StatefulWidget {
 }
 
 class _RouterState extends State<Router> {
- @override
-  void initState() {
-    super.initState();
-    Firestore instance = Firestore.instance;
-    CollectionReference shopCollection = instance.collection("Shops");
+
+    CollectionReference shopCollection = Firestore.instance.collection("Shops");
     Future<bool> getShops() async{
       QuerySnapshot shops = await shopCollection.getDocuments();
       shops.documents.forEach((element) {
@@ -25,7 +22,7 @@ class _RouterState extends State<Router> {
       });
       return true;
     }
-    CollectionReference topCollection = instance.collection("TopPicks");
+    CollectionReference topCollection = Firestore.instance.collection("TopPicks");
     void getTopPick() async{
       QuerySnapshot top  = await topCollection.getDocuments();
         top.documents.forEach((element) {
@@ -35,7 +32,7 @@ class _RouterState extends State<Router> {
     }
 
     Future<bool> getUser() async{
-      DocumentSnapshot user = await instance.collection("Users").document('94ON8vhE5kxa7SfOyBWJ').get();   
+      DocumentSnapshot user = await Firestore.instance.collection("Users").document('94ON8vhE5kxa7SfOyBWJ').get();   
       currentUser.name = user.data['name'];
       currentUser.address = user.data['address'];
       currentUser.contact = user.data['contact'];   
@@ -47,6 +44,10 @@ class _RouterState extends State<Router> {
       getTopPick();
       await getUser();
     }
+ @override
+  void initState() {
+    super.initState();
+    
     
     getThings();
   // int i =0;
