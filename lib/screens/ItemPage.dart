@@ -1,7 +1,19 @@
+import 'package:bake2home/widgets/dropdown.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/constants.dart';
 
-class ItemPage extends StatelessWidget {
+class ItemPage extends StatefulWidget {
+
+  final Map item;
+  ItemPage({this.item});
+
+  @override
+  _ItemPageState createState() => _ItemPageState();
+}
+
+class _ItemPageState extends State<ItemPage> {
+  String _price = '100';
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -21,41 +33,30 @@ class ItemPage extends StatelessWidget {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [Color(0xff654ea3),Color(0xffeaafc8)],
-              )
+                )
                 ),
-                // child: Image.asset(
-                //   "assets/images/cake.jpeg",
-                //   fit: BoxFit.fill,
-                //   colorBlendMode: BlendMode.saturation,
-                  
-                // ),
+                
                 child: ShaderMask(
-        shaderCallback: (rect) {
-          return LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: <Color>[
-                    Colors.black.withOpacity(1.0),
-                    Colors.black.withOpacity(1.0), 
-                    Colors.black.withOpacity(0.1), 
-                    //Colors.black.withOpacity(0.0),
-                    //Colors.black// <-- change this opacity
-           Colors.transparent // <-- you might need this if you want full transparency at the edge
-        ],
-        stops: [0.0, 0.5,0.65, 1.0], //<-- the gradient is interpolated, and these are where the colors above go into effect (that's why there are two colors repeated)
-          ).createShader(Rect.fromLTRB(0, 0, rect.width, 1.5*rect.height));
-        },
-        blendMode: BlendMode.dstIn,
-        child: Image.asset(
-                   "assets/images/cake.jpeg",
-                   fit: BoxFit.fill,
-                //   colorBlendMode: BlendMode.saturation,
-                  
-                 ),
-      ),
-                ),
-                
-                
+                shaderCallback: (rect) {
+                  return LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: <Color>[
+                            Colors.black.withOpacity(1.0),
+                            Colors.black.withOpacity(1.0), 
+                            Colors.black.withOpacity(0.1), 
+                            Colors.transparent // <-- you might need this if you want full transparency at the edge
+                    ],
+                    stops: [0.0, 0.5,0.65, 1.0], //<-- the gradient is interpolated, and these are where the colors above go into effect (that's why there are two colors repeated)
+                  ).createShader(Rect.fromLTRB(0, 0, rect.width, 1.5*rect.height));
+                },
+                blendMode: BlendMode.dstIn,
+                child: CachedNetworkImage(
+                          imageUrl: widget.item['photoUrl'],
+                          fit: BoxFit.fill,                          
+                        ),
+                  ),
+              ),
                 Positioned(
                     top: MediaQuery.of(context).size.height/2.8 - MediaQuery.of(context).size.height/16,
                     left: (MediaQuery.of(context).size.width - MediaQuery.of(context).size.width/1.3)/2,
@@ -72,7 +73,7 @@ class ItemPage extends StatelessWidget {
                     ),
                     height: MediaQuery.of(context).size.height/8,
                     width : MediaQuery.of(context).size.width/1.3,
-                    child: Text("Chocolate Cake",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25.0),),
+                    child: Text(widget.item['itemName'],style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25.0),),
                   ),
                 ),
                 
@@ -101,16 +102,22 @@ class ItemPage extends StatelessWidget {
                     )]
                     ),
                     margin: EdgeInsets.fromLTRB(15.0, MediaQuery.of(context).size.height/16 + 30, 15.0, 0),
-                    child: ButtonTheme(
-                        minWidth: MediaQuery.of(context).size.width,
-                        height: 50.0,
-                        child: FlatButton(
-                        onPressed: (){},
-                        child: Text("Buy (Rs 400)"),
+                    child: Container(
+                      height: MediaQuery.of(context).size.height/14,
+                      decoration: BoxDecoration(
                         color: white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(border)
-                        )
+                        borderRadius: BorderRadius.circular(border),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          createDropDown(widget.item),
+                          FlatButton.icon(
+                            label: Text("Add to cart"),
+                            icon: Icon(Icons.add_shopping_cart),
+                            onPressed: (){},
+                          )
+                        ]
                       ),
                     )
                   ),
@@ -123,16 +130,16 @@ class ItemPage extends StatelessWidget {
                     )]
                     ),
                     margin: EdgeInsets.fromLTRB(15.0, 30, 15.0, 0),
-                    child: ButtonTheme(
-                        height: 50.0,
-                        minWidth: MediaQuery.of(context).size.width,
-                        child: FlatButton(
-                        onPressed: (){},
-                        child: Text("Buy Ingredients (Raw - Rs 200)"),
+                    child: Container(
+                      height: MediaQuery.of(context).size.height/14,
+                      decoration: BoxDecoration(
                         color: white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(border)
-                        )
+                        borderRadius: BorderRadius.circular(border),
+                      ),
+                      child: Row(
+                        children: <Widget>[
+                         
+                        ]
                       ),
                     )
                   ),
@@ -145,16 +152,11 @@ class ItemPage extends StatelessWidget {
                     )],
                     ),
                     margin: EdgeInsets.fromLTRB(15.0, 30, 15.0, 0),
-                    child: ButtonTheme(
-                        height: 50.0,
-                        minWidth: MediaQuery.of(context).size.width,
-                        child: FlatButton(
-                        onPressed: (){},
-                        child: Text("Consult with expert (Rs 30 for 15 min)"),
+                    child: Container(
+                      height: MediaQuery.of(context).size.height/14,
+                      decoration: BoxDecoration(
                         color: white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(border)
-                        )
+                        borderRadius: BorderRadius.circular(border),
                       ),
                     )
                   ),
@@ -177,10 +179,10 @@ class ItemPage extends StatelessWidget {
                         parent: NeverScrollableScrollPhysics(),
                       ),
                       shrinkWrap: true,
-                      itemCount: 5,
+                      itemCount: widget.item['ingredients'].keys.length,
                       itemBuilder: (BuildContext context, int index){
                         return Text(
-                          "Flour",
+                          '${widget.item['ingredients'].keys.elementAt(index)} - ${widget.item['ingredients'][widget.item['ingredients'].keys.elementAt(index)]}',
                           style: TextStyle(
                             color: white,
                             fontSize: textSize,
@@ -204,7 +206,7 @@ class ItemPage extends StatelessWidget {
                   Container(
                     margin: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 0),
                     child: Text(
-                      "This is a cake made from flour which is purely vegetarian. You can try this at home and make it with ease",
+                      widget.item['recipe'],
                       style: TextStyle(
                         color: white,
                         fontSize: textSize
@@ -221,8 +223,41 @@ class ItemPage extends StatelessWidget {
             
             
             ],
-          )  
+          ) ,
+          
       ),
+    );
+  }
+  Widget createDropDown(Map item){
+    List<String> itemList = [];
+    item['variants'].keys.forEach(
+      (value){
+        itemList.add("${item['variants'][value]['size']} pound (Rs. ${item['variants'][value]['price']})");
+      }
+    );
+
+    String dropDownval = itemList[0];
+    return DropdownButton(
+      value: dropDownval,
+      iconSize: 24,
+    elevation: 16,
+    style: TextStyle(color: base),
+    underline: Container(
+      height: 2,
+      color: Colors.deepPurpleAccent,
+    ),
+    
+      onChanged: (String newvalue){
+        setState(() {
+          dropDownval = newvalue;
+        });
+      },
+      items: itemList.map<DropdownMenuItem<String>>((value){
+        return DropdownMenuItem(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
     );
   }
 }

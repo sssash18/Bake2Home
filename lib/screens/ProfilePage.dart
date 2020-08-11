@@ -1,8 +1,14 @@
 import 'package:bake2home/screens/ProfileOrders.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/constants.dart';
+import 'package:bake2home/screens/UserDetails.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
+  @override
+  _ProfilePageState createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,7 +56,7 @@ class ProfilePage extends StatelessWidget {
           )
         ),
         Text(
-          'Suyash Choudhary',
+          '${currentUser.name}',
           style: TextStyle(
             fontSize: head,
             fontWeight: FontWeight.bold
@@ -62,7 +68,7 @@ class ProfilePage extends StatelessWidget {
             Container(
               margin: EdgeInsets.fromLTRB(20.0, 0.0, 0.0, 0.0),
               child: Text(
-                ' Katju Nagar ',
+                ' ${currentUser.address}',
                 style: TextStyle(
                 )
               ),
@@ -80,7 +86,19 @@ class ProfilePage extends StatelessWidget {
             margin: EdgeInsets.fromLTRB(15.0, 10.0, 0.0, 0.0),
             child:ListView(
               children: <Widget>[
-                
+                ListTile(
+                  leading:Icon(
+                    Icons.person,
+                    color: base,
+                    size: 30.0,
+                  ),
+                  title: Text(
+                    "Profile",
+                  ),
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => UserDetails())).then((value) => setState((){}));
+                  },
+                ),
                 ListTile(
                   leading:Icon(
                     Icons.shopping_cart,

@@ -1,3 +1,5 @@
+import 'package:bake2home/functions/shop.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/constants.dart';
 
@@ -5,7 +7,8 @@ import 'package:bake2home/constants.dart';
 class MySliverAppBar extends SliverPersistentHeaderDelegate{
 
     final double expandedHeight;
-    MySliverAppBar({ @required this.expandedHeight});
+    final Shop shop;
+    MySliverAppBar({ @required this.expandedHeight,this.shop});
     @override
     Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
       return Material(
@@ -13,8 +16,8 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate{
           fit: StackFit.expand,
           overflow: Overflow.visible,
           children: <Widget>[
-            Image.asset(
-              "assets/images/choco.jpg",
+            CachedNetworkImage(
+              imageUrl: "${shop.coverPhoto}",
               fit: BoxFit.fill,
             ),
             
@@ -25,7 +28,7 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate{
                   Container(
                     margin: EdgeInsets.fromLTRB(25.0,20, 0, 0),
                     child: CircleAvatar(
-                      backgroundImage: AssetImage("assets/images/profile.jpg"),
+                      backgroundImage: CachedNetworkImageProvider("${shop.profilePhoto}"),
                       radius: 50.0,
                     ),
                   ),
@@ -37,7 +40,7 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate{
                     Column(
                     children: <Widget>[
                       Text(
-                        'The Dessert Town',
+                        '${shop.shopName}',
                         style: TextStyle(
                           fontSize:20.0,
                           color: white,
@@ -46,7 +49,7 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate{
                         ),
                       ),
                       Text(
-                        'Utterly Butterly Delicious',
+                        '${shop.tagline}',
                         style: TextStyle(
                           fontSize:10.0,
                           color: white,
@@ -73,13 +76,13 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate{
                         alignment: Alignment.topCenter,
                         margin: EdgeInsets.fromLTRB(0, 40.0, 0, 20),
                         child: CircleAvatar(
-                          backgroundImage: AssetImage("assets/images/profile.jpg"),
+                          backgroundImage: CachedNetworkImageProvider("${shop.profilePhoto}"),
                           radius: 50.0,
                         ),
                       ),
                       SizedBox(height: 30),
                       Text(  
-                        'The Dessert Town',
+                        '${shop.shopName}',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize:30.0,
@@ -89,7 +92,7 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate{
                         ),
                       ),
                       Text(
-                        'Utterly Butterly Delicious',
+                        '${shop.tagline}',
                         style: TextStyle(
                           fontSize:15.0,
                           color: white,
@@ -135,7 +138,7 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate{
                     Container(
                       margin: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0),
                       alignment: Alignment.center,
-                      child: Text('This is a one stop destination for everything ranging from cookies, chocolates, cakes, bouqets, ice creams, etc'),
+                      child: Text('${shop.bio}'),
                     ),
                   ]
                 ),
