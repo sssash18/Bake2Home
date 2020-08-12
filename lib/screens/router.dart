@@ -6,14 +6,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:bake2home/functions/shop.dart';
 import 'package:bake2home/constants.dart';
 
-
 class Router extends StatefulWidget {
-
   @override
   _RouterState createState() => _RouterState();
 }
 
 class _RouterState extends State<Router> {
+<<<<<<< HEAD
 
 CollectionReference shopCollection = Firestore.instance.collection("Shops");
     Future<bool> getShops() async{
@@ -225,21 +224,52 @@ CollectionReference shopCollection = Firestore.instance.collection("Shops");
   //               },
   //               'ingPrice' : 200,
   //               'recipe' : "Good to make",
+=======
+  CollectionReference shopCollection = Firestore.instance.collection("Shops");
+  CollectionReference topCollection = Firestore.instance.collection("TopPicks");
+  @override
+  void initState() {
+    super.initState();
+    getThings();
+  }
+>>>>>>> 5051cc4325eb5b0711fc8d7b3abf0e0721f0c90c
 
-  //             }
-
-  //           }
-  //         },
-  //      }
-  //   }
-
-  // );
-  // }
-  
-
+  getThings() async {
+    await getShops();
+    getTopPick();
+    await getUser();
   }
 
-  Shop _shopFromSnapshot(DocumentSnapshot doc){
+  Future<bool> getUser() async {
+    DocumentSnapshot user = await Firestore.instance
+        .collection("Users")
+        .document('94ON8vhE5kxa7SfOyBWJ')
+        .get();
+    currentUser.name = user.data['name'];
+    currentUser.address = user.data['address'];
+    currentUser.contact = user.data['contact'];
+    return true;
+  }
+
+  Future<bool> getShops() async {
+    QuerySnapshot shops = await shopCollection.getDocuments();
+    shops.documents.forEach((element) {
+      Shop shop = _shopFromSnapshot(element);
+      shopMap.putIfAbsent(shop.shopID, () => shop);
+    });
+    return true;
+  }
+
+  void getTopPick() async {
+    await topCollection.getDocuments().then((value) {
+      value.documents.forEach((element) {
+        Shop shop = shopMap[element.data['shopID']];
+        topPickMap.putIfAbsent(shop.shopID, () => shop);
+      });
+    });
+  }
+
+  Shop _shopFromSnapshot(DocumentSnapshot doc) {
     return Shop(
       shopID: doc.data['shopID'],
       shopName: doc.data['shopName'],
@@ -264,13 +294,14 @@ CollectionReference shopCollection = Firestore.instance.collection("Shops");
     return Scaffold(
       body: Container(
         alignment: Alignment.center,
-        child: FlatButton(
-          onPressed: (){
-            Navigator.push(context, MaterialPageRoute(
-              builder: (BuildContext context) => HomePage()
-            ));
-          },
-          child: Text("HomePage")),
+        child: RaisedButton(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => HomePage()));
+            },
+            child: Text("HomePage")),
       ),
     );
   }
