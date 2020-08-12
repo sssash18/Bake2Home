@@ -126,7 +126,7 @@ class _HomePageState extends State<HomePage> {
                   return GestureDetector(
                     child: HomeTile(height: MediaQuery.of(context).size.height/5,width: MediaQuery.of(context).size.width/3.3,radius: MediaQuery.of(context).size.width/8,title: topPickMap[topPickMap.keys.elementAt(index)].shopName,photo: topPickMap[topPickMap.keys.elementAt(index)].profilePhoto,),
                     onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=> VendorProfile(shop: shopMap[shopMap.keys.elementAt(index)],)));
+                      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=> VendorProfile(shop: topPickMap[topPickMap.keys.elementAt(index)],)));
                     },
                   );
                 }

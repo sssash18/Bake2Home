@@ -16,6 +16,7 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate{
           fit: StackFit.expand,
           overflow: Overflow.visible,
           children: <Widget>[
+            
             CachedNetworkImage(
               imageUrl: "${shop.coverPhoto}",
               fit: BoxFit.fill,
@@ -26,7 +27,7 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate{
               child: Stack(
                 children: <Widget>[
                   Container(
-                    margin: EdgeInsets.fromLTRB(25.0,20, 0, 0),
+                    margin: EdgeInsets.fromLTRB(45.0,20, 0, 0),
                     child: CircleAvatar(
                       backgroundImage: CachedNetworkImageProvider("${shop.profilePhoto}"),
                       radius: 50.0,
@@ -70,9 +71,11 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate{
                 child: Container(
                     height: (1 - shrinkOffset/expandedHeight)*expandedHeight,
                     child: Wrap(
+                    direction: Axis.vertical,
                     alignment: WrapAlignment.center,
                     children: <Widget>[
                       Container(
+                        //width: MediaQuery.of(context).size.width,
                         alignment: Alignment.topCenter,
                         margin: EdgeInsets.fromLTRB(0, 40.0, 0, 20),
                         child: CircleAvatar(
@@ -80,15 +83,17 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate{
                           radius: 50.0,
                         ),
                       ),
-                      SizedBox(height: 30),
-                      Text(  
-                        '${shop.shopName}',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize:30.0,
-                          color: white,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Sora',
+                     // SizedBox(height: 30),
+                      Container(
+                        child: Text(  
+                          '${shop.shopName}',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize:30.0,
+                            color: white,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Sora',
+                          ),
                         ),
                       ),
                       Text(
@@ -145,7 +150,18 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate{
               ),
             ),
           ),
-          ),         
+          ),
+          Positioned(
+              child: IconButton(
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: white,
+                  size: 40.0,
+                ),
+                onPressed: (){Navigator.pop(context);print("suaysj");}
+              ),
+              top: 0,
+              left: 0,),         
           ],
         ),
       );

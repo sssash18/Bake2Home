@@ -1,7 +1,7 @@
 class Shop{
 
   String shopID,shopName,shopAddress,merchantName,bio,tagline,profilePhoto,coverPhoto,experience,contact;
-  int numOrders;
+  int numOrders,ingPrice;
   double rating;
   Map cookTime,items;
 
@@ -20,6 +20,7 @@ class Shop{
     this.numOrders,
     this.items,
     this.rating,
+    this.ingPrice,
   });
  
 }

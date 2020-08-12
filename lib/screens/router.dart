@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bake2home/screens/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -13,10 +15,11 @@ class Router extends StatefulWidget {
 
 class _RouterState extends State<Router> {
 
-    CollectionReference shopCollection = Firestore.instance.collection("Shops");
+CollectionReference shopCollection = Firestore.instance.collection("Shops");
     Future<bool> getShops() async{
       QuerySnapshot shops = await shopCollection.getDocuments();
       shops.documents.forEach((element) {
+          print(element.data['shopID']);
           Shop shop = _shopFromSnapshot(element);
           shopMap.putIfAbsent(shop.shopID, () => shop);
       });
@@ -26,6 +29,7 @@ class _RouterState extends State<Router> {
     void getTopPick() async{
       QuerySnapshot top  = await topCollection.getDocuments();
         top.documents.forEach((element) {
+          //print('top ${shopMap[element.data['shopID']]}');
           Shop shop = shopMap[element.data['shopID']];
           topPickMap.putIfAbsent(shop.shopID, () => shop);   
         });
@@ -44,17 +48,29 @@ class _RouterState extends State<Router> {
       getTopPick();
       await getUser();
     }
+  // String genID(DocumentReference doc){
+  //   String res = doc.documentID;
+  //   Random ran = new Random();
+  //   ran.nextInt(9000);
+  //   res += '-${Timestamp.now().millisecondsSinceEpoch.toString() + ran.nextInt(9000).toString()}';
+  //   return res;
+  // }
  @override
   void initState() {
-    super.initState();
-    
-    
+    super.initState(); 
     getThings();
   // int i =0;
   // for(i=0;i<6;i++){
-  //   shopCollection.document().setData(
+  //   DocumentReference docRef = shopCollection.document();
+  //   String itemID1 = genID(docRef);
+  //   String itemID2 = genID(docRef);    
+  //   String itemID3 = genID(docRef);
+  //   String itemID4 = genID(docRef);
+  //   String itemID5 = genID(docRef);
+  //   String itemID6 = genID(docRef);
+  //   docRef.setData(
   //     {
-  //       'shopID' : '',
+  //       'shopID' : docRef.documentID,
   //       'shopName' : 'DessertTown',
   //       'shopAddress' : 'ABC Colony',
   //       'contact' : '2233434343',
@@ -74,13 +90,14 @@ class _RouterState extends State<Router> {
   //       'items' : {
   //         'cake' : {
   //           'standard' : {
-  //             '1' : {
-  //               'itemID' : 1,
+  //             itemID1 : {
+  //               'itemID' : itemID1,
   //               'itemName' : 'Chocolate Cake',
   //               'availability' : true,
   //               'photoUrl' : 'https://firebasestorage.googleapis.com/v0/b/bakemycake-1d1dc.appspot.com/o/atom.png?alt=media&token=789c85bc-5234-4fb9-a317-957f98bb0abe',
   //               'variants' : {
-  //                 'v1' : {
+  //                 '${itemID1}-1#00' : {
+  //                   'vid' : '${itemID1}-1#00',
   //                   'size' : 1,
   //                   'price' : 450,
   //                 }
@@ -89,18 +106,20 @@ class _RouterState extends State<Router> {
   //                 'flour' : '500g',
   //                 'sugar' : '1 Kg',
   //               },
+  //               'ingPrice' : 200,
   //               'recipe' : "Good to make",
 
   //             }
   //           },
   //           'customised' : {
-  //             '1' : {
-  //               'itemID' : 1,
+  //             itemID2: {
+  //               'itemID' : itemID2,
   //               'availability' : true,
   //               'itemName' : 'PUBG Cake',
   //               'photoUrl' : 'https://firebasestorage.googleapis.com/v0/b/bakemycake-1d1dc.appspot.com/o/atom.png?alt=media&token=789c85bc-5234-4fb9-a317-957f98bb0abe',
   //               'variants' : {
-  //                 'v1' : {
+  //                 '${itemID2}-1#00' : {
+  //                   'vid' : '${itemID2}-1#00',
   //                   'size' : 1,
   //                   'price' : 550,
   //                 }
@@ -109,6 +128,7 @@ class _RouterState extends State<Router> {
   //                 'flour' : '500g',
   //                 'sugar' : '1 Kg',
   //               },
+  //               'ingPrice' : 120,
   //               'recipe' : "Good to make",
 
   //             }
@@ -117,13 +137,14 @@ class _RouterState extends State<Router> {
   //         },
   //         'cookie' : {
   //           'standard' : {
-  //             '1' : {
-  //               'itemID' : 1,
+  //             itemID3 : {
+  //               'itemID' : itemID3,
   //               'availability' : true,
   //               'itemName' : 'Dry Fruit cookie',
   //               'photoUrl' : 'https://firebasestorage.googleapis.com/v0/b/bakemycake-1d1dc.appspot.com/o/atom.png?alt=media&token=789c85bc-5234-4fb9-a317-957f98bb0abe',
   //               'variants' : {
-  //                 'v1' : {
+  //                 '${itemID3}-1#00' : {
+  //                   'vid' : '${itemID3}-1#00',
   //                   'size' : 1,
   //                   'price' : 90,
   //                 }
@@ -132,19 +153,22 @@ class _RouterState extends State<Router> {
   //                 'flour' : '500g',
   //                 'sugar' : '1 Kg',
   //               },
+  //               'ingPrice' : 400,
   //               'recipe' : "Good to make",
+  //               'ingPrice' : 110,
 
   //             }
   //           },
   //           'customised' : {
-  //             '1' : {
-  //               'itemID' : 1,
+  //             itemID4 : {
+  //               'itemID' : itemID4,
   //               'availability' : true,
   //               'itemName' : 'ChocoVanilla cookie',
   //               'photoUrl' : 'https://firebasestorage.googleapis.com/v0/b/bakemycake-1d1dc.appspot.com/o/atom.png?alt=media&token=789c85bc-5234-4fb9-a317-957f98bb0abe',
   //               'variants' : {
-  //                 'v1' : {
-  //                   'size' : 1,
+  //                 '${itemID4}-1#50' : {
+  //                   'vid' : '${itemID4}-1#50',
+  //                   'size' : 1.5,
   //                   'price' : 120,
   //                 }
   //               },
@@ -152,6 +176,7 @@ class _RouterState extends State<Router> {
   //                 'flour' : '500g',
   //                 'sugar' : '1 Kg',
   //               },
+  //               'ingPrice' : 150,
   //               'recipe' : "Good to make",
 
   //             }
@@ -160,13 +185,14 @@ class _RouterState extends State<Router> {
   //         },
   //         'chocolate' : {
   //           'standard' : {
-  //             '1' : {
-  //               'itemID' : 1,
+  //             itemID5 : {
+  //               'itemID' : itemID5,
   //               'availability' : true,
   //               'itemName' : 'White Chocolate',
   //               'photoUrl' : 'https://firebasestorage.googleapis.com/v0/b/bakemycake-1d1dc.appspot.com/o/atom.png?alt=media&token=789c85bc-5234-4fb9-a317-957f98bb0abe',
   //               'variants' : {
-  //                 'v1' : {
+  //                 '${itemID5}-1#00' : {
+  //                   'vid' : '${itemID5}-1#00',
   //                   'size' : 1,
   //                   'price' : 200,
   //                 }
@@ -175,18 +201,20 @@ class _RouterState extends State<Router> {
   //                 'flour' : '500g',
   //                 'sugar' : '1 Kg',
   //               },
+  //               'ingPrice' : 200,
   //               'recipe' : "Good to make",
 
   //             }
   //           },
   //           'customised' : {
-  //             '1' : {
-  //               'itemID' : 1,
+  //             itemID6 : {
+  //               'itemID' : itemID6,
   //               'availability' : true,
   //               'itemName' : 'Choco Delight',
   //               'photoUrl' : 'https://firebasestorage.googleapis.com/v0/b/bakemycake-1d1dc.appspot.com/o/atom.png?alt=media&token=789c85bc-5234-4fb9-a317-957f98bb0abe',
   //               'variants' : {
-  //                 'v1' : {
+  //                 '${itemID6}-1#00' : {
+  //                   'vid' : '${itemID6}-1#00',
   //                   'size' : 1,
   //                   'price' : 600,
   //                 }
@@ -195,6 +223,7 @@ class _RouterState extends State<Router> {
   //                 'flour' : '500g',
   //                 'sugar' : '1 Kg',
   //               },
+  //               'ingPrice' : 200,
   //               'recipe' : "Good to make",
 
   //             }
@@ -226,6 +255,7 @@ class _RouterState extends State<Router> {
       numOrders: doc.data['numOrders'],
       items: doc.data['items'],
       rating: doc.data['rating'].toDouble(),
+      ingPrice: doc.data['ingPrice'],
     );
   }
 
