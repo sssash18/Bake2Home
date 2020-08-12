@@ -238,26 +238,26 @@ class _ItemPageState extends State<ItemPage> {
 
     String dropDownval = itemList[0];
     return DropdownButton(
-      value: dropDownval,
-      iconSize: 24,
-    elevation: 16,
-    style: TextStyle(color: base),
-    underline: Container(
-      height: 2,
-      color: Colors.deepPurpleAccent,
-    ),
-    
-      onChanged: (String newvalue){
-        setState(() {
-          dropDownval = newvalue;
-        });
-      },
-      items: itemList.map<DropdownMenuItem<String>>((value){
-        return DropdownMenuItem(
-          value: value,
-          child: Text(value),
+    value: dropDownval,
+    iconSize: 24,
+        elevation: 16,
+        style: TextStyle(color: base),
+        underline: Container(
+    height: 2,
+    color: Colors.deepPurpleAccent,
+        ),
+        
+    onChanged: (String newvalue){
+      setState(() {
+        dropDownval = newvalue;
+      });
+    },
+    items: itemList.map<DropdownMenuItem<String>>((value){
+      return DropdownMenuItem(
+        value: value,
+        child: Text(value),
+      );
+    }).toList(),
         );
-      }).toList(),
-    );
   }
 }

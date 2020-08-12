@@ -1,3 +1,4 @@
+import 'package:bake2home/screens/ProfilePage.dart';
 import 'package:bake2home/services/database.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/constants.dart';
@@ -55,7 +56,7 @@ class _UserDetailsState extends State<UserDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
+    appBar: AppBar(
     title: Text("Profile",style: TextStyle(color: base)),
     backgroundColor: white,
     iconTheme: IconThemeData(color: base),
@@ -80,9 +81,9 @@ class _UserDetailsState extends State<UserDetails> {
       })
     ],
         ),
-        body: SingleChildScrollView(
-                  child: Column(
-    children: <Widget>[
+    body: SingleChildScrollView(
+      child: Column(
+      children: <Widget>[
       Container(
       alignment: Alignment.center,
       color: white,
@@ -92,7 +93,7 @@ class _UserDetailsState extends State<UserDetails> {
           backgroundColor: base,
           radius: 60.0,
           child: Text(
-            'SC',
+            ProfilePage().createAvatarText(),
             style: TextStyle(
               color: white,
               fontSize: 40.0,
