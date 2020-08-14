@@ -1,4 +1,3 @@
-import 'package:bake2home/widgets/dropdown.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/constants.dart';
@@ -13,7 +12,6 @@ class ItemPage extends StatefulWidget {
 }
 
 class _ItemPageState extends State<ItemPage> {
-  String _price = '100';
   @override
   Widget build(BuildContext context) {
     return SafeArea(

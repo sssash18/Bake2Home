@@ -1,0 +1,86 @@
+import 'package:bake2home/constants.dart';
+import 'package:bake2home/functions/searchList.dart';
+import 'package:bake2home/functions/shop.dart';
+import 'package:bake2home/screens/ItemList.dart';
+import 'package:bake2home/screens/ItemPage.dart';
+import 'package:flutter/material.dart';
+
+class searchDelegate extends SearchDelegate<Shop>{
+
+  List<Shop> shopSearch = [];
+  List<Map> itemSearch = [];
+  @override
+  List<Widget> buildActions(BuildContext context) {
+      return [
+        IconButton(
+          icon: Icon(Icons.clear),
+          onPressed: (){
+            query =  "";
+          },
+        ),
+      ];
+    }
+  
+    @override
+    Widget buildLeading(BuildContext context) {
+      return IconButton(
+        icon: Icon(Icons.arrow_back),
+        onPressed: (){
+          close(context, null);
+        },
+      );
+    }
+  
+    @override
+    Widget buildResults(BuildContext context) {
+      
+    }
+  
+    @override
+    Widget buildSuggestions(BuildContext context) {
+      final List<Shop> shops = [];
+      final List<Map> itemList = [];
+      shopMap.keys.forEach((element) {
+        shops.add(shopMap[element]);
+        shopMap[element].items.forEach((key, value) { 
+          Map itemMap = shopMap[element].items[key]; //Cake ,cookie
+          Map standard = itemMap['standard'];
+          Map customised = itemMap['customised'];
+          standard.keys.forEach((element) { 
+            //print(standard[element]);
+            itemList.add(standard[element]);
+          });
+          customised.keys.forEach((element) { 
+            itemList.add(customised[element]);
+            //print(customised[element]);
+          });
+        });
+      });
+      print(itemList[0]['itemName']);
+      shopSearch = query.isEmpty ? shops : shops.where((e) => e.shopName.toLowerCase().contains(query.toLowerCase())).toList();
+      itemSearch  = query.isEmpty ? itemList : itemList.where((e) => e['itemName'].toString().toLowerCase().contains(query.toLowerCase())).toList();
+      return ListView.builder(
+        itemCount: shopSearch.length + itemSearch.length,
+        itemBuilder: (BuildContext context, int index){
+          
+          if(index < shopSearch.length){
+            return ListTile(
+              onTap: (){
+                showResults(context);
+              },
+              title: Text(shopSearch[index].shopName),
+            );
+          }
+          String shopId = itemSearch[index - shopSearch.length]['itemId'].toString().split("-")[0];
+           return ListTile(
+             onTap: (){
+               showResults(context);
+             },
+             title : Text(itemList[index - shopSearch.length]['itemName']),
+             subtitle: Text('by ${shopMap[shopId].shopName}'),
+          );
+        }
+      );
+    }
+  
+}

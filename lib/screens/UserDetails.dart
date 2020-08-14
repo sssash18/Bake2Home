@@ -2,7 +2,7 @@ import 'package:bake2home/screens/ProfilePage.dart';
 import 'package:bake2home/services/database.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/constants.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 
 class UserDetails extends StatefulWidget {

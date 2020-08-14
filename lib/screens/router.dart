@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:bake2home/screens/homepage.dart';
 import 'package:flutter/material.dart';
@@ -6,21 +5,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:bake2home/functions/shop.dart';
 import 'package:bake2home/constants.dart';
 
+
 class Router extends StatefulWidget {
+
   @override
   _RouterState createState() => _RouterState();
 }
 
 class _RouterState extends State<Router> {
-<<<<<<< HEAD
 
 CollectionReference shopCollection = Firestore.instance.collection("Shops");
     Future<bool> getShops() async{
       QuerySnapshot shops = await shopCollection.getDocuments();
       shops.documents.forEach((element) {
-          print(element.data['shopID']);
+          print(element.data['shopId']);
           Shop shop = _shopFromSnapshot(element);
-          shopMap.putIfAbsent(shop.shopID, () => shop);
+          shopMap.putIfAbsent(shop.shopId, () => shop);
       });
       return true;
     }
@@ -28,9 +28,8 @@ CollectionReference shopCollection = Firestore.instance.collection("Shops");
     void getTopPick() async{
       QuerySnapshot top  = await topCollection.getDocuments();
         top.documents.forEach((element) {
-          //print('top ${shopMap[element.data['shopID']]}');
-          Shop shop = shopMap[element.data['shopID']];
-          topPickMap.putIfAbsent(shop.shopID, () => shop);   
+          Shop shop = shopMap[element.data['shopId']];
+          topPickMap.putIfAbsent(shop.shopId, () => shop);   
         });
     }
 
@@ -61,15 +60,15 @@ CollectionReference shopCollection = Firestore.instance.collection("Shops");
   // int i =0;
   // for(i=0;i<6;i++){
   //   DocumentReference docRef = shopCollection.document();
-  //   String itemID1 = genID(docRef);
-  //   String itemID2 = genID(docRef);    
-  //   String itemID3 = genID(docRef);
-  //   String itemID4 = genID(docRef);
-  //   String itemID5 = genID(docRef);
-  //   String itemID6 = genID(docRef);
+  //   String itemId1 = genID(docRef);
+  //   String itemId2 = genID(docRef);    
+  //   String itemId3 = genID(docRef);
+  //   String itemId4 = genID(docRef);
+  //   String itemId5 = genID(docRef);
+  //   String itemId6 = genID(docRef);
   //   docRef.setData(
   //     {
-  //       'shopID' : docRef.documentID,
+  //       'shopId' : docRef.documentID,
   //       'shopName' : 'DessertTown',
   //       'shopAddress' : 'ABC Colony',
   //       'contact' : '2233434343',
@@ -89,14 +88,14 @@ CollectionReference shopCollection = Firestore.instance.collection("Shops");
   //       'items' : {
   //         'cake' : {
   //           'standard' : {
-  //             itemID1 : {
-  //               'itemID' : itemID1,
+  //             itemId1 : {
+  //               'itemId' : itemId1,
   //               'itemName' : 'Chocolate Cake',
   //               'availability' : true,
   //               'photoUrl' : 'https://firebasestorage.googleapis.com/v0/b/bakemycake-1d1dc.appspot.com/o/atom.png?alt=media&token=789c85bc-5234-4fb9-a317-957f98bb0abe',
   //               'variants' : {
-  //                 '${itemID1}-1#00' : {
-  //                   'vid' : '${itemID1}-1#00',
+  //                 '${itemId1}-1#00' : {
+  //                   'vid' : '${itemId1}-1#00',
   //                   'size' : 1,
   //                   'price' : 450,
   //                 }
@@ -111,14 +110,14 @@ CollectionReference shopCollection = Firestore.instance.collection("Shops");
   //             }
   //           },
   //           'customised' : {
-  //             itemID2: {
-  //               'itemID' : itemID2,
+  //             itemId2: {
+  //               'itemId' : itemId2,
   //               'availability' : true,
   //               'itemName' : 'PUBG Cake',
   //               'photoUrl' : 'https://firebasestorage.googleapis.com/v0/b/bakemycake-1d1dc.appspot.com/o/atom.png?alt=media&token=789c85bc-5234-4fb9-a317-957f98bb0abe',
   //               'variants' : {
-  //                 '${itemID2}-1#00' : {
-  //                   'vid' : '${itemID2}-1#00',
+  //                 '${itemId2}-1#00' : {
+  //                   'vid' : '${itemId2}-1#00',
   //                   'size' : 1,
   //                   'price' : 550,
   //                 }
@@ -136,14 +135,14 @@ CollectionReference shopCollection = Firestore.instance.collection("Shops");
   //         },
   //         'cookie' : {
   //           'standard' : {
-  //             itemID3 : {
-  //               'itemID' : itemID3,
+  //             itemId3 : {
+  //               'itemId' : itemId3,
   //               'availability' : true,
   //               'itemName' : 'Dry Fruit cookie',
   //               'photoUrl' : 'https://firebasestorage.googleapis.com/v0/b/bakemycake-1d1dc.appspot.com/o/atom.png?alt=media&token=789c85bc-5234-4fb9-a317-957f98bb0abe',
   //               'variants' : {
-  //                 '${itemID3}-1#00' : {
-  //                   'vid' : '${itemID3}-1#00',
+  //                 '${itemId3}-1#00' : {
+  //                   'vid' : '${itemId3}-1#00',
   //                   'size' : 1,
   //                   'price' : 90,
   //                 }
@@ -159,14 +158,14 @@ CollectionReference shopCollection = Firestore.instance.collection("Shops");
   //             }
   //           },
   //           'customised' : {
-  //             itemID4 : {
-  //               'itemID' : itemID4,
+  //             itemId4 : {
+  //               'itemId' : itemId4,
   //               'availability' : true,
   //               'itemName' : 'ChocoVanilla cookie',
   //               'photoUrl' : 'https://firebasestorage.googleapis.com/v0/b/bakemycake-1d1dc.appspot.com/o/atom.png?alt=media&token=789c85bc-5234-4fb9-a317-957f98bb0abe',
   //               'variants' : {
-  //                 '${itemID4}-1#50' : {
-  //                   'vid' : '${itemID4}-1#50',
+  //                 '${itemId4}-1#50' : {
+  //                   'vid' : '${itemId4}-1#50',
   //                   'size' : 1.5,
   //                   'price' : 120,
   //                 }
@@ -184,14 +183,14 @@ CollectionReference shopCollection = Firestore.instance.collection("Shops");
   //         },
   //         'chocolate' : {
   //           'standard' : {
-  //             itemID5 : {
-  //               'itemID' : itemID5,
+  //             itemId5 : {
+  //               'itemId' : itemId5,
   //               'availability' : true,
   //               'itemName' : 'White Chocolate',
   //               'photoUrl' : 'https://firebasestorage.googleapis.com/v0/b/bakemycake-1d1dc.appspot.com/o/atom.png?alt=media&token=789c85bc-5234-4fb9-a317-957f98bb0abe',
   //               'variants' : {
-  //                 '${itemID5}-1#00' : {
-  //                   'vid' : '${itemID5}-1#00',
+  //                 '${itemId5}-1#00' : {
+  //                   'vid' : '${itemId5}-1#00',
   //                   'size' : 1,
   //                   'price' : 200,
   //                 }
@@ -206,14 +205,14 @@ CollectionReference shopCollection = Firestore.instance.collection("Shops");
   //             }
   //           },
   //           'customised' : {
-  //             itemID6 : {
-  //               'itemID' : itemID6,
+  //             itemId6 : {
+  //               'itemId' : itemId6,
   //               'availability' : true,
   //               'itemName' : 'Choco Delight',
   //               'photoUrl' : 'https://firebasestorage.googleapis.com/v0/b/bakemycake-1d1dc.appspot.com/o/atom.png?alt=media&token=789c85bc-5234-4fb9-a317-957f98bb0abe',
   //               'variants' : {
-  //                 '${itemID6}-1#00' : {
-  //                   'vid' : '${itemID6}-1#00',
+  //                 '${itemId6}-1#00' : {
+  //                   'vid' : '${itemId6}-1#00',
   //                   'size' : 1,
   //                   'price' : 600,
   //                 }
@@ -224,54 +223,23 @@ CollectionReference shopCollection = Firestore.instance.collection("Shops");
   //               },
   //               'ingPrice' : 200,
   //               'recipe' : "Good to make",
-=======
-  CollectionReference shopCollection = Firestore.instance.collection("Shops");
-  CollectionReference topCollection = Firestore.instance.collection("TopPicks");
-  @override
-  void initState() {
-    super.initState();
-    getThings();
-  }
->>>>>>> 5051cc4325eb5b0711fc8d7b3abf0e0721f0c90c
 
-  getThings() async {
-    await getShops();
-    getTopPick();
-    await getUser();
+  //             }
+
+  //           }
+  //         },
+  //      }
+  //   }
+
+  // );
+  // }
+  
+
   }
 
-  Future<bool> getUser() async {
-    DocumentSnapshot user = await Firestore.instance
-        .collection("Users")
-        .document('94ON8vhE5kxa7SfOyBWJ')
-        .get();
-    currentUser.name = user.data['name'];
-    currentUser.address = user.data['address'];
-    currentUser.contact = user.data['contact'];
-    return true;
-  }
-
-  Future<bool> getShops() async {
-    QuerySnapshot shops = await shopCollection.getDocuments();
-    shops.documents.forEach((element) {
-      Shop shop = _shopFromSnapshot(element);
-      shopMap.putIfAbsent(shop.shopID, () => shop);
-    });
-    return true;
-  }
-
-  void getTopPick() async {
-    await topCollection.getDocuments().then((value) {
-      value.documents.forEach((element) {
-        Shop shop = shopMap[element.data['shopID']];
-        topPickMap.putIfAbsent(shop.shopID, () => shop);
-      });
-    });
-  }
-
-  Shop _shopFromSnapshot(DocumentSnapshot doc) {
+  Shop _shopFromSnapshot(DocumentSnapshot doc){
     return Shop(
-      shopID: doc.data['shopID'],
+      shopId: doc.data['shopId'],
       shopName: doc.data['shopName'],
       shopAddress: doc.data['shopAddress'],
       contact: doc.data['contact'],
@@ -294,14 +262,13 @@ CollectionReference shopCollection = Firestore.instance.collection("Shops");
     return Scaffold(
       body: Container(
         alignment: Alignment.center,
-        child: RaisedButton(
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => HomePage()));
-            },
-            child: Text("HomePage")),
+        child: FlatButton(
+          onPressed: (){
+            Navigator.push(context, MaterialPageRoute(
+              builder: (BuildContext context) => HomePage()
+            ));
+          },
+          child: Text("HomePage")),
       ),
     );
   }

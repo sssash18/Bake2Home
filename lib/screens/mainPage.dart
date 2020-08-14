@@ -1,4 +1,5 @@
 import 'package:bake2home/constants.dart';
+import 'package:bake2home/services/searchDelegate.dart';
 import 'package:bake2home/screens/TrendingPage.dart';
 import 'package:bake2home/screens/VendorProfile.dart';
 import 'package:bake2home/widgets/HomeHeading.dart';
@@ -32,26 +33,7 @@ class _MainPageState extends State<MainPage> {
             child: IconButton(
               icon: icon,
               onPressed: () {
-                setState(() {
-                  if (this.icon.icon == Icons.search) {
-                    this.icon = Icon(Icons.close, color: base);
-                    this.appBarTitle = new TextField(
-                      decoration: InputDecoration(
-                        prefixIcon: Icon(
-                          Icons.search,
-                          color: base,
-                        ),
-                        hintText: "Search....",
-                      ),
-                    );
-                  } else {
-                    this.icon = Icon(
-                      Icons.search,
-                      color: base,
-                    );
-                    this.appBarTitle = Text('');
-                  }
-                });
+                showSearch(context: context, delegate: searchDelegate());
               },
             ),
           )
