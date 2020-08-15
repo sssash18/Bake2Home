@@ -1,7 +1,9 @@
+import 'package:bake2home/screens/Address.dart';
 import 'package:bake2home/screens/ProfilePage.dart';
 import 'package:bake2home/services/database.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/constants.dart';
+import 'package:geolocator/geolocator.dart';
 
 
 
@@ -16,6 +18,7 @@ class _UserDetailsState extends State<UserDetails> {
   Widget _icon = Icon(Icons.edit);
   String contactHint = "";
   final  _formKey = GlobalKey<FormState>();
+  
   
   Widget _returnWidget(bool edit, String _initialText, String _label){
     if(!edit){
@@ -45,9 +48,7 @@ class _UserDetailsState extends State<UserDetails> {
           if(_label == "Name"){
             currentUser.name = val;
           }
-          if(_label == "Address"){
-            currentUser.address = val;
-          }
+          
         },
       ),
     );
@@ -75,7 +76,7 @@ class _UserDetailsState extends State<UserDetails> {
           }
         });
         if(!_editMode && _formKey.currentState.validate()){
-          await DatabaseService(uid : currentUserID).updateUserDetails(currentUser.name, currentUser.address);
+          await DatabaseService(uid : currentUserID).updateUserDetails(currentUser.name);
           Navigator.pop(context);
         }
       })
@@ -127,10 +128,16 @@ class _UserDetailsState extends State<UserDetails> {
               ),
             ),
             AnimatedContainer(
-              child: _returnWidget(_editMode,currentUser.address,"Address"),
+              child: _returnWidget(_editMode,currentUser.addresses['Ad1']['address'],"Address"),
               margin: EdgeInsets.only(top: MediaQuery.of(context).size.height/20),
               duration: Duration(microseconds: 100),
             ), 
+            FlatButton(
+              child: Text('Manage Addresses'),
+              onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Address()));
+              },
+            ),
           ],
         ),
       ),

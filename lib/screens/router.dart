@@ -36,7 +36,7 @@ CollectionReference shopCollection = Firestore.instance.collection("Shops");
     Future<bool> getUser() async{
       DocumentSnapshot user = await Firestore.instance.collection("Users").document('94ON8vhE5kxa7SfOyBWJ').get();   
       currentUser.name = user.data['name'];
-      currentUser.address = user.data['address'];
+      currentUser.addresses = user.data['addresses'];
       currentUser.contact = user.data['contact'];   
       return true;
     }

@@ -14,6 +14,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
           primaryColor: base,
+          primarySwatch: Colors.deepPurple,
           tabBarTheme: TabBarTheme(
               unselectedLabelColor: Colors.black,
               labelColor: white,

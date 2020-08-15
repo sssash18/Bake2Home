@@ -75,7 +75,7 @@ class _ProfilePageState extends State<ProfilePage> {
               Container(
                 margin: EdgeInsets.fromLTRB(20.0, 0.0, 0.0, 0.0),
                 child: Text(
-                  ' ${currentUser.address}',
+                  ' ${currentUser.addresses['Ad1']['address']}',
                   style: TextStyle(
                   )
                 ),
