@@ -17,7 +17,6 @@ class _AddressState extends State<Address> {
   bool _loading  = false;
   double _height = 0;
   Completer<GoogleMapController> _controller = Completer();
-  double _newlat,_newlong;
   Map _newaddress = Map();
   String  _addressNew = "";
   TextEditingController _textController = TextEditingController(text: "");
@@ -28,14 +27,14 @@ class _AddressState extends State<Address> {
     }
     return FlatButton.icon(
       onPressed: (){
-        setState(() {
-          _loading = true;
-        });
+        // setState(() {
+        //   _loading = true;
+        // });
         DatabaseService(uid: currentUserID).addAddress(_newaddress).then((value){
-          setState(() {
-          _height = 0;
-          _loading = false;
-        });
+        //   setState(() {
+        //   _height = 0;
+        //   _loading = false;
+        // });
         });
         
       },
@@ -57,22 +56,13 @@ class _AddressState extends State<Address> {
       markerId : MarkerId('12'),
       draggable: true,
       onDragEnd: (coord){
-        _newlat = coord.latitude;
-        _newlong = coord.longitude;
+       
         if(coord!=null){
-          Geolocator().placemarkFromCoordinates(_newlat, _newlong).then((value){
+          Geolocator().placemarkFromCoordinates(lat, longi).then((value){
           setState(() {
-
             _addressNew = "${value[0].subThoroughfare} ${value[0].subLocality},${value[0].locality} - ${value[0].postalCode},${value[0].country}";
             _textController.text = _addressNew;
-            print("Asas  ${_textController.text}" );
           });
-          _newaddress.clear();
-          _newaddress.putIfAbsent('lat', () => _newlat);
-          _newaddress.putIfAbsent('long', () => _newlong);
-          _newaddress.putIfAbsent('address', () => _addressNew);
-          print(_newaddress);
-          
           }
          );
         }
@@ -143,11 +133,11 @@ class _AddressState extends State<Address> {
                         helperText: "You can also long press and drag the marker",
                         border: OutlineInputBorder()
                         ),
-                        onFieldSubmitted: (val)async{
+                        onFieldSubmitted: (val){
 
                           Geolocator().placemarkFromAddress(val).then((position){
                             if(position!=null){
-                            print(currentUser.addresses);
+                            print("old ${currentUser.addresses}");
                             
                               _travelMap(position[0].position.latitude,position[0].position.longitude);
                               _addval = {
@@ -155,11 +145,11 @@ class _AddressState extends State<Address> {
                                 'long' : position[0].position.longitude.toDouble(),
                                 'address' : position[0].name
                               };
-                            // _newaddress.clear();
-                            //   _newaddress.putIfAbsent('lat', () => position[0].position.latitude);
-                            //   _newaddress.putIfAbsent('long', () => position[0].position.longitude);
-                            //   _newaddress.putIfAbsent('address', () => val);
-                            print(currentUser.addresses);
+                            _newaddress.clear();
+                              _newaddress.putIfAbsent('lat', () => position[0].position.latitude);
+                              _newaddress.putIfAbsent('long', () => position[0].position.longitude);
+                              _newaddress.putIfAbsent('address', () => val);
+                            print("new ${currentUser.addresses}");
                           };
                           });
                         },
