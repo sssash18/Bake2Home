@@ -27,14 +27,14 @@ class _AddressState extends State<Address> {
     }
     return FlatButton.icon(
       onPressed: (){
-        // setState(() {
-        //   _loading = true;
-        // });
+        setState(() {
+          _loading = true;
+        });
         DatabaseService(uid: currentUserID).addAddress(_newaddress).then((value){
-        //   setState(() {
-        //   _height = 0;
-        //   _loading = false;
-        // });
+          setState(() {
+          _height = 0;
+          _loading = false;
+        });
         });
         
       },
@@ -56,13 +56,17 @@ class _AddressState extends State<Address> {
       markerId : MarkerId('12'),
       draggable: true,
       onDragEnd: (coord){
-       
         if(coord!=null){
           Geolocator().placemarkFromCoordinates(lat, longi).then((value){
           setState(() {
             _addressNew = "${value[0].subThoroughfare} ${value[0].subLocality},${value[0].locality} - ${value[0].postalCode},${value[0].country}";
             _textController.text = _addressNew;
           });
+          _newaddress.clear();
+          _newaddress.putIfAbsent('lat', () => lat);
+          _newaddress.putIfAbsent('long', () => longi);
+          _newaddress.putIfAbsent('address', () => _addressNew);
+          
           }
          );
         }

@@ -43,7 +43,7 @@ class ItemTile extends StatelessWidget {
                 Container(
                   margin: EdgeInsets.fromLTRB(0, 10.0, 0, 0),
                     child: Text(
-                    'Rs ${item['variants']['v1']['price']}',
+                    'Rs ${item['variants'][item['variants'].keys.elementAt(0)]['price']}',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
