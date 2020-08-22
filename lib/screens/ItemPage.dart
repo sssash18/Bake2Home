@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:bake2home/functions/cartItem.dart';
 import 'package:bake2home/functions/customisedItemModel.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -16,11 +17,12 @@ class ItemPage extends StatefulWidget {
 
 class _ItemPageState extends State<ItemPage> {
   String _price = '100';
+  String vid;
   int quantity = 0;
   SplayTreeSet<double> dropDownList = SplayTreeSet();
   Map<double, double> priceMap = new Map();
   Map<double, String> vidMap = new Map();
-  double selectedSize = 0.0;
+  double selectedSize = 0.0,price,tt;
   // Map<double, String> presenceMap = new Map();
   @override
   Widget build(BuildContext context) {
@@ -37,16 +39,18 @@ class _ItemPageState extends State<ItemPage> {
       dropDownList.add(size);
       vidMap.putIfAbsent(size, () => vid);
     });
-    double tt = selectedSize == 0.0 ? dropDownList.first : selectedSize;
-    double price = priceMap[tt];
-    String vid = vidMap[tt];
-    if (cartMap.containsKey(vid) && currentShopId == this.widget.shopId) {
+    tt = selectedSize == 0.0 ? dropDownList.first : selectedSize;
+    price = priceMap[tt];
+    vid = vidMap[tt];
+    if (cartMap.containsKey(vid) ) {
       quantity = cartMap[vid]['quantity'];
     } else {
       quantity = 0;
     }
+    print(quantity);
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: true,
         body: CustomScrollView(
           slivers: <Widget>[
             SliverToBoxAdapter(
@@ -269,7 +273,7 @@ class _ItemPageState extends State<ItemPage> {
     dropDownList.forEach((element) {
       list.add(DropdownMenuItem<double>(
         value: element,
-        child: Text("$element pounds \u20B9 ${priceMap[element]}",
+        child: Text("$element pounds  \u20B9 ${priceMap[element]}",
             style: TextStyle(color: black)),
       ));
     });
@@ -296,7 +300,76 @@ class _ItemPageState extends State<ItemPage> {
     );
   }
 
-  void addToCartNewItem() {}
+  void addToCartNewItem() {
+    bool note = true;
+    String noteItem = "";
+    if(note){
+      showModalBottomSheet( 
+        context: context,
+        builder: (builder){
+          return Container(
+            child: Form(
+            child: Column(
+              children : <Widget>[
+                SizedBox(height: MediaQuery.of(context).size.height/30),
+                Container(
+                    margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.height/30,0, MediaQuery.of(context).size.height/30, 0),
+                    child: TextFormField(
+                    autofocus: true,
+                    decoration: InputDecoration(
+                      labelText: "Special Note",
+                      helperText: "* will be printed on the product",
+                      border: OutlineInputBorder()
+                    ), 
+                    onChanged: (val){
+                      noteItem = val;
+                    }, 
+                  ),
+                ),
+                SizedBox(height: MediaQuery.of(context).size.height/100),
+                FlatButton.icon(
+                  color: base,
+                  shape: RoundedRectangleBorder(
+                    borderRadius : BorderRadius.circular(border),
+                  ),
+                  onPressed: (){
+                   setState(() {
+                      quantity++;
+                      if(quantity==1){
+                        CartItemMap cartItem = CartItemMap(
+                          itemName: widget.model.itemName,
+                          quantity: quantity,
+                          size: tt,
+                          notes: [noteItem],
+                          price: price
+                        );
+                        cartMap.putIfAbsent(vid,() => {
+                          'itemName' : cartItem.itemName,
+                          'size'  : cartItem.size,
+                          'price' : cartItem.price,
+                          'quantity' : cartItem.quantity,
+                          'notes' : cartItem.notes,
+                        });
+                      }else{
+                        cartMap[vid]['quantity']++;
+                        cartMap[vid]['notes'].add(noteItem);
+                      }
+                      print(cartMap);
+                      Navigator.pop(context);
+                   }); 
+
+                  },
+                  icon: Icon(Icons.done,color: white,),
+                  label: Text('Done',style: TextStyle(color : white),)
+                )
+              ]
+            ), 
+              ),
+          );
+        }
+      );
+    }
+  }
 
   cartAdded(BuildContext context) {
     double height = MediaQuery.of(context).size.height * 0.08;
@@ -318,7 +391,6 @@ class _ItemPageState extends State<ItemPage> {
         Container(
             width: width / 2,
             decoration: BoxDecoration(
-                // color: Colors.pink,
                 borderRadius: BorderRadius.only(
               topLeft: Radius.circular(30.0),
               bottomLeft: Radius.circular(30.0),
@@ -327,9 +399,7 @@ class _ItemPageState extends State<ItemPage> {
               child: dButton(),
             )),
         InkWell(
-          onTap: () {
-            addToCartNewItem();
-          },
+          
           child: Container(
             width: width / 2,
             decoration: BoxDecoration(
@@ -346,12 +416,25 @@ class _ItemPageState extends State<ItemPage> {
                     Icons.remove_circle_outline,
                     color: Colors.black,
                   ),
+                  onTap: (){
+                    setState(() {
+                      --quantity;
+                      cartMap[vid]['quantity']--;
+                      cartMap[vid]['notes'].removeLast();
+                      if(cartMap[vid]['quantity']==0){
+                        cartMap.remove(vid);
+                      }
+                    });
+                  },
                 ),
                 Text('$quantity'),
                 InkWell(
                   onTap: () {
-                    print('tapped');
-                    ++quantity;
+                    setState(() {
+                      ++quantity;
+                      addToCartNewItem();  
+                    });
+                    
                   },
                   child: Icon(
                     Icons.add_circle_outline,

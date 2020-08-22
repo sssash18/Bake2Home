@@ -1,9 +1,7 @@
 import 'package:bake2home/functions/shop.dart';
-import 'package:bake2home/screens/ItemPage.dart';
 import 'package:bake2home/screens/customised.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/constants.dart';
-import 'package:bake2home/widgets/ItemTile.dart';
 
 class ItemList extends StatefulWidget {
   final String itemType;
