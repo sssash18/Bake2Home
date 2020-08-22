@@ -143,100 +143,101 @@ class VendorProfile extends StatelessWidget {
           SliverToBoxAdapter(
             child: Homeheading(heading: 'Recently Added'),
           ),
-          SliverToBoxAdapter(
-              child: Container(
-                  height: 150.0,
-                  child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 5,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Container(
-                            height: 150,
-                            width: MediaQuery.of(context).size.width / 4 + 5,
-                            margin: EdgeInsets.fromLTRB(15.0, 0, 0, 0),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(border),
-                                gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [
-                                      Color(0xffeaafc8),
-                                      Color(0xff654ea3)
-                                    ])),
-                            child: Stack(
-                              children: <Widget>[
-                                Container(
-                                  width:
-                                      MediaQuery.of(context).size.width / 4 + 5,
-                                  height:
-                                      MediaQuery.of(context).size.width / 4 + 5,
-                                  decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: AssetImage(
-                                            "assets/images/cookie.jpeg"),
-                                        fit: BoxFit.fill,
-                                      ),
-                                      borderRadius:
-                                          BorderRadius.circular(border)),
-                                ),
-                                Container(
-                                  margin: EdgeInsets.fromLTRB(
-                                      0.0,
-                                      MediaQuery.of(context).size.width / 4 +
-                                          10,
-                                      0.0,
-                                      0),
-                                  alignment: Alignment.center,
-                                  child: Text("Red Velvet Cake",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: white,
-                                      )),
-                                )
-                              ],
-                            ));
-                      }))),
+          recentlyAdded(),
           SliverToBoxAdapter(
             child: Homeheading(heading: "Categories"),
           ),
-          SliverToBoxAdapter(
-              child: ListView.builder(
-                  physics: ScrollPhysics(
-                    parent: NeverScrollableScrollPhysics(),
-                  ),
-                  shrinkWrap: true,
-                  itemCount: shop.items.keys.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (BuildContext context) => ItemList(
-                                    itemType: shop.items.keys.elementAt(index),
-                                    shop: shop)));
-                      },
-                      child: Container(
-                        margin: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 0),
-                        height: 180,
-                        decoration: BoxDecoration(
-                            image: DecorationImage(
-                                image: AssetImage("assets/images/cake.jpeg"),
-                                fit: BoxFit.fill),
-                            borderRadius: BorderRadius.circular(border)),
-                        alignment: Alignment.center,
-                        child: Text(
-                          "${shop.items.keys.elementAt(index)}",
-                          style: TextStyle(
-                              color: white,
-                              fontSize: 30.0,
-                              fontWeight: FontWeight.w900),
-                        ),
-                      ),
-                    );
-                  }))
+          allCategories()
         ],
       ),
     ));
+  }
+
+  SliverToBoxAdapter allCategories() {
+    List<dynamic> categories = shop.items.keys.toList();
+    print(categories);
+    return SliverToBoxAdapter(
+        child: ListView.builder(
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: categories.length,
+            itemBuilder: (BuildContext context, int i) {
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) => ItemList(
+                              itemType: categories[i],
+                              shop: shop)));
+                },
+                child: Container(
+                  margin: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 0),
+                  height: 180,
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage("assets/images/cake.jpeg"),
+                          fit: BoxFit.fill),
+                      borderRadius: BorderRadius.circular(border)),
+                  alignment: Alignment.center,
+                  child: Text(
+                    "${shop.items.keys.elementAt(i)}",
+                    style: TextStyle(
+                        color: white,
+                        fontSize: 30.0,
+                        fontWeight: FontWeight.w900),
+                  ),
+                ),
+              );
+            }));
+  }
+
+  SliverToBoxAdapter recentlyAdded() {
+    return SliverToBoxAdapter(
+        child: Container(
+            height: 150.0,
+            child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: 5,
+                itemBuilder: (BuildContext context, int index) {
+                  return Container(
+                      height: 150,
+                      width: MediaQuery.of(context).size.width / 4 + 5,
+                      margin: EdgeInsets.fromLTRB(15.0, 0, 0, 0),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(border),
+                          gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [Color(0xffeaafc8), Color(0xff654ea3)])),
+                      child: Stack(
+                        children: <Widget>[
+                          Container(
+                            width: MediaQuery.of(context).size.width / 4 + 5,
+                            height: MediaQuery.of(context).size.width / 4 + 5,
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image:
+                                      AssetImage("assets/images/cookie.jpeg"),
+                                  fit: BoxFit.fill,
+                                ),
+                                borderRadius: BorderRadius.circular(border)),
+                          ),
+                          Container(
+                            margin: EdgeInsets.fromLTRB(
+                                0.0,
+                                MediaQuery.of(context).size.width / 4 + 10,
+                                0.0,
+                                0),
+                            alignment: Alignment.center,
+                            child: Text("Red Velvet Cake",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: white,
+                                )),
+                          )
+                        ],
+                      ));
+                })));
   }
 }

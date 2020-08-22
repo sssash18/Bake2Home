@@ -1,9 +1,17 @@
-class Shop{
-
-  String shopId,shopName,shopAddress,merchantName,bio,tagline,profilePhoto,coverPhoto,experience,contact;
-  int numOrders,ingPrice;
+class Shop {
+  String shopId,
+      shopName,
+      shopAddress,
+      merchantName,
+      bio,
+      tagline,
+      profilePhoto,
+      coverPhoto,
+      experience,
+      contact;
+  int numOrders, ingPrice;
   double rating;
-  Map cookTime,items;
+  Map<String, dynamic> cookTime, items;
 
   Shop({
     this.shopId,
@@ -22,5 +30,4 @@ class Shop{
     this.rating,
     this.ingPrice,
   });
- 
 }

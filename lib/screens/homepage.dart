@@ -13,7 +13,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _index = 0;
- 
+
   void _incrementTab(index) {
     setState(() {
       print('tapped');
@@ -32,7 +32,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
         body: _children[_index],
         bottomNavigationBar: FloatingNavbar(
           onTap: (index) {
@@ -51,7 +50,10 @@ class _HomePageState extends State<HomePage> {
               icon: Icons.home,
               title: '',
             ),
-            FloatingNavbarItem(icon: Icons.receipt, title: ''),
+            FloatingNavbarItem(
+              icon: Icons.receipt,
+              title: '',
+            ),
             FloatingNavbarItem(icon: Icons.shopping_cart, title: ''),
             FloatingNavbarItem(icon: Icons.person, title: ''),
           ],
