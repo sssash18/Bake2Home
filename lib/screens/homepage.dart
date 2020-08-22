@@ -21,7 +21,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _index = 0;
- 
+
   void _incrementTab(index) {
     setState(() {
       print('tapped');
@@ -40,7 +40,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
         body: _children[_index],
         bottomNavigationBar: FloatingNavbar(
           onTap: (index) {
@@ -59,76 +58,12 @@ class _HomePageState extends State<HomePage> {
               icon: Icons.home,
               title: '',
             ),
-<<<<<<< HEAD
-            // Container(
-            //   margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width/30, 0.0, 0.0, 0.0),
-            //   height: MediaQuery.of(context).size.height/4,
-            //   color: white,
-            //   child: ListView.builder(
-            //     scrollDirection: Axis.horizontal,
-            //     itemCount: 5,
-            //     itemBuilder: (BuildContext context, int index){
-            //       return GestureDetector(
-            //         child: HomeTile(height: MediaQuery.of(context).size.height/4,width:MediaQuery.of(context).size.width/3.3,radius: MediaQuery.of(context).size.width/10,),
-            //         onTap: (){
-            //           Navigator.push(context, MaterialPageRoute(builder: (context) => VendorListPage()));                      
-            //         },
-            //       );
-            //     }
-            //   ),
-            // ),
-            Homeheading(heading: "Delicious Chocolates"),
-            Container(
-              height: MediaQuery.of(context).size.height/10,
-              margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width/30, 0, 0, 0),
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: 5,
-                itemBuilder: (BuildContext context,int index){
-                  return GestureDetector(
-                    child: PastryTile(),
-                    onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => TrendingPage()));
-                    },
-                  );
-                }
-              ),
+            FloatingNavbarItem(
+              icon: Icons.receipt,
+              title: '',
             ),
-            Homeheading(heading:'Top Picks For You'),
-            Container(
-              margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width/30, 0.0, 0.0, 0.0),
-              height: MediaQuery.of(context).size.height/4,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: topPickMap.length,
-                itemBuilder: (BuildContext context,int index){
-                  return GestureDetector(
-                    child: HomeTile(height: MediaQuery.of(context).size.height/5,width: MediaQuery.of(context).size.width/3.3,radius: MediaQuery.of(context).size.width/8,title: topPickMap[topPickMap.keys.elementAt(index)].shopName,photo: topPickMap[topPickMap.keys.elementAt(index)].profilePhoto,),
-                    onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=> VendorProfile(shop: topPickMap[topPickMap.keys.elementAt(index)],)));
-                    },
-                  );
-                }
-              )
-            ),
-            Homeheading(heading: 'Try these Recipes'),
-            Container(
-              margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width/30, 0.0, 0.0, 0.0),
-              height: MediaQuery.of(context).size.height/5,
-              child: ListView.builder(
-                itemCount: 5,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (BuildContext context, int index){
-                  return RecipeTile();
-                }
-              )
-            )
-            
-=======
-            FloatingNavbarItem(icon: Icons.receipt, title: ''),
             FloatingNavbarItem(icon: Icons.shopping_cart, title: ''),
             FloatingNavbarItem(icon: Icons.person, title: ''),
->>>>>>> 5051cc4325eb5b0711fc8d7b3abf0e0721f0c90c
           ],
         ));
   }

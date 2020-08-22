@@ -115,6 +115,8 @@ class _MainPageState extends State<MainPage> {
                               .profilePhoto,
                         ),
                         onTap: () {
+                          print(
+                              '^^^^^^^^^^^^ ${shopMap[shopMap.keys.elementAt(index)]}');
                           Navigator.push(
                               context,
                               MaterialPageRoute(
