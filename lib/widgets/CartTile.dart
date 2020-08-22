@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:bake2home/constants.dart';
 
 class CartTile extends StatelessWidget {
+
+  Map item;
+  CartTile({this.item});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -26,7 +29,7 @@ class CartTile extends StatelessWidget {
                 Container(
                     margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                     child: Text(
-                    'Chocolate Cake',
+                    item['itemName'],
                     style: TextStyle(
                       fontSize: 15.0,
                     ),
@@ -44,7 +47,7 @@ class CartTile extends StatelessWidget {
                 Container(
                     margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
                     child: Text(
-                    'Rs 700',
+                    item['price'].toString(),
                     style: TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.bold

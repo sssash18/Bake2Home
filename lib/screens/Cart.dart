@@ -91,9 +91,9 @@ class Cart extends StatelessWidget {
                   0.0),
               color: white,
               child: ListView.builder(
-                  itemCount: 5,
+                  itemCount: cartMap.length - 1,
                   itemBuilder: (BuildContext context, int index) {
-                    return CartTile();
+                    return CartTile(item: cartMap.values.elementAt(index),);
                   }),
             ),
           ),

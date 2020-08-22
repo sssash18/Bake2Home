@@ -89,7 +89,7 @@ class _RouterState extends State<Router> {
         setState(() {
           print('fetched shopId is $currentShopId');
           if (someMap.isNotEmpty) {
-            cartMap = Map<String, dynamic>.from(someMap['items']);
+            cartMap = Map<String, dynamic>.from(someMap);
           }
           cartLengthNotifier.value = cartMap.length;
           currentShopId = someMap['shopId'].toString();

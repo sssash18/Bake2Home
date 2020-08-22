@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:bake2home/functions/cartItem.dart';
 import 'package:bake2home/functions/customisedItemModel.dart';
+import 'package:bake2home/services/database.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/constants.dart';
@@ -42,173 +43,193 @@ class _ItemPageState extends State<ItemPage> {
     tt = selectedSize == 0.0 ? dropDownList.first : selectedSize;
     price = priceMap[tt];
     vid = vidMap[tt];
-    if (cartMap.containsKey(vid) ) {
+    if (cartMap.containsKey(vid)) {
       quantity = cartMap[vid]['quantity'];
     } else {
       quantity = 0;
     }
     print(quantity);
     return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: true,
-        body: CustomScrollView(
-          slivers: <Widget>[
-            SliverToBoxAdapter(
-              child: Stack(overflow: Overflow.visible, children: <Widget>[
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height / 2.8,
-                  decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Color(0xff654ea3), Color(0xffeaafc8)],
-                  )),
-                  child: ShaderMask(
-                    shaderCallback: (rect) {
-                      return LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: <Color>[
-                          Colors.black.withOpacity(1.0),
-                          Colors.black.withOpacity(1.0),
-                          Colors.black.withOpacity(0.1),
-                          Colors
-                              .transparent // <-- you might need this if you want full transparency at the edge
+      child: WillPopScope(
+          onWillPop: () async{
+            DatabaseService(uid : currentUserID).updateCart(cartMap);
+            return true;
+          },
+          child: Scaffold(
+          resizeToAvoidBottomInset: true,
+          body: CustomScrollView(
+            slivers: <Widget>[
+              SliverToBoxAdapter(
+                child: Stack(overflow: Overflow.visible, children: <Widget>[
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height / 2.8,
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Color(0xff654ea3), Color(0xffeaafc8)],
+                    )),
+                    child: ShaderMask(
+                      shaderCallback: (rect) {
+                        return LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: <Color>[
+                            Colors.black.withOpacity(1.0),
+                            Colors.black.withOpacity(1.0),
+                            Colors.black.withOpacity(0.1),
+                            Colors
+                                .transparent // <-- you might need this if you want full transparency at the edge
+                          ],
+                          stops: [
+                            0.0,
+                            0.5,
+                            0.65,
+                            1.0
+                          ], //<-- the gradient is interpolated, and these are where the colors above go into effect (that's why there are two colors repeated)
+                        ).createShader(
+                            Rect.fromLTRB(0, 0, rect.width, 1.5 * rect.height));
+                      },
+                      blendMode: BlendMode.dstIn,
+                      child: CachedNetworkImage(
+                        imageUrl: widget.model.photoUrl,
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: MediaQuery.of(context).size.height / 2.8 -
+                        MediaQuery.of(context).size.height / 16,
+                    left: (MediaQuery.of(context).size.width -
+                            MediaQuery.of(context).size.width / 1.3) /
+                        2,
+                    child: Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.0),
+                        color: white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey,
+                            offset: Offset(0.0, 1.0),
+                            blurRadius: 16.0,
+                          )
                         ],
-                        stops: [
-                          0.0,
-                          0.5,
-                          0.65,
-                          1.0
-                        ], //<-- the gradient is interpolated, and these are where the colors above go into effect (that's why there are two colors repeated)
-                      ).createShader(
-                          Rect.fromLTRB(0, 0, rect.width, 1.5 * rect.height));
-                    },
-                    blendMode: BlendMode.dstIn,
-                    child: CachedNetworkImage(
-                      imageUrl: widget.model.photoUrl,
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: MediaQuery.of(context).size.height / 2.8 -
-                      MediaQuery.of(context).size.height / 16,
-                  left: (MediaQuery.of(context).size.width -
-                          MediaQuery.of(context).size.width / 1.3) /
-                      2,
-                  child: Container(
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20.0),
-                      color: white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey,
-                          offset: Offset(0.0, 1.0),
-                          blurRadius: 16.0,
-                        )
-                      ],
-                    ),
-                    height: MediaQuery.of(context).size.height / 8,
-                    width: MediaQuery.of(context).size.width / 1.3,
-                    child: Text(
-                      widget.model.itemName,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 25.0),
-                    ),
-                  ),
-                ),
-              ]),
-            ),
-            SliverToBoxAdapter(
-                child: Container(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color(0xffeaafc8), Color(0xff654ea3)],
-              )),
-              child: Column(
-                children: <Widget>[
-                  quantity == 0.0 ? cartAdder(context) : cartAdded(context),
-                  Container(
-                    margin: EdgeInsets.only(top: 20.0),
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    height: MediaQuery.of(context).size.height * 0.08,
-                    decoration: BoxDecoration(
-                        color: white,
-                        borderRadius: BorderRadius.circular(30.0),
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.black.withOpacity(0.3),
-                              spreadRadius: 2.5,
-                              blurRadius: 2.5)
-                        ]),
-                    child: Row(children: <Widget>[]),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(top: 20.0),
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    height: MediaQuery.of(context).size.height * 0.08,
-                    decoration: BoxDecoration(
-                        color: white,
-                        borderRadius: BorderRadius.circular(30.0),
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.black.withOpacity(0.3),
-                              spreadRadius: 2.5,
-                              blurRadius: 2.5)
-                        ]),
-                  ),
-                  Container(
-                      margin: EdgeInsets.fromLTRB(15.0, 45.0, 0, 0),
-                      alignment: Alignment.topLeft,
-                      child: Text("Ingredients",
-                          style: TextStyle(
-                            color: white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: head2,
-                          ))),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(15.0, 15.0, 0, 0),
-                    child: ListView.builder(
-                        physics: ScrollPhysics(
-                          parent: NeverScrollableScrollPhysics(),
-                        ),
-                        shrinkWrap: true,
-                        itemCount: widget.model.ingredients.keys.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Text(
-                              '${widget.model.ingredients.keys.elementAt(index)} - ${widget.model.ingredients[widget.model.ingredients.keys.elementAt(index)]}',
-                              style: TextStyle(
-                                color: white,
-                                fontSize: textSize,
-                              ));
-                        }),
-                  ),
-                  Container(
-                      margin: EdgeInsets.fromLTRB(15.0, 45.0, 15.0, 0),
-                      alignment: Alignment.topLeft,
-                      child: Text("Description",
-                          style: TextStyle(
-                            color: white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: head2,
-                          ))),
-                  Container(
-                      margin: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 0),
+                      ),
+                      height: MediaQuery.of(context).size.height / 8,
+                      width: MediaQuery.of(context).size.width / 1.3,
                       child: Text(
-                        widget.model.recipe,
-                        style: TextStyle(color: white, fontSize: textSize),
-                      )),
-                ],
+                        widget.model.itemName,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 25.0),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+            child: IconButton(
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: white,
+                  size: 40.0,
+                ),
+                onPressed: () {
+                  DatabaseService(uid:currentUserID).updateCart(cartMap);
+                  Navigator.pop(context);
+                }),
+            top: 0,
+            left: 0,
+          ),
+                ]),
               ),
-            )),
-          ],
+              SliverToBoxAdapter(
+                  child: Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Color(0xffeaafc8), Color(0xff654ea3)],
+                )),
+                child: Column(
+                  children: <Widget>[
+                    quantity == 0.0 ? cartAdder(context) : cartAdded(context),
+                    Container(
+                      margin: EdgeInsets.only(top: 20.0),
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      height: MediaQuery.of(context).size.height * 0.08,
+                      decoration: BoxDecoration(
+                          color: white,
+                          borderRadius: BorderRadius.circular(30.0),
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.black.withOpacity(0.3),
+                                spreadRadius: 2.5,
+                                blurRadius: 2.5)
+                          ]),
+                      child: Row(children: <Widget>[]),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 20.0),
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      height: MediaQuery.of(context).size.height * 0.08,
+                      decoration: BoxDecoration(
+                          color: white,
+                          borderRadius: BorderRadius.circular(30.0),
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.black.withOpacity(0.3),
+                                spreadRadius: 2.5,
+                                blurRadius: 2.5)
+                          ]),
+                    ),
+                    Container(
+                        margin: EdgeInsets.fromLTRB(15.0, 45.0, 0, 0),
+                        alignment: Alignment.topLeft,
+                        child: Text("Ingredients",
+                            style: TextStyle(
+                              color: white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: head2,
+                            ))),
+                    Container(
+                      margin: EdgeInsets.fromLTRB(15.0, 15.0, 0, 0),
+                      child: ListView.builder(
+                          physics: ScrollPhysics(
+                            parent: NeverScrollableScrollPhysics(),
+                          ),
+                          shrinkWrap: true,
+                          itemCount: widget.model.ingredients.keys.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Text(
+                                '${widget.model.ingredients.keys.elementAt(index)} - ${widget.model.ingredients[widget.model.ingredients.keys.elementAt(index)]}',
+                                style: TextStyle(
+                                  color: white,
+                                  fontSize: textSize,
+                                ));
+                          }),
+                    ),
+                    Container(
+                        margin: EdgeInsets.fromLTRB(15.0, 45.0, 15.0, 0),
+                        alignment: Alignment.topLeft,
+                        child: Text("Description",
+                            style: TextStyle(
+                              color: white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: head2,
+                            ))),
+                    Container(
+                        margin: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 0),
+                        child: Text(
+                          widget.model.recipe,
+                          style: TextStyle(color: white, fontSize: textSize),
+                        )),
+                  ],
+                ),
+              )),
+            ],
+          ),
         ),
       ),
     );

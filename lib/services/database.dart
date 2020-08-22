@@ -35,8 +35,13 @@ class DatabaseService{
     await userCollection.document(uid).updateData({
       'addresses' : currentUser.addresses
     });
-    print("Done");
-    print(currentUser.addresses);
+  }
+
+  Future<void> updateCart(Map cart) async{
+    await userCollection.document(uid).updateData({
+      'cart' : cart
+    });
+    print("Updated");
   }
   
 }
