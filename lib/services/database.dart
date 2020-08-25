@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bake2home/constants.dart';
 import 'package:bake2home/screens/Address.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,6 +10,7 @@ class DatabaseService{
 
   final CollectionReference shopCollection = Firestore.instance.collection('Shops');
   final CollectionReference userCollection  = Firestore.instance.collection("Users");
+  final CollectionReference orderCollection = Firestore.instance.collection("Orders");
   final String uid;
 
   DatabaseService({this.uid});
@@ -42,6 +45,22 @@ class DatabaseService{
       'cart' : cart
     });
     print("Updated");
+  }
+
+  Future<void> createOrder() async{
+    int counter;
+    DocumentSnapshot doc  = await orderCollection.document('counter').get();
+    counter = doc.data['counter'];
+    int random = Random().nextInt(9999);
+    String orderId = "bmc" + random.toString() + counter.toString();
+    orderCollection.document('counter').updateData(
+      {
+        'counter' : FieldValue.increment(1),
+      }
+    );
+    
+
+
   }
   
 }

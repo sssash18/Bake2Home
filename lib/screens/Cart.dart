@@ -1,10 +1,39 @@
+import 'package:bake2home/services/database.dart';
 import 'package:bake2home/widgets/CartTile.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/constants.dart';
+import 'package:bake2home/functions/shop.dart';
+import 'package:intl/intl.dart';
 
-class Cart extends StatelessWidget {
+
+class Cart extends StatefulWidget {
+  @override
+  _CartState createState() => _CartState();
+}
+
+class _CartState extends State<Cart> {
   @override
   Widget build(BuildContext context) {
+    double subtotal  = 0;
+    String _date,_time;
+    cartMap.keys.where((element) => element!=cartMap['shopId']).forEach((element) { 
+      if(element!='shopId'){
+        subtotal += cartMap[element]['price'] * cartMap[element]['quantity'];
+      }
+    });
+    Shop shop = shopMap[shopMap.keys.firstWhere((element) => element==cartMap['shopId'])];
+    List<DropdownMenuItem<String>> _addresses=[];
+    currentUser.addresses.keys.forEach((element) { 
+      _addresses.add(
+        DropdownMenuItem(
+          child: Text(currentUser.addresses[element]['address']),
+          value : currentUser.addresses[element]['address'],
+        ),
+      );
+    });
+    String _selectedAddress = _addresses.first.value;
+    print(_addresses.first.value);
     return Scaffold(
       appBar: AppBar(
           backgroundColor: white,
@@ -91,9 +120,10 @@ class Cart extends StatelessWidget {
                   0.0),
               color: white,
               child: ListView.builder(
-                  itemCount: cartMap.length - 1,
+                  itemCount: cartMap.length-1,
                   itemBuilder: (BuildContext context, int index) {
-                    return CartTile(item: cartMap.values.elementAt(index),);
+                    print('passed : ${cartMap[cartMap.keys.where((element) => element!='shopId').elementAt(index)]}');
+                    return CartTile(item: cartMap[cartMap.keys.where((element) => element!='shopId').elementAt(index)],shopName: shop.shopName,vid: cartMap.keys.where((element) => element!='shopId').elementAt(index),);
                   }),
             ),
           ),
@@ -134,7 +164,7 @@ class Cart extends StatelessWidget {
                       MediaQuery.of(context).size.width / 20,
                       0),
                   alignment: Alignment.centerRight,
-                  child: Text('Rs 3500',
+                  child: Text('\u20B9 ${subtotal}',
                       style: TextStyle(
                           color: white,
                           fontSize: 18.0,
@@ -185,8 +215,85 @@ class Cart extends StatelessWidget {
                         borderRadius: BorderRadius.circular(border)),
                     color: Colors.white,
                     textColor: base,
-                    child: Text('Checkout (Rs 3550)'),
-                    onPressed: () {},
+                    child: Text('Checkout (Rs ${subtotal + 50})'),
+                    onPressed: () {
+                      //DatabaseService().createOrder();
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (BuildContext context){
+                          return StatefulBuilder(
+                                  builder: (BuildContext context,setState){
+                                    return Column(
+                                  children: <Widget>[
+                                    SizedBox(height: MediaQuery.of(context).size.height/20,),
+                                    Container(
+                                      alignment: Alignment.topCenter,
+                                        margin: EdgeInsets.symmetric(horizontal : MediaQuery.of(context).size.width/40),
+                                        child: Text("Choose the Delivery Date\n and Time",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: head
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: MediaQuery.of(context).size.height/40,),
+                                    FlatButton.icon(
+                                      onPressed: ()async{
+                                        DateTime date = await showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime.now(), lastDate: DateTime.now().add(Duration(days: 12)));
+                                        setState((){
+                                          _date = DateFormat.yMMMd().format(date);
+                                        });
+                                      },
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius : BorderRadius.circular(border),
+                                      ),
+                                      color: base,
+                                      icon: Icon(Icons.date_range,color:white),
+                                      label: Text(_date ?? "Choose the date",style: TextStyle(color:  white),)
+                                    ),
+                                    SizedBox(height: MediaQuery.of(context).size.height/40,),
+                                    FlatButton.icon(
+                                      onPressed: ()async{
+                                        TimeOfDay time = await showTimePicker(context: context, initialTime: TimeOfDay.now());
+                                        setState((){
+                                          _time = time.format(context);
+                                        });
+                                      },
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius : BorderRadius.circular(border),
+                                      ),
+                                      color: base,
+                                      icon: Icon(Icons.date_range,color:white),
+                                      label: Text(_time ?? "Choose the time",style: TextStyle(color:  white),)
+                                    ),                                    
+                                    SizedBox(height: MediaQuery.of(context).size.height/40,),
+                                    DropdownButton(
+                                      value: _selectedAddress,
+                                      items: _addresses,
+                                      onChanged: (val){
+                                        setState((){
+                                          _selectedAddress = val;
+                                          print(_selectedAddress);
+                                        });
+                                      }
+                                    ),
+                                    SizedBox(height: MediaQuery.of(context).size.height/40,),
+                                    FlatButton.icon(
+                                      color: base,
+                                      shape : RoundedRectangleBorder(
+                                        borderRadius : BorderRadius.circular(border),
+                                      ),
+                                      onPressed: (){},
+                                      icon: Icon(Icons.done,color: white,), 
+                                      label: Text('Confirm' ,style:TextStyle(color: white)),
+                                    )
+                                  ]
+                              );
+                            }
+                          );
+                        }
+                      );                   
+                    },
                   ),
                 ),
               )

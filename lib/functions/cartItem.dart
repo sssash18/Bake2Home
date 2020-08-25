@@ -1,5 +1,5 @@
 class CartItemMap{
-  String itemName;
+  String itemName,photoUrl;
   int quantity;
   double size,price;
   List<String> notes;
@@ -8,7 +8,8 @@ class CartItemMap{
     this.size,
     this.itemName,
     this.notes,
-    this.price
+    this.price,
+    this.photoUrl
   });
 
 }

@@ -31,7 +31,7 @@ class _RouterState extends State<Router> {
   Future<bool> getUser() async{
       DocumentSnapshot user = await Firestore.instance.collection("Users").document('94ON8vhE5kxa7SfOyBWJ').get();   
       currentUser.name = user.data['name'];
-      currentUser.addresses = user.data['address'];
+      currentUser.addresses = user.data['addresses'];
       currentUser.contact = user.data['contact'];   
       return true;
   }

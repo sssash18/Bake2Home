@@ -24,10 +24,8 @@ class _ItemPageState extends State<ItemPage> {
   Map<double, double> priceMap = new Map();
   Map<double, String> vidMap = new Map();
   double selectedSize = 0.0,price,tt;
-  // Map<double, String> presenceMap = new Map();
   @override
   Widget build(BuildContext context) {
-    // priceMap.clear();
     vidMap.clear();
     priceMap.clear();
     dropDownList.clear();
@@ -48,7 +46,6 @@ class _ItemPageState extends State<ItemPage> {
     } else {
       quantity = 0;
     }
-    print(quantity);
     return SafeArea(
       child: WillPopScope(
           onWillPop: () async{
@@ -362,7 +359,8 @@ class _ItemPageState extends State<ItemPage> {
                           quantity: quantity,
                           size: tt,
                           notes: [noteItem],
-                          price: price
+                          price: price,
+                          photoUrl: widget.model.photoUrl
                         );
                         cartMap.putIfAbsent(vid,() => {
                           'itemName' : cartItem.itemName,
@@ -370,6 +368,7 @@ class _ItemPageState extends State<ItemPage> {
                           'price' : cartItem.price,
                           'quantity' : cartItem.quantity,
                           'notes' : cartItem.notes,
+                          'photoUrl' : cartItem.photoUrl
                         });
                       }else{
                         cartMap[vid]['quantity']++;
