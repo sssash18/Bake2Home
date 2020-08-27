@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:bake2home/functions/order.dart';
 import 'package:bake2home/services/database.dart';
 import 'package:bake2home/widgets/CartTile.dart';
 import 'package:flutter/cupertino.dart';
@@ -27,13 +30,13 @@ class _CartState extends State<Cart> {
     currentUser.addresses.keys.forEach((element) { 
       _addresses.add(
         DropdownMenuItem(
-          child: Text(currentUser.addresses[element]['address']),
+          child: Text(currentUser.addresses[element]['address'].toString()),
           value : currentUser.addresses[element]['address'],
         ),
       );
     });
     String _selectedAddress = _addresses.first.value;
-    print(_addresses.first.value);
+    //print(currentUser.addresses[currentUser.addresses.keys.elementAt(0)]['address']);
     return Scaffold(
       appBar: AppBar(
           backgroundColor: white,
@@ -122,7 +125,7 @@ class _CartState extends State<Cart> {
               child: ListView.builder(
                   itemCount: cartMap.length-1,
                   itemBuilder: (BuildContext context, int index) {
-                    print('passed : ${cartMap[cartMap.keys.where((element) => element!='shopId').elementAt(index)]}');
+                    //print('passed : ${cartMap[cartMap.keys.where((element) => element!='shopId').elementAt(index)]}');
                     return CartTile(item: cartMap[cartMap.keys.where((element) => element!='shopId').elementAt(index)],shopName: shop.shopName,vid: cartMap.keys.where((element) => element!='shopId').elementAt(index),);
                   }),
             ),
@@ -215,9 +218,8 @@ class _CartState extends State<Cart> {
                         borderRadius: BorderRadius.circular(border)),
                     color: Colors.white,
                     textColor: base,
-                    child: Text('Checkout (Rs ${subtotal + 50})'),
+                    child: Text('Checkout (\u20B9 ${subtotal})'),
                     onPressed: () {
-                      //DatabaseService().createOrder();
                       showModalBottomSheet(
                         context: context,
                         builder: (BuildContext context){
@@ -258,6 +260,7 @@ class _CartState extends State<Cart> {
                                         setState((){
                                           _time = time.format(context);
                                         });
+                                        
                                       },
                                       shape: RoundedRectangleBorder(
                                         borderRadius : BorderRadius.circular(border),
@@ -273,7 +276,6 @@ class _CartState extends State<Cart> {
                                       onChanged: (val){
                                         setState((){
                                           _selectedAddress = val;
-                                          print(_selectedAddress);
                                         });
                                       }
                                     ),
@@ -283,7 +285,27 @@ class _CartState extends State<Cart> {
                                       shape : RoundedRectangleBorder(
                                         borderRadius : BorderRadius.circular(border),
                                       ),
-                                      onPressed: (){},
+                                      onPressed: (){
+                                        int _otp = Random().nextInt(9999);
+                                        while(_otp < 1000){
+                                          _otp *= 10;
+                                        }
+                                        Order order = Order(
+                                          userId: currentUserID,
+                                          shopId: currentShopId,
+                                          status: "PENDING",
+                                          otp : _otp,
+                                          paymentType: "UPI",
+                                          amount: subtotal + 50,
+                                          delCharges: 50,
+                                          pickUp: false,
+                                          orderTime: '${DateTime.now()}',
+                                          deliveryTime: '${_date} ${_time}',
+                                          deliveryAddress: _selectedAddress,
+                                          items: cartMap
+                                        );
+                                        DatabaseService().createOrder(order);
+                                      },
                                       icon: Icon(Icons.done,color: white,), 
                                       label: Text('Confirm' ,style:TextStyle(color: white)),
                                     )

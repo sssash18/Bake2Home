@@ -4,7 +4,7 @@ import 'package:bake2home/constants.dart';
 import 'package:bake2home/screens/Address.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
+import 'package:bake2home/functions/order.dart';
 
 class DatabaseService{
 
@@ -47,7 +47,7 @@ class DatabaseService{
     print("Updated");
   }
 
-  Future<void> createOrder() async{
+  Future<void> createOrder(Order order) async{
     int counter;
     DocumentSnapshot doc  = await orderCollection.document('counter').get();
     counter = doc.data['counter'];
@@ -58,7 +58,22 @@ class DatabaseService{
         'counter' : FieldValue.increment(1),
       }
     );
-    
+    order.orderId = orderId;
+    orderCollection.document(orderId).setData({
+      'orderId' : order.orderId,
+      'shopId' : order.shopId,
+      'userId' : order.userId,
+      'status' : order.status,
+      'otp' : order.otp,
+      'paymentType' : order.paymentType,
+      'deliveryAddress' : order.deliveryAddress,
+      'amount' : order.amount,
+      'deliveryCharges' : order.delCharges,
+      'pickUp' : order.pickUp,
+      'orderTime' : order.orderTime,
+      'deliveryTime' : order.deliveryTime,
+      'items' : order.items 
+    }).then((value) => print("Order Places"));
 
 
   }

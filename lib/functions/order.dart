@@ -5,16 +5,18 @@ class Order{
   userId,
   orderId,
   status,
-  otp,
   paymentType,
   deliveryAddress;
 
-  int amount,
+  double amount,
   delCharges;
 
+  int otp;
   bool pickUp;
 
-  Timestamp orderTime,deliveryTime;
+  String orderTime,deliveryTime;
+
+  Map items;
 
   Order({
     this.userId,
@@ -28,5 +30,7 @@ class Order{
     this.pickUp,
     this.orderTime,
     this.deliveryTime,
+    this.deliveryAddress,
+    this.items,
   });
 }
