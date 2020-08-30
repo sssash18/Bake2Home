@@ -123,19 +123,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   ListTile(
                     leading:Icon(
-                      Icons.history,
-                      color: base,
-                      size: 30.0,
-                    ),
-                    title: Text(
-                      "History",
-                    ),
-                    onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder:(BuildContext context) =>  ProfileOrder()));
-                    },
-                  ),
-                  ListTile(
-                    leading:Icon(
                       Icons.settings,
                       color: base,
                       size: 30.0,

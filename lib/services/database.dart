@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/functions/order.dart';
 
+
 class DatabaseService{
 
   final CollectionReference shopCollection = Firestore.instance.collection('Shops');
@@ -74,8 +75,36 @@ class DatabaseService{
       'deliveryTime' : order.deliveryTime,
       'items' : order.items 
     }).then((value) => print("Order Places"));
+  }
 
+  Future<void> cancelOrder(String orderId){
+    orderCollection.document(orderId).updateData(
+      {
+        'status' : "CANCELLED",
+      }
+    );
+  }
 
+  Stream<List<Order>> get orders{
+    return orderCollection.where('userId',isEqualTo : currentUserID).snapshots().map((_ordersFromSnapshot));
+  }
+
+  List<Order> _ordersFromSnapshot(QuerySnapshot snapshot){
+    return snapshot.documents.map((e) => Order(
+      userId : e['userId'],
+      shopId: e['shopId'],
+      status: e['status'],
+      otp : e['otp'],
+      paymentType: e['paymentType'],
+      amount: e['amount'],
+      delCharges: e['deliveryCharges'],
+      pickUp: e['pickUp'],
+      orderTime: e['orderTime'],
+      deliveryTime: e['deliveryTime'],
+      deliveryAddress: e['deliveryAddress'],
+      items: e['items'],
+      orderId: e['orderId']
+    )).toList();
   }
   
 }

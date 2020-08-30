@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:bake2home/functions/shop.dart';
 import 'package:bake2home/functions/user.dart';
+import 'package:stop_watch_timer/stop_watch_timer.dart';
+import 'dart:async';
+
 
 Color base = Color(0xff654ea3);
 Color white = Colors.white;
@@ -23,3 +26,6 @@ String cartShopId = null;
 Map<String, dynamic> cartMap = Map<String, dynamic>();
 ValueNotifier<int> cartLengthNotifier = ValueNotifier<int>(0);
 String currentShopId = 'null';
+StopWatchTimer timer ;
+bool activeTimer = false;
+String timerVal;

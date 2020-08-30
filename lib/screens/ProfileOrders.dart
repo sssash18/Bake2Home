@@ -1,7 +1,10 @@
+import 'package:bake2home/services/database.dart';
+import 'package:bake2home/widgets/OrdersList.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/constants.dart';
 import 'package:bake2home/widgets/HistoryTile.dart';
-
+import 'package:provider/provider.dart';
+import 'package:bake2home/functions/order.dart';
 
 
 class ProfileOrder extends StatelessWidget {
@@ -21,13 +24,11 @@ class ProfileOrder extends StatelessWidget {
           )
         )
       ),
-      body: Container(
-        child: ListView.builder(
-          itemCount: 5,
-          itemBuilder: (BuildContext context, int index){
-            return HistoryTile();
-          }
-        )
+      body: StreamProvider<List<Order>>.value(
+          value: DatabaseService().orders,
+          child: Container(
+          child: OrdersList(),
+        ),
       ),
     );
   }

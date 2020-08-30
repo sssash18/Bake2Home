@@ -1,6 +1,6 @@
 import 'dart:math';
-
 import 'package:bake2home/functions/order.dart';
+import 'package:bake2home/screens/OrderPending.dart';
 import 'package:bake2home/services/database.dart';
 import 'package:bake2home/widgets/CartTile.dart';
 import 'package:flutter/cupertino.dart';
@@ -305,6 +305,7 @@ class _CartState extends State<Cart> {
                                           items: cartMap
                                         );
                                         DatabaseService().createOrder(order);
+                                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context){return OrderPending();}));
                                       },
                                       icon: Icon(Icons.done,color: white,), 
                                       label: Text('Confirm' ,style:TextStyle(color: white)),

@@ -1,3 +1,4 @@
+import 'package:bake2home/screens/ProfileOrders.dart';
 import 'package:bake2home/screens/ProfilePage.dart';
 import 'package:bake2home/screens/mainPage.dart';
 import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
@@ -23,9 +24,7 @@ class _HomePageState extends State<HomePage> {
 
   final List<Widget> _children = [
     MainPage(),
-    Center(
-      child: Text("NotAvailable"),
-    ),
+    ProfileOrder(),
     Cart(),
     ProfilePage(),
   ];
