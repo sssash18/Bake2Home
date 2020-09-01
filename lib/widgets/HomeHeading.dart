@@ -3,7 +3,9 @@ import 'package:bake2home/constants.dart';
 
 class Homeheading extends StatelessWidget {
   final String heading;
-  Homeheading({this.heading});
+  final bool showAll;
+  final showPage;
+  Homeheading({this.heading,this.showAll,this.showPage});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -20,7 +22,13 @@ class Homeheading extends StatelessWidget {
             fontWeight: FontWeight.bold
           )
           ),
-          Align(
+          showAll ? _showAllitems() : Container()
+        ]
+        ),
+    );
+  }
+  Widget _showAllitems(){
+    return Align(
               alignment: Alignment.centerRight,
               child: FlatButton(
               shape: RoundedRectangleBorder(
@@ -33,12 +41,9 @@ class Homeheading extends StatelessWidget {
                   fontSize: sideButton,
                 )
               ),
-              onPressed: (){},
+              onPressed: showPage,
               color: white,
             ),
-          )
-        ]
-        ),
-    );
+          );
   }
 }

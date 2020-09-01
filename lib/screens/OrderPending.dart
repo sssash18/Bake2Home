@@ -1,10 +1,12 @@
 
+import 'package:bake2home/screens/Payment.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:bake2home/constants.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_countdown_timer/countdown_timer.dart';
+
 
 
 
@@ -38,8 +40,16 @@ class _OrderPendingState extends State<OrderPending> {
     
     return Scaffold(
     body: Container(
-      child : Center(child: 
-        Text(timer.rawTime.value.toString())
+      child : Column(
+              children: [Center(child: 
+          Text(timer.rawTime.value.toString())
+        ),
+        FlatButton(child: Text("Pay"),
+          onPressed: (){
+            Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Payment()));
+          },
+        ),
+        ]
       )
     ),
       );

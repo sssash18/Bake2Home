@@ -1,3 +1,4 @@
+import 'package:bake2home/functions/category.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/functions/shop.dart';
 import 'package:bake2home/functions/user.dart';
@@ -29,3 +30,4 @@ String currentShopId = 'null';
 StopWatchTimer timer ;
 bool activeTimer = false;
 String timerVal;
+List<Category> categoryList = [];

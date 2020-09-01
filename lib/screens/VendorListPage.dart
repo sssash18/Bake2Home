@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 
 
 class VendorListPage extends StatelessWidget {
+  String title;
+  bool rated;
+  VendorListPage({this.title,this.rated});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,13 +17,13 @@ class VendorListPage extends StatelessWidget {
           color: base,
         ),
         title: Text(
-          'Cakes',
+          title,
           style: TextStyle(
             color: text,
           )
         )
       ),
-      body: VendorList(),
+      body: VendorList(category: title.toLowerCase(),rated: rated,),
       );
   }
 }

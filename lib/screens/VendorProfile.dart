@@ -141,11 +141,11 @@ class VendorProfile extends StatelessWidget {
                             )),
                       ]))),
           SliverToBoxAdapter(
-            child: Homeheading(heading: 'Recently Added'),
+            child: Homeheading(heading: 'Recently Added',showAll: false,),
           ),
           recentlyAdded(),
           SliverToBoxAdapter(
-            child: Homeheading(heading: "Categories"),
+            child: Homeheading(heading: "Categories",showAll: false,),
           ),
           allCategories()
         ],

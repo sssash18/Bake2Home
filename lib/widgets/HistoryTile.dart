@@ -3,7 +3,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/constants.dart';
 import 'package:bake2home/functions/order.dart';
-import 'package:provider/provider.dart';
 import 'package:bake2home/functions/shop.dart';
 
 

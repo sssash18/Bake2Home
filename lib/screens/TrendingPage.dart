@@ -6,21 +6,9 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 class TrendingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Container(
-          height: double.infinity,
-          width: double.infinity,
-          decoration:BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color(0xffeaafc8),Color(0xff654ea3)]
-              )
-          ),
-          alignment: Alignment.center,
-          child: Stack(
-                      children: <Widget>[Stack(
+    Widget _showItem(){
+     return  Stack(
+              children: <Widget>[Stack(
               overflow: Overflow.visible,
               children: <Widget>[
                 Container(
@@ -112,14 +100,35 @@ class TrendingPage extends StatelessWidget {
         
               ],
             ),
-            // Positioned(
-            //       bottom: 15.0,
-            //       child: FlatButton(child: Text("Customize"),onPressed: (){},)
-            //     )
+            
           ]
+          );
+        
+  }
+    return SafeArea(
+      child: Scaffold(
+        body: Container(
+          height: double.infinity,
+          width: double.infinity,
+          decoration:BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xffeaafc8),Color(0xff654ea3)]
+              )
           ),
-        ), 
+          alignment: Alignment.center,
+          child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: 5,
+          itemBuilder: (BuildContext context,int index){
+            return _showItem();
+          },
+        ),
       ),
+    )
     );
   }
+
+  
 }

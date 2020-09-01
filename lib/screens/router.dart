@@ -1,4 +1,5 @@
 
+import 'package:bake2home/functions/category.dart';
 import 'package:bake2home/screens/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -15,6 +16,7 @@ class Router extends StatefulWidget {
 class _RouterState extends State<Router> {
   CollectionReference shopCollection = Firestore.instance.collection("Shops");
   CollectionReference topCollection = Firestore.instance.collection("TopPicks");
+  CollectionReference categoryCollection = Firestore.instance.collection("Categories");
   @override
   void initState() {
     super.initState();
@@ -26,6 +28,7 @@ class _RouterState extends State<Router> {
       await getShops();
       getTopPick();
       await getUser();
+      getCategories();
   }
 
   Future<bool> getUser() async{
@@ -45,6 +48,14 @@ class _RouterState extends State<Router> {
     return true;
   }
 
+  Future<void> getCategories() async{
+    QuerySnapshot categories = await categoryCollection.getDocuments();
+    categories.documents.forEach((element) { 
+      Category cat = Category(name: element.documentID,photoUrl: element.data['photoUrl']);
+      categoryList.add(cat);
+    });
+    print(categoryList);
+  }
   void getTopPick() async {
     await topCollection.getDocuments().then((value) {
       value.documents.forEach((element) {
