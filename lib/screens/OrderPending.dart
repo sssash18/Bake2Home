@@ -1,5 +1,6 @@
 
 import 'package:bake2home/screens/Payment.dart';
+import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:bake2home/constants.dart';
@@ -38,20 +39,24 @@ class _OrderPendingState extends State<OrderPending> {
     }
 
     
-    return Scaffold(
-    body: Container(
-      child : Column(
-              children: [Center(child: 
-          Text(timer.rawTime.value.toString())
-        ),
-        FlatButton(child: Text("Pay"),
-          onPressed: (){
-            Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Payment()));
-          },
-        ),
-        ]
+    return 
+     Container(
+      height: 200,
+      width: 400,
+      alignment: Alignment.center,
+      child : CircularCountDownTimer(
+        width: MediaQuery.of(context).size.width/2, 
+        height: 200, 
+        duration: 90, 
+        fillColor: white, 
+        color: base,
+        isTimerTextShown: true,
+        isReverse: true,
+        onComplete: (){},
       )
-    ),
+        
       );
+    
+    
   }
 }

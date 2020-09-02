@@ -22,7 +22,7 @@ class _PaymentState extends State<Payment> {
     
   }
 
-  Future<UpiResponse> initiateTransaction(){
+  Future<UpiResponse> initiateTransaction() {
     return _upiIndia.startTransaction(
       app: apps[0].app,
       receiverUpiId: 'pmcares@sbi',
@@ -35,8 +35,10 @@ class _PaymentState extends State<Payment> {
   @override
   Widget build(BuildContext context) {
     String _text = "Pay";
+    
     return Scaffold(
       body: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Center(
                 child: FlatButton(
@@ -44,6 +46,7 @@ class _PaymentState extends State<Payment> {
             onPressed: () async{
               _response = await initiateTransaction();
               if(_response.error!=null){
+                print(_response.error.toString());
                 switch (_response.error) {
                 case UpiError.APP_NOT_INSTALLED:
                   setState(() {
@@ -65,12 +68,18 @@ class _PaymentState extends State<Payment> {
                     _text = "You cancelled the transaction";
                   });
                 break;
+                default: 
+                  setState((){
+                    _text = "Error";
+                  });
+                
               }
               }else{
                 setState(() {
                   _text ='${_response.transactionId} ${_response.status}';
                 });
-              }        
+              }
+              print("TEXT ${_text}");        
             },
           ),
         ),

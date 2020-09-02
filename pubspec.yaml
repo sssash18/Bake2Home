@@ -34,6 +34,8 @@ dependencies:
   flutter_countdown_timer: ^1.2.0
   upi_india: ^2.1.2
   carousel_slider: ^2.2.1
+  circular_countdown_timer: ^0.0.5
+  firebase_dynamic_links: ^0.6.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
