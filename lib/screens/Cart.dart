@@ -306,7 +306,7 @@ class _CartState extends State<Cart> {
                                           items: cartMap
                                         );
                                         DatabaseService().createOrder(order);
-                                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context){return Checkout();}));
+                                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context){return Checkout(order: order);}));
                                       },
                                       icon: Icon(Icons.done,color: white,), 
                                       label: Text('Confirm' ,style:TextStyle(color: white)),

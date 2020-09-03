@@ -31,3 +31,5 @@ StopWatchTimer timer ;
 bool activeTimer = false;
 String timerVal;
 List<Category> categoryList = [];
+bool timerOver = false;
+StreamController<bool> controller = StreamController();

@@ -24,19 +24,19 @@ class _OrderPendingState extends State<OrderPending> {
   @override
   Widget build(BuildContext context) {
     
-    if(!activeTimer){
-      timer = StopWatchTimer(
-        onChangeRawSecond: (val){
-          if(val == 90){
-            timer.onExecute.add(StopWatchExecute.stop);
-            activeTimer = false;
-          }
-          print(val);
-        }
-      );
-      timer.onExecute.add(StopWatchExecute.start);
-      activeTimer = true;
-    }
+    // if(!activeTimer){
+    //   timer = StopWatchTimer(
+    //     onChangeRawSecond: (val){
+    //       if(val == 90){
+    //         timer.onExecute.add(StopWatchExecute.stop);
+    //         activeTimer = false;
+    //       }
+    //       print(val);
+    //     }
+    //   );
+    //   timer.onExecute.add(StopWatchExecute.start);
+    //   activeTimer = true;
+    // }
 
     
     return 
@@ -47,12 +47,14 @@ class _OrderPendingState extends State<OrderPending> {
       child : CircularCountDownTimer(
         width: MediaQuery.of(context).size.width/2, 
         height: 200, 
-        duration: 90, 
+        duration: 9, 
         fillColor: white, 
         color: base,
         isTimerTextShown: true,
         isReverse: true,
-        onComplete: (){},
+        onComplete: (){
+          controller.add(true);
+        },
       )
         
       );

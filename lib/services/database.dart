@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:bake2home/constants.dart';
@@ -83,7 +84,18 @@ class DatabaseService{
         'status' : "CANCELLED",
       }
     );
+    
   }
+
+  Future<void> emptyCart(){
+    userCollection.document(uid).updateData(
+      {
+        'cartMap' : Map(),
+      }
+    );
+  }
+
+  
 
   Stream<List<Order>> get orders{
     return orderCollection.where('userId',isEqualTo : currentUserID).snapshots().map((_ordersFromSnapshot));
