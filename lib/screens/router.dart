@@ -14,9 +14,9 @@ class Router extends StatefulWidget {
 }
 
 class _RouterState extends State<Router> {
-  CollectionReference shopCollection = Firestore.instance.collection("Shops");
-  CollectionReference topCollection = Firestore.instance.collection("TopPicks");
-  CollectionReference categoryCollection = Firestore.instance.collection("Categories");
+  CollectionReference shopCollection = FirebaseFirestore.instance.collection("Shops");
+  CollectionReference topCollection = FirebaseFirestore.instance.collection("TopPicks");
+  CollectionReference categoryCollection = FirebaseFirestore.instance.collection("Categories");
   @override
   void initState() {
     super.initState();
@@ -32,15 +32,15 @@ class _RouterState extends State<Router> {
   }
 
   Future<bool> getUser() async{
-      DocumentSnapshot user = await Firestore.instance.collection("Users").document('94ON8vhE5kxa7SfOyBWJ').get();   
-      currentUser.name = user.data['name'];
-      currentUser.addresses = user.data['addresses'];
-      currentUser.contact = user.data['contact'];   
+      DocumentSnapshot user = await FirebaseFirestore.instance.collection("Users").doc('94ON8vhE5kxa7SfOyBWJ').get();   
+      currentUser.name = user.data()['name'];
+      currentUser.addresses = user.data()['addresses'];
+      currentUser.contact = user.data()['contact'];   
       return true;
   }
 
   Future<bool> getShops() async {
-    QuerySnapshot shops = await shopCollection.getDocuments();
+    QuerySnapshot shops = await shopCollection.get();
     shops.documents.forEach((element) {
       Shop shop = _shopFromSnapshot(element);
       shopMap.putIfAbsent(shop.shopId, () => shop);
@@ -49,9 +49,9 @@ class _RouterState extends State<Router> {
   }
 
   Future<void> getCategories() async{
-    QuerySnapshot categories = await categoryCollection.getDocuments();
-    categories.documents.forEach((element) { 
-      Category cat = Category(name: element.documentID,photoUrl: element.data['photoUrl']);
+    QuerySnapshot categories = await categoryCollection.get();
+    categories.docs.forEach((element) { 
+      Category cat = Category(name: element.id,photoUrl: element.data()['photoUrl']);
       categoryList.add(cat);
     });
     print(categoryList);
@@ -59,43 +59,43 @@ class _RouterState extends State<Router> {
   void getTopPick() async {
     await topCollection.getDocuments().then((value) {
       value.documents.forEach((element) {
-        Shop shop = shopMap[element.data['shopId']];
+        Shop shop = shopMap[element.data()['shopId']];
         topPickMap.putIfAbsent(shop.shopId, () => shop);
       });
     });
   }
 
-  Shop _shopFromSnapshot(DocumentSnapshot doc){
+  Shop _shopFromSnapshot(DocumentSnapshot document){
     return Shop(
-      shopId: doc.data['shopId'],
-      shopName: doc.data['shopName'],
-      shopAddress: doc.data['shopAddress'],
-      contact: doc.data['contact'],
-      merchantName: doc.data['merchantName'],
-      tagline: doc.data['tagline'],
-      bio: doc.data['bio'],
-      profilePhoto: doc.data['profilePhoto'],
-      coverPhoto: doc.data['coverPhoto'],
-      cookTime: doc.data['cookTime'],
-      experience: doc.data['experience'],
-      numOrders: doc.data['numOrders'],
-      items: doc.data['items'],
-      rating: doc.data['rating'].toDouble(),
-      ingPrice: doc.data['ingPrice'],
+      shopId: document.data()['shopId'],
+      shopName: document.data()['shopName'],
+      shopAddress: document.data()['shopAddress'],
+      contact: document.data()['contact'],
+      merchantName: document.data()['merchantName'],
+      tagline: document.data()['tagline'],
+      bio: document.data()['bio'],
+      profilePhoto: document.data()['profilePhoto'],
+      coverPhoto: document.data()['coverPhoto'],
+      cookTime: document.data()['cookTime'],
+      experience: document.data()['experience'],
+      numOrders: document.data()['numOrders'],
+      items: document.data()['items'],
+      rating: document.data()['rating'].toDouble(),
+      ingPrice: document.data()['ingPrice'],
     );
   }
 
   Future<void> getCardDetails() async {
-    Stream<DocumentSnapshot> ss = Firestore.instance
+    Stream<DocumentSnapshot> ss = FirebaseFirestore.instance
         .collection('Users')
-        .document(currentUserID)
+        .doc(currentUserID)
         .snapshots();
     ss.listen((event) {
       if (event.exists) {
-        print('startting cartMap ${event.data['cart']}');
+        print('startting cartMap ${event.data()['cart']}');
         Map<String, dynamic> someMap = Map();
-        if (event.data['cart'] != null) {
-          someMap = Map<String, dynamic>.from(event.data['cart']);
+        if (event.data()['cart'] != null) {
+          someMap = Map<String, dynamic>.from(event.data()['cart']);
         }
         setState(() {
           print('fetched shopId is $currentShopId');
@@ -109,7 +109,7 @@ class _RouterState extends State<Router> {
           // if (someMap.containsKey('orderId')) {
           //   // orderId = someMap['orderId'];
           //   // if (someMap['status'] == 'pending') {
-          //   //   orderPending = true;
+          //   //   orderPending = ()true;
           //   // } else if (someMap['status'] == 'accepted') {
           //   //   orderPending = true;
           //   //   orderAccepted = true;

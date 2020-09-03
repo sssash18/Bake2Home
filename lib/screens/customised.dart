@@ -22,7 +22,7 @@ class _CustomisedItemState extends State<CustomisedItem> {
   Widget build(BuildContext context) {
     print('************** ${widget.shop.shopId}');
     return StreamBuilder(
-        stream: Firestore.instance
+        stream: FirebaseFirestore.instance
             .collection('Shops')
             .document(widget.shop.shopId)
             .snapshots(),

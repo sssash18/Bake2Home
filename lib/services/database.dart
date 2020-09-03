@@ -3,16 +3,17 @@ import 'dart:math';
 
 import 'package:bake2home/constants.dart';
 import 'package:bake2home/screens/Address.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:bake2home/functions/order.dart';
 
 
 class DatabaseService{
 
-  final CollectionReference shopCollection = Firestore.instance.collection('Shops');
-  final CollectionReference userCollection  = Firestore.instance.collection("Users");
-  final CollectionReference orderCollection = Firestore.instance.collection("Orders");
+  final CollectionReference shopCollection = FirebaseFirestore.instance.collection('Shops');
+  final CollectionReference userCollection  = FirebaseFirestore.instance.collection("Users");
+  final CollectionReference orderCollection = FirebaseFirestore.instance.collection("Orders");
   final String uid;
 
   DatabaseService({this.uid});
@@ -51,8 +52,8 @@ class DatabaseService{
 
   Future<void> createOrder(Order order) async{
     int counter;
-    DocumentSnapshot doc  = await orderCollection.document('counter').get();
-    counter = doc.data['counter'];
+    DocumentSnapshot document  = await orderCollection.document('counter').get();
+    counter = document.data()['counter'];
     int random = Random().nextInt(9999);
     String orderId = "bmc" + random.toString() + counter.toString();
     orderCollection.document('counter').updateData(
@@ -88,7 +89,7 @@ class DatabaseService{
   }
 
   Future<void> emptyCart(){
-    userCollection.document(uid).updateData(
+    userCollection.document(uid).update(
       {
         'cartMap' : Map(),
       }
@@ -102,20 +103,21 @@ class DatabaseService{
   }
 
   List<Order> _ordersFromSnapshot(QuerySnapshot snapshot){
+    
     return snapshot.documents.map((e) => Order(
-      userId : e['userId'],
-      shopId: e['shopId'],
-      status: e['status'],
-      otp : e['otp'],
-      paymentType: e['paymentType'],
-      amount: e['amount'],
-      delCharges: e['deliveryCharges'],
-      pickUp: e['pickUp'],
-      orderTime: e['orderTime'],
-      deliveryTime: e['deliveryTime'],
-      deliveryAddress: e['deliveryAddress'],
-      items: e['items'],
-      orderId: e['orderId']
+      userId : e.data()['userId'],
+      shopId: e.data()['shopId'],
+      status: e.data()['status'],
+      otp : e.data()['otp'],
+      paymentType: e.data()['paymentType'],
+      amount: e.data()['amount'],
+      delCharges: e.data()['deliveryCharges'],
+      pickUp: e.data()['pickUp'],
+      orderTime: e.data()['orderTime'],
+      deliveryTime: e.data()['deliveryTime'],
+      deliveryAddress: e.data()['deliveryAddress'],
+      items: e.data()['items'],
+      orderId: e.data()['orderId']
     )).toList();
   }
   
