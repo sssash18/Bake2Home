@@ -6,10 +6,14 @@ import 'package:bake2home/screens/ItemList.dart';
 import 'package:bake2home/functions/shop.dart';
 
 class VendorProfile extends StatelessWidget {
-  final Shop shop;
+  Shop shop;
   VendorProfile({this.shop});
   @override
   Widget build(BuildContext context) {
+    final Shop args = ModalRoute.of(context).settings.arguments;
+    if(shop==null){
+      shop = args;
+    }
     return SafeArea(
         child: Material(
       child: CustomScrollView(
@@ -169,7 +173,7 @@ class VendorProfile extends StatelessWidget {
                       MaterialPageRoute(
                           builder: (BuildContext context) => ItemList(
                               itemType: categories[i],
-                              shop: shop)));
+                              shop: shop )));
                 },
                 child: Container(
                   margin: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 0),

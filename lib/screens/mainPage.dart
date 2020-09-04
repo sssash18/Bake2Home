@@ -67,7 +67,10 @@ class _MainPageState extends State<MainPage> {
                       margin: EdgeInsets.symmetric(horizontal: 5.0),
                       decoration: 
                       BoxDecoration(
-                        color: Colors.amber,
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [Color(0xffeaafc8), Color(0xff654ea3)]),
                         borderRadius: BorderRadius.circular(border),
                         image: DecorationImage(image: AssetImage('assets/images/cake.jpeg'),fit: BoxFit.fill),
                       ),
