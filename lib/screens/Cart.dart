@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:bake2home/functions/order.dart';
 import 'package:bake2home/screens/Checkout.dart';
 import 'package:bake2home/screens/OrderPending.dart';
+import 'package:bake2home/services/PushNotification.dart';
 import 'package:bake2home/services/database.dart';
 import 'package:bake2home/widgets/CartTile.dart';
 import 'package:flutter/cupertino.dart';
@@ -19,14 +20,18 @@ class Cart extends StatefulWidget {
 class _CartState extends State<Cart> {
   @override
   Widget build(BuildContext context) {
+    print(cartMap.toString());
     double subtotal  = 0;
+    Shop shop;
     String _date,_time;
     cartMap.keys.where((element) => element!=cartMap['shopId']).forEach((element) { 
       if(element!='shopId'){
         subtotal += cartMap[element]['price'] * cartMap[element]['quantity'];
       }
     });
-    Shop shop = shopMap[shopMap.keys.firstWhere((element) => element==cartMap['shopId'])];
+    print("SSSSSSSSSSS");
+    print(shopMap.toString());
+    
     List<DropdownMenuItem<String>> _addresses=[];
     currentUser.addresses.keys.forEach((element) { 
       _addresses.add(
@@ -37,7 +42,7 @@ class _CartState extends State<Cart> {
       );
     });
     String _selectedAddress = _addresses.first.value;
-    //print(currentUser.addresses[currentUser.addresses.keys.elementAt(0)]['address']);
+    print(currentUser.addresses[currentUser.addresses.keys.elementAt(0)]['address']);
     return Scaffold(
       appBar: AppBar(
           backgroundColor: white,
@@ -114,7 +119,7 @@ class _CartState extends State<Cart> {
               )
             ]),
           ),
-          Expanded(
+          cartMap!=null  && cartMap.length!=0 ?Expanded(
             child: Container(
               width: double.infinity,
               margin: EdgeInsets.fromLTRB(
@@ -126,11 +131,12 @@ class _CartState extends State<Cart> {
               child: ListView.builder(
                   itemCount: cartMap.length-1,
                   itemBuilder: (BuildContext context, int index) {
-                    //print('passed : ${cartMap[cartMap.keys.where((element) => element!='shopId').elementAt(index)]}');
-                    return CartTile(item: cartMap[cartMap.keys.where((element) => element!='shopId').elementAt(index)],shopName: shop.shopName,vid: cartMap.keys.where((element) => element!='shopId').elementAt(index),);
+                      shop = shopMap[shopMap.keys.firstWhere((element) => element==cartMap['shopId'])];
+    
+                      return CartTile(item: cartMap[cartMap.keys.where((element) => element!='shopId').elementAt(index)],shopName: shop.shopName,vid: cartMap.keys.where((element) => element!='shopId').elementAt(index),);
                   }),
             ),
-          ),
+          ) : Expanded(child: Container()),
           Container(
             height: MediaQuery.of(context).size.height / 5.5,
             margin: EdgeInsets.fromLTRB(
@@ -286,7 +292,7 @@ class _CartState extends State<Cart> {
                                       shape : RoundedRectangleBorder(
                                         borderRadius : BorderRadius.circular(border),
                                       ),
-                                      onPressed: (){
+                                      onPressed: () async {
                                         int _otp = Random().nextInt(9999);
                                         while(_otp < 1000){
                                           _otp *= 10;
@@ -307,6 +313,7 @@ class _CartState extends State<Cart> {
                                         );
                                         DatabaseService().createOrder(order);
                                         Navigator.push(context, MaterialPageRoute(builder: (BuildContext context){return Checkout(order: order);}));
+                                        PushNotification().pushMessage('New Order Request', 'Request from ${currentUser.name}', shop.token);
                                       },
                                       icon: Icon(Icons.done,color: white,), 
                                       label: Text('Confirm' ,style:TextStyle(color: white)),
@@ -326,5 +333,6 @@ class _CartState extends State<Cart> {
         ]),
       ),
     );
+
   }
 }

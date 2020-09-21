@@ -8,7 +8,7 @@ class Shop {
       profilePhoto,
       coverPhoto,
       experience,
-      contact;
+      contact,token;
   int numOrders, ingPrice;
   double rating;
   Map<String, dynamic> cookTime, items;
@@ -29,5 +29,6 @@ class Shop {
     this.items,
     this.rating,
     this.ingPrice,
+    this.token,
   });
 }

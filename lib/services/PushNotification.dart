@@ -1,6 +1,9 @@
+import 'package:bake2home/services/database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:bake2home/constants.dart';
 
 
 class PushNotification{
@@ -11,22 +14,24 @@ class PushNotification{
 
   static final PushNotification _instance = PushNotification._();
 
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   bool _initialized = false;
 
   Future<void> init() async{
     if(!_initialized){
-      _firebaseMessaging.requestNotificationPermissions();
-      _firebaseMessaging.configure();
-      _firebaseMessaging.onTokenRefresh.last.then((value) => null);
-      String token = await _firebaseMessaging.getToken();
-      print("toke" + token);
+      firebaseMessaging.requestNotificationPermissions();
+      firebaseMessaging.configure();
+      firebaseMessaging.onTokenRefresh.last.then((value){
+        token = value;
+        print("TTTTTTT ${token}");
+      });
+      String token1 = await firebaseMessaging.getToken();
+      print("toke" + token1);
       _initialized = true;
     }
   }
 
-  Future<void> pushMessage(String title,String body) async{
+  Future<void> pushMessage(String title,String body,String token) async{
     final serverToken = 'AAAATnEOuVU:APA91bEv0ZjHErtQC1lN_-yVorEJrf0YMBpdZiPrShRWSvog7SdUQ_B72yhEfx55i9riKJElt7BnsOi_E88DgrpvCMqilwikJq3gdg9_euNvqi3n7bBs8SaGnJCEbSt4gJr_4dljSA56'; 
     await http.post(
     'https://fcm.googleapis.com/fcm/send',
@@ -46,7 +51,7 @@ class PushNotification{
          'id': '1',
          'status': 'done'
        },
-       'to': await _firebaseMessaging.getToken(),
+       'to': token
      },
     ),
   );

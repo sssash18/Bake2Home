@@ -5,7 +5,7 @@ class CustomisedItemModel {
   double ingPrice;
   String photoUrl;
   String recipe;
-  Map<String, dynamic> ingredients;
+  List<String> ingredients;
   Map<String, dynamic> variants;
   CustomisedItemModel(
       {this.availability,

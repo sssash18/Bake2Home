@@ -37,9 +37,9 @@ class _CartTileState extends State<CartTile> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(border),
               image: DecorationImage(
-                image: CachedNetworkImageProvider(
+                image: widget.item['photoUrl']!=null ? CachedNetworkImageProvider(
                   widget.item['photoUrl'],
-                ),
+                ) : AssetImage("assets/images/cake.jpeg"),
                 fit: BoxFit.fill
               )
             )

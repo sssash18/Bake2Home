@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:bake2home/services/PushNotification.dart';
 import 'package:bake2home/services/database.dart';
 import 'package:upi_india/upi_india.dart';
 import 'package:bake2home/screens/OrderPending.dart';
@@ -148,10 +149,11 @@ class _CheckoutState extends State<Checkout> {
                 Step(
                   title: Text("Order Placed Successfully")  , 
                   content: FlatButton.icon(
-                    onPressed: (){
+                    onPressed: () async{
                       DatabaseService(uid: currentUserID).emptyCart();
                       Navigator.pop(context);
                       Navigator.pop(context);
+                      PushNotification().pushMessage("Order Placed Successfully", 'Order Id : ${widget.order.orderId}',shopMap[widget.order.shopId].token );
                     },
                     shape: RoundedRectangleBorder(borderRadius : BorderRadius.circular(border)),
                     color: white,

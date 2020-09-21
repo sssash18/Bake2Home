@@ -31,6 +31,7 @@ class _ItemPageState extends State<ItemPage> {
     dropDownList.clear();
 
     this.widget.model.variants.forEach((key, value) {
+      print("VVVVVVV" + value.toString());
       String vid = value['vid'];
       double price = value['price'].toDouble();
       double size = value['size'].toDouble();
@@ -89,10 +90,10 @@ class _ItemPageState extends State<ItemPage> {
                             Rect.fromLTRB(0, 0, rect.width, 1.5 * rect.height));
                       },
                       blendMode: BlendMode.dstIn,
-                      child: CachedNetworkImage(
+                      child: widget.model.photoUrl!=null ? CachedNetworkImage(
                         imageUrl: widget.model.photoUrl,
                         fit: BoxFit.fill,
-                      ),
+                      ) : Image.asset("assets/images/cake.jpeg",fit:BoxFit.fill) ,
                     ),
                   ),
                   Positioned(
@@ -152,35 +153,7 @@ class _ItemPageState extends State<ItemPage> {
                 child: Column(
                   children: <Widget>[
                     quantity == 0.0 ? cartAdder(context) : cartAdded(context),
-                    Container(
-                      margin: EdgeInsets.only(top: 20.0),
-                      width: MediaQuery.of(context).size.width * 0.9,
-                      height: MediaQuery.of(context).size.height * 0.08,
-                      decoration: BoxDecoration(
-                          color: white,
-                          borderRadius: BorderRadius.circular(30.0),
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.black.withOpacity(0.3),
-                                spreadRadius: 2.5,
-                                blurRadius: 2.5)
-                          ]),
-                      child: Row(children: <Widget>[]),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(top: 20.0),
-                      width: MediaQuery.of(context).size.width * 0.9,
-                      height: MediaQuery.of(context).size.height * 0.08,
-                      decoration: BoxDecoration(
-                          color: white,
-                          borderRadius: BorderRadius.circular(30.0),
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.black.withOpacity(0.3),
-                                spreadRadius: 2.5,
-                                blurRadius: 2.5)
-                          ]),
-                    ),
+                    
                     Container(
                         margin: EdgeInsets.fromLTRB(15.0, 45.0, 0, 0),
                         alignment: Alignment.topLeft,
@@ -197,10 +170,10 @@ class _ItemPageState extends State<ItemPage> {
                             parent: NeverScrollableScrollPhysics(),
                           ),
                           shrinkWrap: true,
-                          itemCount: widget.model.ingredients.keys.length,
+                          itemCount: widget.model.ingredients.length,
                           itemBuilder: (BuildContext context, int index) {
                             return Text(
-                                '${widget.model.ingredients.keys.elementAt(index)} - ${widget.model.ingredients[widget.model.ingredients.keys.elementAt(index)]}',
+                                '${widget.model.ingredients.elementAt(index)}',
                                 style: TextStyle(
                                   color: white,
                                   fontSize: textSize,
@@ -370,6 +343,7 @@ class _ItemPageState extends State<ItemPage> {
                           'notes' : cartItem.notes,
                           'photoUrl' : cartItem.photoUrl
                         });
+                        cartMap.putIfAbsent('shopId', () => widget.shopId);
                       }else{
                         cartMap[vid]['quantity']++;
                         cartMap[vid]['notes'].add(noteItem);

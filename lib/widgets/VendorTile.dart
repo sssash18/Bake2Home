@@ -68,19 +68,7 @@ class VendorTile extends StatelessWidget {
                     },
                     onRatingUpdate: (rating){}
                 ),
-                Container(
-                  alignment: Alignment.bottomRight,
-                  margin: EdgeInsets.fromLTRB(0.0, 5.0, 25.0, 0.0),
-                  child: Stack(
-                    children: <Widget>[
-                      Container(child: Text('${shop.cookTime['cake']}'),margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0)),
-                      Icon(
-                        Icons.history,
-                        size: 20.0,
-                      )
-                    ],
-                  )
-                )
+               
               ],
             ),
             margin: EdgeInsets.fromLTRB(90.0, 15.0, 15.0, 15.0),

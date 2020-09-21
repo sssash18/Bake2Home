@@ -1,9 +1,11 @@
 import 'package:bake2home/functions/category.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/functions/shop.dart';
-import 'package:bake2home/functions/user.dart';
+import 'package:bake2home/functions/user.dart' as LocalUser;
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'dart:async';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 
 Color base = Color(0xff654ea3);
@@ -21,8 +23,8 @@ double sideButton = 12.0;
 double border = 20.0;
 Map<String, Shop> shopMap = new Map<String, Shop>();
 Map<String, Shop> topPickMap = new Map<String, Shop>();
-String currentUserID = "94ON8vhE5kxa7SfOyBWJ";
-User currentUser = new User();
+LocalUser.User currentUser = FirebaseAuth.instance.currentUser!=null ? LocalUser.User(uid: FirebaseAuth.instance.currentUser.uid) : LocalUser.User();
+String currentUserID = '94ON8vhE5kxa7SfOyBWJ';
 String cartShopId = null;
 Map<String, dynamic> cartMap = Map<String, dynamic>();
 ValueNotifier<int> cartLengthNotifier = ValueNotifier<int>(0);
@@ -33,3 +35,6 @@ String timerVal;
 List<Category> categoryList = [];
 bool timerOver = false;
 StreamController<bool> controller = StreamController();
+FirebaseMessaging firebaseMessaging = FirebaseMessaging();
+String token = "";
+

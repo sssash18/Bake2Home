@@ -18,6 +18,24 @@ class DatabaseService{
 
   DatabaseService({this.uid});
 
+  void createUser(String name,String uid,String contact) async{
+    String token = await firebaseMessaging.getToken();
+    await userCollection.doc(uid).set({
+      'name' : name,
+      'contact' : contact,
+      'uid' : uid,
+      'token' : token,
+      'cart' : {},
+      'addresses' : {}
+    });
+  }
+
+  void updateToken(String token) async{
+    await userCollection.doc(uid).update({
+      'token' : token,
+    });
+  }
+
   void updateUserDetails(String name) async{
     await userCollection.document(uid).updateData(
       {
@@ -104,7 +122,7 @@ class DatabaseService{
 
   List<Order> _ordersFromSnapshot(QuerySnapshot snapshot){
     
-    return snapshot.documents.map((e) => Order(
+    return snapshot.docs.map((e) => Order(
       userId : e.data()['userId'],
       shopId: e.data()['shopId'],
       status: e.data()['status'],

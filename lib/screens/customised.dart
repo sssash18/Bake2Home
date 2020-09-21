@@ -24,26 +24,30 @@ class _CustomisedItemState extends State<CustomisedItem> {
     return StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('Shops')
-            .document(widget.shop.shopId)
+            .doc(widget.shop.shopId)
             .snapshots(),
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            Map<String, dynamic> allItems =
-                Map.from(snapshot.data['items'][widget.itemType][widget.category]);
+          if(snapshot.hasData){
+           Map<String, dynamic> allItems =
+                Map.from(snapshot.data.data()['items'][widget.itemType][widget.category]);
             List<CustomisedItemModel> list = List();
-            allItems.forEach((key, value) {
+            print(snapshot.data.data().toString());
+            if (allItems != null ){
+              allItems.forEach((key, value) {
               CustomisedItemModel model = CustomisedItemModel(
-                availability: value['availability'],
+                //availability: value['availability'],
                 itemId: value['itemId'],
-                ingPrice: value['ingPrice'].toDouble(),
-                ingredients: Map.from(value['ingredients']),
+               // ingPrice: value['ingPrice'].toDouble(),
+                ingredients: List<String>.from(value['ingredients']),
                 itemName: value['itemName'],
                 photoUrl: value['photoUrl'],
                 recipe: value['recipe'],
                 variants: Map.from(value['variants']),
               );
               list.add(model);
-            });
+              });
+            }
+            
             return ListView.builder(
                 itemCount: list.length,
                 itemBuilder: (BuildContext context, int i) {
@@ -54,6 +58,7 @@ class _CustomisedItemState extends State<CustomisedItem> {
               child: Text("Loading......"),
             );
           }
+          
         });
   }
 }

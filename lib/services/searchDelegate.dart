@@ -70,10 +70,10 @@ class searchDelegate extends SearchDelegate<Shop>{
           }
           String shopId = itemSearch[index - shopSearch.length]['itemId'].toString().split("-")[0];
           CustomisedItemModel item = CustomisedItemModel(
-            availability: itemList[index - shopSearch.length]['availability'],
+           // availability: itemList[index - shopSearch.length]['availability'],
             itemId: itemList[index - shopSearch.length]['itemId'],
-            ingPrice: itemList[index - shopSearch.length]['ingPrice'].toDouble(),
-            ingredients: itemList[index - shopSearch.length]['ingredients'],
+           // ingPrice: itemList[index - shopSearch.length]['ingPrice'].toDouble(),
+            ingredients: List.from(itemList[index - shopSearch.length]['ingredients']),
             itemName: itemList[index - shopSearch.length]['itemName'],
             photoUrl: itemList[index - shopSearch.length]['photoUrl'],
             recipe: itemList[index - shopSearch.length]['recipe'],

@@ -57,7 +57,7 @@ class ItemTile extends StatelessWidget {
               margin: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 15.0),
               child: CircleAvatar(
                 backgroundImage:
-                    CachedNetworkImageProvider('${model.photoUrl}'),
+                    model.photoUrl != null ? CachedNetworkImageProvider('${model.photoUrl}') : AssetImage("assets/images/cake.jpeg"),
                 radius: 45.0,
               ),
             ),

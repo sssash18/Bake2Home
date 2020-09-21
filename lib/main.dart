@@ -31,8 +31,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
 
   @override
   Widget build(BuildContext context) {
-    PushNotification().init();
-    PushNotification().pushMessage('New Order Request','Suyash requested from you' );
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     return MaterialApp(
       routes: {
@@ -41,6 +39,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
       title: 'Bake2Home',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+          canvasColor: white,
           primaryColor: base,
           primarySwatch: Colors.deepPurple,
           tabBarTheme: TabBarTheme(

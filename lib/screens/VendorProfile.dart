@@ -56,7 +56,7 @@ class VendorProfile extends StatelessWidget {
                                   child: Container(
                                     alignment: Alignment.center,
                                     child: Text(
-                                      '${shop.experience}',
+                                      shop.experience.toString(),
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                           color: white,

@@ -1,11 +1,14 @@
 
 import 'package:bake2home/functions/category.dart';
 import 'package:bake2home/screens/homepage.dart';
+import 'package:bake2home/screens/signIn.dart';
+import 'package:bake2home/services/auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:bake2home/functions/shop.dart';
 import 'package:bake2home/constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 
 class Router extends StatefulWidget {
@@ -18,11 +21,11 @@ class _RouterState extends State<Router> {
   CollectionReference shopCollection = FirebaseFirestore.instance.collection("Shops");
   CollectionReference topCollection = FirebaseFirestore.instance.collection("TopPicks");
   CollectionReference categoryCollection = FirebaseFirestore.instance.collection("Categories");
+  FirebaseAuth _auth = FirebaseAuth.instance;
   @override
   void initState() {
     super.initState();
     getThings();
-    getCardDetails();
     //createDynamicLink();
     initDynamicLinks();
   }
@@ -48,36 +51,38 @@ class _RouterState extends State<Router> {
     final Uri deeplink = link?.link;
     print( "LLLLL" + deeplink.toString());
   }
-
-  
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    //initDynamicLinks();
-  }
-
   
 
   void getThings() async{
       await getShops();
-      getTopPick();
+      //await getTopPick();
       await getUser();
-      getCategories();
+      await getCategories();
+      await getCardDetails();
+      _auth.currentUser!=null ? Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => HomePage())) : Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => SignIn()));
   }
 
   Future<bool> getUser() async{
-      DocumentSnapshot user = await FirebaseFirestore.instance.collection("Users").doc('94ON8vhE5kxa7SfOyBWJ').get();   
-      currentUser.name = user.data()['name'];
-      currentUser.addresses = user.data()['addresses'];
-      currentUser.contact = user.data()['contact'];   
+      if(FirebaseAuth.instance.currentUser!=null){
+        String uid = FirebaseAuth.instance.currentUser.uid;
+        DocumentSnapshot user = await FirebaseFirestore.instance.collection("Users").doc(uid).get();  
+        currentUserID = uid; 
+        currentUser.name = user.data()['name'];
+        currentUser.addresses = user.data()['addresses'];
+        currentUser.contact = user.data()['contact'];  
+        currentUser.token = user.data()['token']; 
+      }
+      
       return true;
   }
 
   Future<bool> getShops() async {
     QuerySnapshot shops = await shopCollection.get();
-    shops.documents.forEach((element) {
+    shops.docs.forEach((element) {
       Shop shop = _shopFromSnapshot(element);
       shopMap.putIfAbsent(shop.shopId, () => shop);
     });
+    print("SSSSSS + ${shopMap.toString()}");
     return true;
   }
 
@@ -89,9 +94,9 @@ class _RouterState extends State<Router> {
     });
     print(categoryList);
   }
-  void getTopPick() async {
-    await topCollection.getDocuments().then((value) {
-      value.documents.forEach((element) {
+  Future<void> getTopPick() async {
+    await topCollection.get().then((value) {
+      value.docs.forEach((element) {
         Shop shop = shopMap[element.data()['shopId']];
         topPickMap.putIfAbsent(shop.shopId, () => shop);
       });
@@ -113,9 +118,11 @@ class _RouterState extends State<Router> {
       experience: document.data()['experience'],
       numOrders: document.data()['numOrders'],
       items: document.data()['items'],
-      rating: document.data()['rating'].toDouble(),
+      rating: (document.data()['rating'] ?? 0).toDouble(),
       ingPrice: document.data()['ingPrice'],
+      token : document.data()['token'],
     );
+
   }
 
   Future<void> createDynamicLink() async{
@@ -156,17 +163,6 @@ class _RouterState extends State<Router> {
           cartLengthNotifier.value = cartMap.length;
           currentShopId = someMap['shopId'].toString();
           print('cartMap is $cartMap');
-
-          // if (someMap.containsKey('orderId')) {
-          //   // orderId = someMap['orderId'];
-          //   // if (someMap['status'] == 'pending') {
-          //   //   orderPending = ()true;
-          //   // } else if (someMap['status'] == 'accepted') {
-          //   //   orderPending = true;
-          //   //   orderAccepted = true;
-          //   // }
-          // }
-          // print('map us $cartMap or some is $someMap in streeam');
         });
       }
     });
@@ -175,20 +171,14 @@ class _RouterState extends State<Router> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        alignment: Alignment.center,
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [FlatButton(
-            onPressed: (){
-              Navigator.push(context, MaterialPageRoute(
-                builder: (BuildContext context) => HomePage()
-              ));
-            },
-            child: Text("HomePage")),
-            Image.asset("assets/images/logo.png",height: 250,),
-            ]
-        ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+          Center(
+            child: Container(child: Image.asset("assets/images/logo.png",height: 120,)),
+          ),
+          CircularProgressIndicator(),
+        ]
       ),
     );
   }

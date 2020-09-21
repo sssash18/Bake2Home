@@ -8,6 +8,7 @@ class OrdersList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Order> orders = Provider.of<List<Order>>(context) ?? [];
+    print(orders.toString());
     return ListView.builder(
         itemCount: orders.length,
         itemBuilder: (BuildContext context, int index){

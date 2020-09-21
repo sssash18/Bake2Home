@@ -1,4 +1,5 @@
 import 'package:bake2home/screens/ProfileOrders.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/constants.dart';
 import 'package:bake2home/screens/UserDetails.dart';
@@ -25,6 +26,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+      print("UUUUUUUUU" +currentUser.uid);
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
@@ -147,6 +150,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       color: base,
                       size: 30.0,
                     ),
+                    onTap: () async{
+                      await FirebaseAuth.instance.signOut();
+                    },
                     title: Text(
                       "Sign Out",
                     )
