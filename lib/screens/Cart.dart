@@ -5,6 +5,7 @@ import 'package:bake2home/screens/OrderPending.dart';
 import 'package:bake2home/services/PushNotification.dart';
 import 'package:bake2home/services/database.dart';
 import 'package:bake2home/widgets/CartTile.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/constants.dart';
@@ -24,6 +25,7 @@ class _CartState extends State<Cart> {
     double subtotal  = 0;
     Shop shop;
     String _date,_time;
+    Timestamp delTime;
     cartMap.keys.where((element) => element!=cartMap['shopId']).forEach((element) { 
       if(element!='shopId'){
         subtotal += cartMap[element]['price'] * cartMap[element]['quantity'];
@@ -250,6 +252,7 @@ class _CartState extends State<Cart> {
                                       onPressed: ()async{
                                         DateTime date = await showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime.now(), lastDate: DateTime.now().add(Duration(days: 12)));
                                         setState((){
+                                          delTime = Timestamp.fromDate(date);
                                           _date = DateFormat.yMMMd().format(date);
                                         });
                                       },
@@ -265,6 +268,8 @@ class _CartState extends State<Cart> {
                                       onPressed: ()async{
                                         TimeOfDay time = await showTimePicker(context: context, initialTime: TimeOfDay.now());
                                         setState((){
+                                          delTime.toDate().add(Duration(hours: time.hour));
+                                          delTime.toDate().add(Duration(minutes: time.minute));
                                           _time = time.format(context);
                                         });
                                         
@@ -306,8 +311,8 @@ class _CartState extends State<Cart> {
                                           amount: subtotal + 50,
                                           delCharges: 50,
                                           pickUp: false,
-                                          orderTime: '${DateTime.now()}',
-                                          deliveryTime: '${_date} ${_time}',
+                                          orderTime: Timestamp.now(),
+                                          deliveryTime: delTime,
                                           deliveryAddress: _selectedAddress,
                                           items: cartMap
                                         );

@@ -14,7 +14,7 @@ class Order{
   int otp;
   bool pickUp;
 
-  String orderTime,deliveryTime;
+  Timestamp orderTime,deliveryTime;
 
   Map items;
 

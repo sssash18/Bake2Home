@@ -148,7 +148,7 @@ class HistoryTile extends StatelessWidget {
                   Container(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      order.orderTime,
+                      order.orderTime.toString(),
                     ),
                   ),
                   Container(
