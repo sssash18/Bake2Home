@@ -11,7 +11,7 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 
 bool USE_FIRESTORE_EMULATOR = false;
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   if (USE_FIRESTORE_EMULATOR) {
@@ -21,20 +21,18 @@ void main() async{
   runApp(MyApp());
 }
 
-
 class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
-
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     return MaterialApp(
       routes: {
-        '/profile' : (BuildContext context) => VendorProfile(),
+        '/profile': (BuildContext context) => VendorProfile(),
       },
       title: 'Bake2Home',
       debugShowCheckedModeBanner: false,

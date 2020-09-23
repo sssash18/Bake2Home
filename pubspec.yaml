@@ -40,7 +40,7 @@ dependencies:
   http: ^0.12.2
   firebase_auth: ^0.18.0+1
   otp_text_field: ^1.0.1
-
+  progress_dialog: ^1.2.4
 
 
 
