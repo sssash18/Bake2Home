@@ -93,7 +93,7 @@ class DatabaseService{
       'pickUp' : order.pickUp,
       'orderTime' : order.orderTime,
       'deliveryTime' : order.deliveryTime,
-      'items' : order.items 
+      'items' : order.items ,
     }).then((value) => print("Order Places"));
   }
 
@@ -120,6 +120,10 @@ class DatabaseService{
     return orderCollection.where('userId',isEqualTo : currentUserID).snapshots().map((_ordersFromSnapshot));
   }
 
+  Stream<List<Order>>  orderUpdate(String orderId){
+    return orderCollection.where('orderId',isEqualTo: orderId).snapshots().map(( _ordersFromSnapshot));
+  }
+
   List<Order> _ordersFromSnapshot(QuerySnapshot snapshot){
     
     return snapshot.docs.map((e) => Order(
@@ -135,8 +139,10 @@ class DatabaseService{
       deliveryTime: e.data()['deliveryTime'],
       deliveryAddress: e.data()['deliveryAddress'],
       items: e.data()['items'],
-      orderId: e.data()['orderId']
+      orderId: e.data()['orderId'],
+      comments: e.data()['comments']
     )).toList();
   }
+
   
 }

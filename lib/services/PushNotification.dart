@@ -25,9 +25,11 @@ class PushNotification{
         token = value;
         print("TTTTTTT ${token}");
       });
+     
       String token1 = await firebaseMessaging.getToken();
       print("toke" + token1);
       _initialized = true;
+      
     }
   }
 
@@ -44,6 +46,8 @@ class PushNotification{
        'notification': <String, dynamic>{
          'body': body,
          'title': title,
+         'sound' : "air.mp3",
+         'icon' : "logo.png"
        },
        'priority': 'high',
        'data': <String, dynamic>{
@@ -51,7 +55,7 @@ class PushNotification{
          'id': '1',
          'status': 'done'
        },
-       'to': token
+       'to': await firebaseMessaging.getToken()
      },
     ),
   );
