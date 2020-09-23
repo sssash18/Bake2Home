@@ -20,15 +20,27 @@ class _ItemPageState extends State<ItemPage> {
   String _price = '100';
   String vid;
   int quantity = 0;
+  List<String>  _flavour = [];
+  String _selectedFlavour;
+  List<DropdownMenuItem> flavours = [];
   SplayTreeSet<double> dropDownList = SplayTreeSet();
   Map<double, double> priceMap = new Map();
   Map<double, String> vidMap = new Map();
   double selectedSize = 0.0,price,tt;
   @override
   Widget build(BuildContext context) {
+    _flavour = widget.model.flavours;
     vidMap.clear();
     priceMap.clear();
     dropDownList.clear();
+    flavours.clear();
+    _flavour.forEach((element) {
+      flavours.add(DropdownMenuItem(
+        value: element,
+        child: Text(element),
+      ));
+     });
+     _selectedFlavour = flavours.first.value;
 
     this.widget.model.variants.forEach((key, value) {
       print("VVVVVVV" + value.toString());
@@ -318,6 +330,18 @@ class _ItemPageState extends State<ItemPage> {
                   ),
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height/100),
+                Text('Choose the Flavour',style: TextStyle(color: base),),
+                SizedBox(height: MediaQuery.of(context).size.height/100),
+                DropdownButton(
+                  value: _selectedFlavour,
+                  items: flavours,
+                  onChanged: (val){
+                    setState(() {
+                      _selectedFlavour = val;
+                    });
+                  },
+                ),
+               
                 FlatButton.icon(
                   color: base,
                   shape: RoundedRectangleBorder(
@@ -333,7 +357,8 @@ class _ItemPageState extends State<ItemPage> {
                           size: tt,
                           notes: [noteItem],
                           price: price,
-                          photoUrl: widget.model.photoUrl
+                          photoUrl: widget.model.photoUrl,
+                          flavour : _selectedFlavour,
                         );
                         cartMap.putIfAbsent(vid,() => {
                           'itemName' : cartItem.itemName,
@@ -341,7 +366,8 @@ class _ItemPageState extends State<ItemPage> {
                           'price' : cartItem.price,
                           'quantity' : cartItem.quantity,
                           'notes' : cartItem.notes,
-                          'photoUrl' : cartItem.photoUrl
+                          'photoUrl' : cartItem.photoUrl,
+                          'flavour' : _selectedFlavour,
                         });
                         cartMap.putIfAbsent('shopId', () => widget.shopId);
                       }else{

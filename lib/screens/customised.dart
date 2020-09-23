@@ -43,6 +43,8 @@ class _CustomisedItemState extends State<CustomisedItem> {
                 photoUrl: value['photoUrl'],
                 recipe: value['recipe'],
                 variants: Map.from(value['variants']),
+                flavours: List<String>.from(value['flavours'])
+                
               );
               list.add(model);
               });

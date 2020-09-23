@@ -6,6 +6,7 @@ class Order{
   orderId,
   status,
   paymentType,
+  comments,
   deliveryAddress;
 
   double amount,
@@ -32,5 +33,6 @@ class Order{
     this.deliveryTime,
     this.deliveryAddress,
     this.items,
+    this.comments
   });
 }

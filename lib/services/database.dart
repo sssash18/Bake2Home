@@ -130,6 +130,7 @@ class DatabaseService {
       'counter': FieldValue.increment(1),
     });
     order.orderId = orderId;
+
     orderCollection
         .doc(orderId)
         .set({
@@ -192,22 +193,30 @@ class DatabaseService {
         .map((_ordersFromSnapshot));
   }
 
-  List<Order> _ordersFromSnapshot(QuerySnapshot snapshot) {
-    return snapshot.docs
-        .map((e) => Order(
-            userId: e.data()['userId'],
-            shopId: e.data()['shopId'],
-            status: e.data()['status'],
-            otp: e.data()['otp'],
-            paymentType: e.data()['paymentType'],
-            amount: e.data()['amount'],
-            delCharges: e.data()['deliveryCharges'],
-            pickUp: e.data()['pickUp'],
-            orderTime: e.data()['orderTime'],
-            deliveryTime: e.data()['deliveryTime'],
-            deliveryAddress: e.data()['deliveryAddress'],
-            items: e.data()['items'],
-            orderId: e.data()['orderId']))
-        .toList();
+  Stream<List<Order>>  orderUpdate(String orderId){
+    return orderCollection.where('orderId',isEqualTo: orderId).snapshots().map(( _ordersFromSnapshot));
   }
+
+  List<Order> _ordersFromSnapshot(QuerySnapshot snapshot){
+    
+    return snapshot.docs.map((e) => Order(
+      userId : e.data()['userId'],
+      shopId: e.data()['shopId'],
+      status: e.data()['status'],
+      otp : e.data()['otp'],
+      paymentType: e.data()['paymentType'],
+      amount: e.data()['amount'],
+      delCharges: e.data()['deliveryCharges'],
+      pickUp: e.data()['pickUp'],
+      orderTime: e.data()['orderTime'],
+      deliveryTime: e.data()['deliveryTime'],
+      deliveryAddress: e.data()['deliveryAddress'],
+      items: e.data()['items'],
+      orderId: e.data()['orderId'],
+      comments: e.data()['comments']
+    )).toList();
+  }
+
+  
 }
+
