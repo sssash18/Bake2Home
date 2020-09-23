@@ -7,7 +7,6 @@ import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
-
 Color base = Color(0xff654ea3);
 Color white = Colors.white;
 Color text = Color(0xff654ea3);
@@ -23,13 +22,13 @@ double sideButton = 12.0;
 double border = 20.0;
 Map<String, Shop> shopMap = new Map<String, Shop>();
 Map<String, Shop> topPickMap = new Map<String, Shop>();
-LocalUser.User currentUser = FirebaseAuth.instance.currentUser!=null ? LocalUser.User(uid: FirebaseAuth.instance.currentUser.uid) : LocalUser.User();
+LocalUser.MyUser currentUser;
 String currentUserID = '94ON8vhE5kxa7SfOyBWJ';
 String cartShopId = null;
 Map<String, dynamic> cartMap = Map<String, dynamic>();
 ValueNotifier<int> cartLengthNotifier = ValueNotifier<int>(0);
 String currentShopId = 'null';
-StopWatchTimer timer ;
+StopWatchTimer timer;
 bool activeTimer = false;
 String timerVal;
 List<Category> categoryList = [];
@@ -37,4 +36,64 @@ bool timerOver = false;
 StreamController<bool> controller = StreamController();
 FirebaseMessaging firebaseMessaging = FirebaseMessaging();
 String token = "";
+String createAvatarText() {
+  String result = "";
+  print('retsult is ${currentUser.name}');
 
+  if (currentUser.name.contains(" ")) {
+    List<String> nameList = currentUser.name.split(" ");
+    if (nameList.contains('')) {
+      result += nameList[0][0].toUpperCase();
+      return result;
+    }
+    nameList.forEach((element) {
+      result += element[0].toUpperCase();
+    });
+  } else {
+    result = currentUser.name.substring(0);
+  }
+  print('retsult is $result');
+  return result;
+}
+
+Future<bool> genDialog(
+    BuildContext context, String msg, String yes, String no) async {
+  bool rs = await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Alert'),
+          content: Text("$msg"),
+          actions: [
+            RaisedButton(
+              onPressed: () {
+                Navigator.pop(context, true);
+              },
+              color: base,
+              child: Text(
+                yes,
+                style: TextStyle(color: white),
+              ),
+            ),
+            RaisedButton(
+              onPressed: () {
+                Navigator.pop(context, false);
+              },
+              color: black,
+              child: Text(
+                no,
+                style: TextStyle(color: white),
+              ),
+            )
+          ],
+        );
+      });
+  return rs;
+}
+
+showSnackBar(GlobalKey<ScaffoldState> key, String msg) {
+  key.currentState.showSnackBar(SnackBar(
+    content: Text("$msg"),
+    duration: Duration(milliseconds: 1),
+  ));
+}
