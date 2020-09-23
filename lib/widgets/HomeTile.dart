@@ -6,7 +6,8 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 class HomeTile extends StatefulWidget {
   final double height,width,radius;
   final String title,photo;
-  HomeTile({this.height,this.width,this.radius,this.title,this.photo}) ;
+  final bool showRating;
+  HomeTile({this.height,this.width,this.radius,this.title,this.photo,this.showRating}) ;
   @override
   _HomeTileState createState() => _HomeTileState();
 }
@@ -45,20 +46,7 @@ class _HomeTileState extends State<HomeTile> {
                   SizedBox(
                     height: 5.0,
                   ),   
-                  RatingBar(
-                    ignoreGestures: true,
-                    initialRating: 3.2,
-                    itemSize: 15.0,
-                    itemCount: 5,
-                    glow: true,
-                    itemBuilder: (BuildContext context, int index){
-                      return Icon(
-                        Icons.star,
-                        color: Colors.amber,
-                      );
-                    },
-                    onRatingUpdate: (rating){}
-                  )
+                  widget.showRating ? _showRatingBar() : Container(),
                 ]
               ),
             ), 
@@ -76,6 +64,22 @@ class _HomeTileState extends State<HomeTile> {
                 )
               ),
         ],
+    );
+  }
+  Widget _showRatingBar(){
+    return RatingBar(
+      ignoreGestures: true,
+      initialRating: 3.2,
+      itemSize: 15.0,
+      itemCount: 5,
+      glow: true,
+      itemBuilder: (BuildContext context, int index){
+      return Icon(
+        Icons.star,
+        color: Colors.amber,
+      );
+      },
+      onRatingUpdate: (rating){}
     );
   }
 }

@@ -1,4 +1,5 @@
-class User{
-  String name,contact,address;
-  User({this.name,this.contact,this.address});
+class MyUser {
+  String name, contact, uid, token;
+  Map addresses;
+  MyUser({this.name, this.contact, this.addresses, this.uid, this.token});
 }

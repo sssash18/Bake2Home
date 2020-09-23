@@ -1,12 +1,22 @@
 import 'package:bake2home/constants.dart';
-import 'package:bake2home/services/database.dart';
 import 'package:bake2home/widgets/VendorList.dart';
 import 'package:flutter/material.dart';
-import 'package:bake2home/widgets/VendorTile.dart';
-import 'package:provider/provider.dart';
-import 'package:bake2home/functions/shop.dart';
 
-class VendorListPage extends StatelessWidget {
+
+
+class VendorListPage extends StatefulWidget {
+  String title;
+  bool rated;
+  VendorListPage({this.title,this.rated});
+
+  @override
+  _VendorListPageState createState() => _VendorListPageState();
+}
+
+class _VendorListPageState extends State<VendorListPage> {
+  
+  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,13 +27,13 @@ class VendorListPage extends StatelessWidget {
           color: base,
         ),
         title: Text(
-          'Cakes',
+          widget.title,
           style: TextStyle(
             color: text,
           )
         )
       ),
-      body: VendorList(),
+      body: VendorList(category: widget.title.toLowerCase(),rated: widget.rated,),
       );
   }
 }

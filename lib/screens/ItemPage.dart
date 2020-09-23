@@ -1,12 +1,16 @@
-import 'package:bake2home/widgets/dropdown.dart';
+import 'dart:collection';
+
+import 'package:bake2home/functions/cartItem.dart';
+import 'package:bake2home/functions/customisedItemModel.dart';
+import 'package:bake2home/services/database.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/constants.dart';
 
 class ItemPage extends StatefulWidget {
-
-  final Map item;
-  ItemPage({this.item});
+  CustomisedItemModel model;
+  String shopId;
+  ItemPage({this.shopId, this.model});
 
   @override
   _ItemPageState createState() => _ItemPageState();
@@ -14,250 +18,428 @@ class ItemPage extends StatefulWidget {
 
 class _ItemPageState extends State<ItemPage> {
   String _price = '100';
+  String vid;
+  int quantity = 0;
+  SplayTreeSet<double> dropDownList = SplayTreeSet();
+  Map<double, double> priceMap = new Map();
+  Map<double, String> vidMap = new Map();
+  double selectedSize = 0.0,price,tt;
   @override
   Widget build(BuildContext context) {
+    vidMap.clear();
+    priceMap.clear();
+    dropDownList.clear();
+
+    this.widget.model.variants.forEach((key, value) {
+      print("VVVVVVV" + value.toString());
+      String vid = value['vid'];
+      double price = value['price'].toDouble();
+      double size = value['size'].toDouble();
+      priceMap.putIfAbsent(size, () => price);
+      dropDownList.add(size);
+      vidMap.putIfAbsent(size, () => vid);
+    });
+    tt = selectedSize == 0.0 ? dropDownList.first : selectedSize;
+    price = priceMap[tt];
+    vid = vidMap[tt];
+    if (cartMap.containsKey(vid)) {
+      quantity = cartMap[vid]['quantity'];
+    } else {
+      quantity = 0;
+    }
     return SafeArea(
-      child: Scaffold(
-        body:
-          CustomScrollView(
-              slivers:<Widget>[ 
+      child: WillPopScope(
+          onWillPop: () async{
+            DatabaseService(uid : currentUserID).updateCart(cartMap);
+            return true;
+          },
+          child: Scaffold(
+          resizeToAvoidBottomInset: true,
+          body: CustomScrollView(
+            slivers: <Widget>[
               SliverToBoxAdapter(
-                              child: Stack(
-                overflow: Overflow.visible,
-                children: <Widget>[ 
-                Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height/2.8,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color(0xff654ea3),Color(0xffeaafc8)],
-                )
-                ),
-                
-                child: ShaderMask(
-                shaderCallback: (rect) {
-                  return LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: <Color>[
+                child: Stack(overflow: Overflow.visible, children: <Widget>[
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height / 2.8,
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Color(0xff654ea3), Color(0xffeaafc8)],
+                    )),
+                    child: ShaderMask(
+                      shaderCallback: (rect) {
+                        return LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: <Color>[
                             Colors.black.withOpacity(1.0),
-                            Colors.black.withOpacity(1.0), 
-                            Colors.black.withOpacity(0.1), 
-                            Colors.transparent // <-- you might need this if you want full transparency at the edge
-                    ],
-                    stops: [0.0, 0.5,0.65, 1.0], //<-- the gradient is interpolated, and these are where the colors above go into effect (that's why there are two colors repeated)
-                  ).createShader(Rect.fromLTRB(0, 0, rect.width, 1.5*rect.height));
-                },
-                blendMode: BlendMode.dstIn,
-                child: CachedNetworkImage(
-                          imageUrl: widget.item['photoUrl'],
-                          fit: BoxFit.fill,                          
-                        ),
-                  ),
-              ),
-                Positioned(
-                    top: MediaQuery.of(context).size.height/2.8 - MediaQuery.of(context).size.height/16,
-                    left: (MediaQuery.of(context).size.width - MediaQuery.of(context).size.width/1.3)/2,
-                    child: Container( 
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20.0),
-                      color: white,
-                      boxShadow: [BoxShadow(
-                      color: Colors.grey,
-                      offset: Offset(0.0, 1.0),
-                      blurRadius: 16.0,    
-                    )],
+                            Colors.black.withOpacity(1.0),
+                            Colors.black.withOpacity(0.1),
+                            Colors
+                                .transparent // <-- you might need this if you want full transparency at the edge
+                          ],
+                          stops: [
+                            0.0,
+                            0.5,
+                            0.65,
+                            1.0
+                          ], //<-- the gradient is interpolated, and these are where the colors above go into effect (that's why there are two colors repeated)
+                        ).createShader(
+                            Rect.fromLTRB(0, 0, rect.width, 1.5 * rect.height));
+                      },
+                      blendMode: BlendMode.dstIn,
+                      child: widget.model.photoUrl!=null ? CachedNetworkImage(
+                        imageUrl: widget.model.photoUrl,
+                        fit: BoxFit.fill,
+                      ) : Image.asset("assets/images/cake.jpeg",fit:BoxFit.fill) ,
                     ),
-                    height: MediaQuery.of(context).size.height/8,
-                    width : MediaQuery.of(context).size.width/1.3,
-                    child: Text(widget.item['itemName'],style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25.0),),
                   ),
+                  Positioned(
+                    top: MediaQuery.of(context).size.height / 2.8 -
+                        MediaQuery.of(context).size.height / 16,
+                    left: (MediaQuery.of(context).size.width -
+                            MediaQuery.of(context).size.width / 1.3) /
+                        2,
+                    child: Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.0),
+                        color: white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey,
+                            offset: Offset(0.0, 1.0),
+                            blurRadius: 16.0,
+                          )
+                        ],
+                      ),
+                      height: MediaQuery.of(context).size.height / 8,
+                      width: MediaQuery.of(context).size.width / 1.3,
+                      child: Text(
+                        widget.model.itemName,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 25.0),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+            child: IconButton(
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: white,
+                  size: 40.0,
                 ),
-                
-            ]
-            ),
-            ),
-            SliverToBoxAdapter(
-              child: Container(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color(0xffeaafc8),Color(0xff654ea3)],
-              )
+                onPressed: () {
+                  DatabaseService(uid:currentUserID).updateCart(cartMap);
+                  Navigator.pop(context);
+                }),
+            top: 0,
+            left: 0,
+          ),
+                ]),
               ),
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    decoration: BoxDecoration(
-                      boxShadow: [BoxShadow(
-                        color: Colors.grey,
-                        offset: Offset(0.0, 1.0),
-                        blurRadius: 6.0
-                    )]
+              SliverToBoxAdapter(
+                  child: Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Color(0xffeaafc8), Color(0xff654ea3)],
+                )),
+                child: Column(
+                  children: <Widget>[
+                    quantity == 0.0 ? cartAdder(context) : cartAdded(context),
+                    
+                    Container(
+                        margin: EdgeInsets.fromLTRB(15.0, 45.0, 0, 0),
+                        alignment: Alignment.topLeft,
+                        child: Text("Ingredients",
+                            style: TextStyle(
+                              color: white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: head2,
+                            ))),
+                    Container(
+                      margin: EdgeInsets.fromLTRB(15.0, 15.0, 0, 0),
+                      child: ListView.builder(
+                          physics: ScrollPhysics(
+                            parent: NeverScrollableScrollPhysics(),
+                          ),
+                          shrinkWrap: true,
+                          itemCount: widget.model.ingredients.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Text(
+                                '${widget.model.ingredients.elementAt(index)}',
+                                style: TextStyle(
+                                  color: white,
+                                  fontSize: textSize,
+                                ));
+                          }),
                     ),
-                    margin: EdgeInsets.fromLTRB(15.0, MediaQuery.of(context).size.height/16 + 30, 15.0, 0),
-                    child: Container(
-                      height: MediaQuery.of(context).size.height/14,
-                      decoration: BoxDecoration(
-                        color: white,
-                        borderRadius: BorderRadius.circular(border),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          createDropDown(widget.item),
-                          FlatButton.icon(
-                            label: Text("Add to cart"),
-                            icon: Icon(Icons.add_shopping_cart),
-                            onPressed: (){},
-                          )
-                        ]
-                      ),
-                    )
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      boxShadow: [BoxShadow(
-                        color: Colors.grey,
-                        offset: Offset(0.0, 1.0),
-                        blurRadius: 6.0
-                    )]
-                    ),
-                    margin: EdgeInsets.fromLTRB(15.0, 30, 15.0, 0),
-                    child: Container(
-                      height: MediaQuery.of(context).size.height/14,
-                      decoration: BoxDecoration(
-                        color: white,
-                        borderRadius: BorderRadius.circular(border),
-                      ),
-                      child: Row(
-                        children: <Widget>[
-                         
-                        ]
-                      ),
-                    )
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      boxShadow: [BoxShadow(
-                      color: Colors.grey,
-                      offset: Offset(0.0, 1.0),
-                      blurRadius: 16.0
-                    )],
-                    ),
-                    margin: EdgeInsets.fromLTRB(15.0, 30, 15.0, 0),
-                    child: Container(
-                      height: MediaQuery.of(context).size.height/14,
-                      decoration: BoxDecoration(
-                        color: white,
-                        borderRadius: BorderRadius.circular(border),
-                      ),
-                    )
-                  ),
-                  Container( 
-                    margin: EdgeInsets.fromLTRB(15.0, 45.0, 0, 0),
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      "Ingredients",
-                      style: TextStyle(
-                        color: white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: head2,
-                      )
-                    )
-                  ),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(15.0, 15.0, 0, 0),
-                    child: ListView.builder(
-                      physics: ScrollPhysics(
-                        parent: NeverScrollableScrollPhysics(),
-                      ),
-                      shrinkWrap: true,
-                      itemCount: widget.item['ingredients'].keys.length,
-                      itemBuilder: (BuildContext context, int index){
-                        return Text(
-                          '${widget.item['ingredients'].keys.elementAt(index)} - ${widget.item['ingredients'][widget.item['ingredients'].keys.elementAt(index)]}',
-                          style: TextStyle(
-                            color: white,
-                            fontSize: textSize,
-                          )
-                        );
-                      }
-                    ),
-                  ),
-                  Container( 
-                    margin: EdgeInsets.fromLTRB(15.0, 45.0, 15.0, 0),
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      "Description",
-                      style: TextStyle(
-                        color: white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: head2,
-                      )
-                    )
-                  ),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 0),
-                    child: Text(
-                      widget.item['recipe'],
-                      style: TextStyle(
-                        color: white,
-                        fontSize: textSize
-                      ),
-                    )
-                  ),
-                ],
-              ),                    
-                
-              
-                )
-            ),
-            
-            
-            
+                    Container(
+                        margin: EdgeInsets.fromLTRB(15.0, 45.0, 15.0, 0),
+                        alignment: Alignment.topLeft,
+                        child: Text("Description",
+                            style: TextStyle(
+                              color: white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: head2,
+                            ))),
+                    Container(
+                        margin: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 0),
+                        child: Text(
+                          widget.model.recipe,
+                          style: TextStyle(color: white, fontSize: textSize),
+                        )),
+                  ],
+                ),
+              )),
             ],
-          ) ,
-          
+          ),
+        ),
       ),
     );
   }
-  Widget createDropDown(Map item){
-    List<String> itemList = [];
-    item['variants'].keys.forEach(
-      (value){
-        itemList.add("${item['variants'][value]['size']} pound (Rs. ${item['variants'][value]['price']})");
-      }
-    );
 
-    String dropDownval = itemList[0];
-    return DropdownButton(
-    value: dropDownval,
-    iconSize: 24,
-        elevation: 16,
-        style: TextStyle(color: base),
-        underline: Container(
-    height: 2,
-    color: Colors.deepPurpleAccent,
+  Container cartAdder(BuildContext context) {
+    double height = MediaQuery.of(context).size.height * 0.08;
+    double width = MediaQuery.of(context).size.width * 0.9;
+    return Container(
+      margin: EdgeInsets.only(top: 60.0),
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+          color: white,
+          borderRadius: BorderRadius.circular(30.0),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black.withOpacity(0.3),
+                spreadRadius: 2.5,
+                blurRadius: 2.5)
+          ]),
+      child: Row(children: <Widget>[
+        Container(
+            width: width / 2,
+            decoration: BoxDecoration(
+                // color: Colors.pink,
+                borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(30.0),
+              bottomLeft: Radius.circular(30.0),
+            )),
+            child: Center(
+              child: dButton(),
+            )),
+        InkWell(
+          onTap: () {
+            addToCartNewItem();
+          },
+          child: Container(
+            width: width / 2,
+            decoration: BoxDecoration(
+                color: base,
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(30.0),
+                  bottomRight: Radius.circular(30.0),
+                )),
+            height: height,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Icon(Icons.add_shopping_cart),
+                Text("Add to cart"),
+              ],
+            ),
+          ),
         ),
-        
-    onChanged: (String newvalue){
-      setState(() {
-        dropDownval = newvalue;
-      });
-    },
-    items: itemList.map<DropdownMenuItem<String>>((value){
-      return DropdownMenuItem(
-        value: value,
-        child: Text(value),
+      ]),
+    );
+  }
+
+  dButton() {
+    List<DropdownMenuItem<double>> list = List();
+    dropDownList.forEach((element) {
+      list.add(DropdownMenuItem<double>(
+        value: element,
+        child: Text("$element pounds  \u20B9 ${priceMap[element]}",
+            style: TextStyle(color: black)),
+      ));
+    });
+    return DropdownButtonHideUnderline(
+      child: DropdownButton(
+        isDense: false,
+        // focusNode: dropFocus,
+        items: list,
+        value: selectedSize == 0.0 ? dropDownList.first : selectedSize,
+        style: TextStyle(fontSize: 13.0),
+        onChanged: (value) {
+          // FocusScope.of(context).requestFocus(new FocusNode());
+          setState(() {
+            selectedSize = value;
+            // price = myMap[selectedSize];
+            // if (cartMap.containsKey(idMap[selected])) {
+            //   quantity = cartMap[idMap[selected]]['quantity'];
+            // } else {
+            //   quantity = 0;
+            // }
+          });
+        },
+      ),
+    );
+  }
+
+  void addToCartNewItem() {
+    bool note = true;
+    String noteItem = "";
+    if(note){
+      showModalBottomSheet( 
+        context: context,
+        builder: (builder){
+          return Container(
+            child: Form(
+            child: Column(
+              children : <Widget>[
+                SizedBox(height: MediaQuery.of(context).size.height/30),
+                Container(
+                    margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.height/30,0, MediaQuery.of(context).size.height/30, 0),
+                    child: TextFormField(
+                    autofocus: true,
+                    decoration: InputDecoration(
+                      labelText: "Special Note",
+                      helperText: "* will be printed on the product",
+                      border: OutlineInputBorder()
+                    ), 
+                    onChanged: (val){
+                      noteItem = val;
+                    }, 
+                  ),
+                ),
+                SizedBox(height: MediaQuery.of(context).size.height/100),
+                FlatButton.icon(
+                  color: base,
+                  shape: RoundedRectangleBorder(
+                    borderRadius : BorderRadius.circular(border),
+                  ),
+                  onPressed: (){
+                   setState(() {
+                      quantity++;
+                      if(quantity==1){
+                        CartItemMap cartItem = CartItemMap(
+                          itemName: widget.model.itemName,
+                          quantity: quantity,
+                          size: tt,
+                          notes: [noteItem],
+                          price: price,
+                          photoUrl: widget.model.photoUrl
+                        );
+                        cartMap.putIfAbsent(vid,() => {
+                          'itemName' : cartItem.itemName,
+                          'size'  : cartItem.size,
+                          'price' : cartItem.price,
+                          'quantity' : cartItem.quantity,
+                          'notes' : cartItem.notes,
+                          'photoUrl' : cartItem.photoUrl
+                        });
+                        cartMap.putIfAbsent('shopId', () => widget.shopId);
+                      }else{
+                        cartMap[vid]['quantity']++;
+                        cartMap[vid]['notes'].add(noteItem);
+                      }
+                      print(cartMap);
+                      Navigator.pop(context);
+                   }); 
+
+                  },
+                  icon: Icon(Icons.done,color: white,),
+                  label: Text('Done',style: TextStyle(color : white),)
+                )
+              ]
+            ), 
+              ),
+          );
+        }
       );
-    }).toList(),
-        );
+    }
+  }
+
+  cartAdded(BuildContext context) {
+    double height = MediaQuery.of(context).size.height * 0.08;
+    double width = MediaQuery.of(context).size.width * 0.9;
+    return Container(
+      margin: EdgeInsets.only(top: 60.0),
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+          color: white,
+          borderRadius: BorderRadius.circular(30.0),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black.withOpacity(0.3),
+                spreadRadius: 2.5,
+                blurRadius: 2.5)
+          ]),
+      child: Row(children: <Widget>[
+        Container(
+            width: width / 2,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(30.0),
+              bottomLeft: Radius.circular(30.0),
+            )),
+            child: Center(
+              child: dButton(),
+            )),
+        InkWell(
+          
+          child: Container(
+            width: width / 2,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+              topRight: Radius.circular(30.0),
+              bottomRight: Radius.circular(30.0),
+            )),
+            height: height,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                InkWell(
+                  child: Icon(
+                    Icons.remove_circle_outline,
+                    color: Colors.black,
+                  ),
+                  onTap: (){
+                    setState(() {
+                      --quantity;
+                      cartMap[vid]['quantity']--;
+                      cartMap[vid]['notes'].removeLast();
+                      if(cartMap[vid]['quantity']==0){
+                        cartMap.remove(vid);
+                      }
+                    });
+                  },
+                ),
+                Text('$quantity'),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      ++quantity;
+                      addToCartNewItem();  
+                    });
+                    
+                  },
+                  child: Icon(
+                    Icons.add_circle_outline,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ]),
+    );
   }
 }

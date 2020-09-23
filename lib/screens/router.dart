@@ -1,10 +1,14 @@
-import 'dart:math';
-
+import 'package:bake2home/functions/category.dart';
+import 'package:bake2home/functions/user.dart';
 import 'package:bake2home/screens/homepage.dart';
+import 'package:bake2home/screens/signIn.dart';
+import 'package:bake2home/services/auth.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:bake2home/functions/shop.dart';
 import 'package:bake2home/constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Router extends StatefulWidget {
   @override
@@ -12,297 +16,192 @@ class Router extends StatefulWidget {
 }
 
 class _RouterState extends State<Router> {
-<<<<<<< HEAD
-
-CollectionReference shopCollection = Firestore.instance.collection("Shops");
-    Future<bool> getShops() async{
-      QuerySnapshot shops = await shopCollection.getDocuments();
-      shops.documents.forEach((element) {
-          print(element.data['shopID']);
-          Shop shop = _shopFromSnapshot(element);
-          shopMap.putIfAbsent(shop.shopID, () => shop);
-      });
-      return true;
-    }
-    CollectionReference topCollection = Firestore.instance.collection("TopPicks");
-    void getTopPick() async{
-      QuerySnapshot top  = await topCollection.getDocuments();
-        top.documents.forEach((element) {
-          //print('top ${shopMap[element.data['shopID']]}');
-          Shop shop = shopMap[element.data['shopID']];
-          topPickMap.putIfAbsent(shop.shopID, () => shop);   
-        });
-    }
-
-    Future<bool> getUser() async{
-      DocumentSnapshot user = await Firestore.instance.collection("Users").document('94ON8vhE5kxa7SfOyBWJ').get();   
-      currentUser.name = user.data['name'];
-      currentUser.address = user.data['address'];
-      currentUser.contact = user.data['contact'];   
-      return true;
-    }
-  
-    void getThings() async{
-      await getShops();
-      getTopPick();
-      await getUser();
-    }
-  // String genID(DocumentReference doc){
-  //   String res = doc.documentID;
-  //   Random ran = new Random();
-  //   ran.nextInt(9000);
-  //   res += '-${Timestamp.now().millisecondsSinceEpoch.toString() + ran.nextInt(9000).toString()}';
-  //   return res;
-  // }
- @override
-  void initState() {
-    super.initState(); 
-    getThings();
-  // int i =0;
-  // for(i=0;i<6;i++){
-  //   DocumentReference docRef = shopCollection.document();
-  //   String itemID1 = genID(docRef);
-  //   String itemID2 = genID(docRef);    
-  //   String itemID3 = genID(docRef);
-  //   String itemID4 = genID(docRef);
-  //   String itemID5 = genID(docRef);
-  //   String itemID6 = genID(docRef);
-  //   docRef.setData(
-  //     {
-  //       'shopID' : docRef.documentID,
-  //       'shopName' : 'DessertTown',
-  //       'shopAddress' : 'ABC Colony',
-  //       'contact' : '2233434343',
-  //       'merchantName': 'Aman Bhai',
-  //       'rating' : 4.2,
-  //       'numOrders' : 450,
-  //       'experience' : '2+ years',
-  //       'profilePhoto' : 'https://firebasestorage.googleapis.com/v0/b/bakemycake-1d1dc.appspot.com/o/atom.png?alt=media&token=789c85bc-5234-4fb9-a317-957f98bb0abe',
-  //       'coverPhoto' : 'https://firebasestorage.googleapis.com/v0/b/bakemycake-1d1dc.appspot.com/o/atom.png?alt=media&token=789c85bc-5234-4fb9-a317-957f98bb0abe',
-  //       'tagline' : 'Utterly',
-  //       'bio' : 'Good shop',
-  //       'cookTime' : {
-  //         'cake' : '2 hours',
-  //         'cookie' : '1 hour',
-  //         'chocolate' : '2 days'
-  //       },
-  //       'items' : {
-  //         'cake' : {
-  //           'standard' : {
-  //             itemID1 : {
-  //               'itemID' : itemID1,
-  //               'itemName' : 'Chocolate Cake',
-  //               'availability' : true,
-  //               'photoUrl' : 'https://firebasestorage.googleapis.com/v0/b/bakemycake-1d1dc.appspot.com/o/atom.png?alt=media&token=789c85bc-5234-4fb9-a317-957f98bb0abe',
-  //               'variants' : {
-  //                 '${itemID1}-1#00' : {
-  //                   'vid' : '${itemID1}-1#00',
-  //                   'size' : 1,
-  //                   'price' : 450,
-  //                 }
-  //               },
-  //               'ingredients' : {
-  //                 'flour' : '500g',
-  //                 'sugar' : '1 Kg',
-  //               },
-  //               'ingPrice' : 200,
-  //               'recipe' : "Good to make",
-
-  //             }
-  //           },
-  //           'customised' : {
-  //             itemID2: {
-  //               'itemID' : itemID2,
-  //               'availability' : true,
-  //               'itemName' : 'PUBG Cake',
-  //               'photoUrl' : 'https://firebasestorage.googleapis.com/v0/b/bakemycake-1d1dc.appspot.com/o/atom.png?alt=media&token=789c85bc-5234-4fb9-a317-957f98bb0abe',
-  //               'variants' : {
-  //                 '${itemID2}-1#00' : {
-  //                   'vid' : '${itemID2}-1#00',
-  //                   'size' : 1,
-  //                   'price' : 550,
-  //                 }
-  //               },
-  //               'ingredients' : {
-  //                 'flour' : '500g',
-  //                 'sugar' : '1 Kg',
-  //               },
-  //               'ingPrice' : 120,
-  //               'recipe' : "Good to make",
-
-  //             }
-
-  //           }
-  //         },
-  //         'cookie' : {
-  //           'standard' : {
-  //             itemID3 : {
-  //               'itemID' : itemID3,
-  //               'availability' : true,
-  //               'itemName' : 'Dry Fruit cookie',
-  //               'photoUrl' : 'https://firebasestorage.googleapis.com/v0/b/bakemycake-1d1dc.appspot.com/o/atom.png?alt=media&token=789c85bc-5234-4fb9-a317-957f98bb0abe',
-  //               'variants' : {
-  //                 '${itemID3}-1#00' : {
-  //                   'vid' : '${itemID3}-1#00',
-  //                   'size' : 1,
-  //                   'price' : 90,
-  //                 }
-  //               },
-  //               'ingredients' : {
-  //                 'flour' : '500g',
-  //                 'sugar' : '1 Kg',
-  //               },
-  //               'ingPrice' : 400,
-  //               'recipe' : "Good to make",
-  //               'ingPrice' : 110,
-
-  //             }
-  //           },
-  //           'customised' : {
-  //             itemID4 : {
-  //               'itemID' : itemID4,
-  //               'availability' : true,
-  //               'itemName' : 'ChocoVanilla cookie',
-  //               'photoUrl' : 'https://firebasestorage.googleapis.com/v0/b/bakemycake-1d1dc.appspot.com/o/atom.png?alt=media&token=789c85bc-5234-4fb9-a317-957f98bb0abe',
-  //               'variants' : {
-  //                 '${itemID4}-1#50' : {
-  //                   'vid' : '${itemID4}-1#50',
-  //                   'size' : 1.5,
-  //                   'price' : 120,
-  //                 }
-  //               },
-  //               'ingredients' : {
-  //                 'flour' : '500g',
-  //                 'sugar' : '1 Kg',
-  //               },
-  //               'ingPrice' : 150,
-  //               'recipe' : "Good to make",
-
-  //             }
-
-  //           }
-  //         },
-  //         'chocolate' : {
-  //           'standard' : {
-  //             itemID5 : {
-  //               'itemID' : itemID5,
-  //               'availability' : true,
-  //               'itemName' : 'White Chocolate',
-  //               'photoUrl' : 'https://firebasestorage.googleapis.com/v0/b/bakemycake-1d1dc.appspot.com/o/atom.png?alt=media&token=789c85bc-5234-4fb9-a317-957f98bb0abe',
-  //               'variants' : {
-  //                 '${itemID5}-1#00' : {
-  //                   'vid' : '${itemID5}-1#00',
-  //                   'size' : 1,
-  //                   'price' : 200,
-  //                 }
-  //               },
-  //               'ingredients' : {
-  //                 'flour' : '500g',
-  //                 'sugar' : '1 Kg',
-  //               },
-  //               'ingPrice' : 200,
-  //               'recipe' : "Good to make",
-
-  //             }
-  //           },
-  //           'customised' : {
-  //             itemID6 : {
-  //               'itemID' : itemID6,
-  //               'availability' : true,
-  //               'itemName' : 'Choco Delight',
-  //               'photoUrl' : 'https://firebasestorage.googleapis.com/v0/b/bakemycake-1d1dc.appspot.com/o/atom.png?alt=media&token=789c85bc-5234-4fb9-a317-957f98bb0abe',
-  //               'variants' : {
-  //                 '${itemID6}-1#00' : {
-  //                   'vid' : '${itemID6}-1#00',
-  //                   'size' : 1,
-  //                   'price' : 600,
-  //                 }
-  //               },
-  //               'ingredients' : {
-  //                 'flour' : '500g',
-  //                 'sugar' : '1 Kg',
-  //               },
-  //               'ingPrice' : 200,
-  //               'recipe' : "Good to make",
-=======
-  CollectionReference shopCollection = Firestore.instance.collection("Shops");
-  CollectionReference topCollection = Firestore.instance.collection("TopPicks");
+  CollectionReference shopCollection =
+      FirebaseFirestore.instance.collection("Shops");
+  CollectionReference topCollection =
+      FirebaseFirestore.instance.collection("TopPicks");
+  CollectionReference categoryCollection =
+      FirebaseFirestore.instance.collection("Categories");
+  FirebaseAuth _auth = FirebaseAuth.instance;
   @override
   void initState() {
     super.initState();
     getThings();
+    //createDynamicLink();
+    initDynamicLinks();
   }
->>>>>>> 5051cc4325eb5b0711fc8d7b3abf0e0721f0c90c
 
-  getThings() async {
+  Future<void> initDynamicLinks() async {
+    FirebaseDynamicLinks.instance.onLink(
+        onSuccess: (PendingDynamicLinkData link) async {
+      final Uri deeplink = link?.link;
+      if (deeplink != null) {
+        final String param = deeplink.queryParameters['Id'];
+        print(param);
+        Shop shop = shopMap[param];
+        print(shop.shopName);
+        Navigator.pushNamed(context, deeplink.path, arguments: shop);
+      }
+    }, onError: (OnLinkErrorException e) async {
+      print('onLinkError');
+      print(e.message);
+    });
+    final PendingDynamicLinkData link =
+        await FirebaseDynamicLinks.instance.getInitialLink();
+    //FirebaseDynamicLinks.instance.getDynamicLink(url);
+    final Uri deeplink = link?.link;
+    print("LLLLL" + deeplink.toString());
+  }
+
+  void getThings() async {
     await getShops();
-    getTopPick();
+    //await getTopPick();
     await getUser();
+    await getCategories();
+    // await getCardDetails();
+    _auth.currentUser != null
+        ? Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (BuildContext context) => HomePage()))
+        : Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (BuildContext context) => SignIn()));
   }
 
   Future<bool> getUser() async {
-    DocumentSnapshot user = await Firestore.instance
-        .collection("Users")
-        .document('94ON8vhE5kxa7SfOyBWJ')
-        .get();
-    currentUser.name = user.data['name'];
-    currentUser.address = user.data['address'];
-    currentUser.contact = user.data['contact'];
+    if (FirebaseAuth.instance.currentUser != null) {
+      String uid = FirebaseAuth.instance.currentUser.uid;
+      print('00000000000000------------------$uid');
+      DocumentSnapshot user = await FirebaseFirestore.instance
+          .collection("Users")
+          .doc(uid)
+          .get()
+          .catchError((e) {
+        print(e.toString());
+      });
+      currentUserID = uid;
+      currentUser = MyUser(
+          uid: uid,
+          name: user.data()['name'],
+          addresses: user.data()['addresses'] == null
+              ? {}
+              : Map.from(user.data()['addresses']),
+          contact: user.data()['contact'],
+          token: user.data()['token']);
+    }
+
     return true;
   }
 
   Future<bool> getShops() async {
-    QuerySnapshot shops = await shopCollection.getDocuments();
-    shops.documents.forEach((element) {
+    QuerySnapshot shops = await shopCollection.get();
+    shops.docs.forEach((element) {
       Shop shop = _shopFromSnapshot(element);
-      shopMap.putIfAbsent(shop.shopID, () => shop);
+      shopMap.putIfAbsent(shop.shopId, () => shop);
     });
+    print("SSSSSS + ${shopMap.toString()}");
     return true;
   }
 
-  void getTopPick() async {
-    await topCollection.getDocuments().then((value) {
-      value.documents.forEach((element) {
-        Shop shop = shopMap[element.data['shopID']];
-        topPickMap.putIfAbsent(shop.shopID, () => shop);
+  Future<void> getCategories() async {
+    QuerySnapshot categories = await categoryCollection.get();
+    categories.docs.forEach((element) {
+      Category cat =
+          Category(name: element.id, photoUrl: element.data()['photoUrl']);
+      categoryList.add(cat);
+    });
+    print(categoryList);
+  }
+
+  Future<void> getTopPick() async {
+    await topCollection.get().then((value) {
+      value.docs.forEach((element) {
+        Shop shop = shopMap[element.data()['shopId']];
+        topPickMap.putIfAbsent(shop.shopId, () => shop);
       });
     });
   }
 
-  Shop _shopFromSnapshot(DocumentSnapshot doc) {
+  Shop _shopFromSnapshot(DocumentSnapshot document) {
     return Shop(
-      shopID: doc.data['shopID'],
-      shopName: doc.data['shopName'],
-      shopAddress: doc.data['shopAddress'],
-      contact: doc.data['contact'],
-      merchantName: doc.data['merchantName'],
-      tagline: doc.data['tagline'],
-      bio: doc.data['bio'],
-      profilePhoto: doc.data['profilePhoto'],
-      coverPhoto: doc.data['coverPhoto'],
-      cookTime: doc.data['cookTime'],
-      experience: doc.data['experience'],
-      numOrders: doc.data['numOrders'],
-      items: doc.data['items'],
-      rating: doc.data['rating'].toDouble(),
-      ingPrice: doc.data['ingPrice'],
+      shopId: document.data()['shopId'],
+      shopName: document.data()['shopName'],
+      shopAddress: document.data()['shopAddress'],
+      contact: document.data()['contact'],
+      merchantName: document.data()['merchantName'],
+      tagline: document.data()['tagline'],
+      bio: document.data()['bio'],
+      profilePhoto: document.data()['profilePhoto'],
+      coverPhoto: document.data()['coverPhoto'],
+      cookTime: document.data()['cookTime'],
+      experience: document.data()['experience'],
+      numOrders: document.data()['numOrders'],
+      items: document.data()['items'],
+      rating: (document.data()['rating'] ?? 0).toDouble(),
+      ingPrice: document.data()['ingPrice'],
+      token: document.data()['token'],
     );
   }
+
+  Future<void> createDynamicLink() async {
+    final DynamicLinkParameters parameters = DynamicLinkParameters(
+        navigationInfoParameters:
+            NavigationInfoParameters(forcedRedirectEnabled: true),
+        uriPrefix: 'https://bakemycakevendor.page.link',
+        link: Uri.parse(
+            'https://bakemycakevendor/profile?Id=FKAEYVHnogOZvI4g6ba5'),
+        androidParameters:
+            AndroidParameters(packageName: 'com.example.bake2home'),
+        socialMetaTagParameters: SocialMetaTagParameters(
+          title: "Find me at",
+          description: 'Find my profile at bmc',
+          imageUrl: Uri.parse(
+              'https://firebasestorage.googleapis.com/v0/b/bakemycake-1d1dc.appspot.com/o/atom.png?alt=media&token=789c85bc-5234-4fb9-a317-957f98bb0abe'),
+        ));
+    final dynamicLink = await parameters.buildUrl();
+    final ShortDynamicLink shortLink = await parameters.buildShortLink();
+    print('linkkkkkkkkk' +
+        shortLink.shortUrl.toString() +
+        "     " +
+        shortLink.warnings.toString());
+  }
+
+  // Future<void> getCardDetails() async {
+  //   Stream<DocumentSnapshot> ss = FirebaseFirestore.instance
+  //       .collection('Users')
+  //       .doc(currentUserID)
+  //       .snapshots();
+  //   ss.listen((event) {
+  //     if (event.exists) {
+  //       print('startting cartMap ${event.data()['cart']}');
+  //       Map<String, dynamic> someMap = Map();
+  //       if (event.data()['cart'] != null) {
+  //         someMap = Map<String, dynamic>.from(event.data()['cart']);
+  //       }
+  //       setState(() {
+  //         print('fetched shopId is $currentShopId');
+  //         if (someMap.isNotEmpty) {
+  //           cartMap = Map<String, dynamic>.from(someMap);
+  //         }
+  //         cartLengthNotifier.value = cartMap.length;
+  //         currentShopId = someMap['shopId'].toString();
+  //         print('cartMap is $cartMap');
+  //       });
+  //     }
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        alignment: Alignment.center,
-        child: RaisedButton(
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => HomePage()));
-            },
-            child: Text("HomePage")),
-      ),
+      body: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+        Center(
+          child: Container(
+              child: Image.asset(
+            "assets/images/logo.png",
+            height: 120,
+          )),
+        ),
+        CircularProgressIndicator(),
+      ]),
     );
   }
 }
