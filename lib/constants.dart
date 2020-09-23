@@ -50,7 +50,7 @@ String createAvatarText() {
       result += element[0].toUpperCase();
     });
   } else {
-    result = currentUser.name.substring(0);
+    result = currentUser.name.substring(0, 1);
   }
   print('retsult is $result');
   return result;

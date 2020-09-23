@@ -1,18 +1,37 @@
+import 'package:bake2home/functions/user.dart';
 import 'package:bake2home/screens/homepage.dart';
+import 'package:bake2home/screens/registerAddress.dart';
 import 'package:bake2home/services/database.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/constants.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
-class Register extends StatelessWidget {
+class Register extends StatefulWidget {
   final String uid, contact;
   Register({this.uid, this.contact});
+
+  @override
+  _RegisterState createState() => _RegisterState();
+}
+
+class _RegisterState extends State<Register> {
   String name;
+
   String add;
 
   final formKey2 = GlobalKey<FormState>();
 
   final registerScaffold = GlobalKey<ScaffoldState>();
+  TextEditingController addController;
+  @override
+  void initState() {
+    addController = new TextEditingController();
+    currentUser =
+        new MyUser(addresses: {}, contact: '', name: '', token: '', uid: '');
+    print(currentUser.addresses);
+    super.initState();
+  }
+
   divider() {
     return SizedBox(
       height: 20,
@@ -21,6 +40,9 @@ class Register extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // currentUser =
+    //     new MyUser(addresses: {}, contact: '', name: '', token: '', uid: '');
+    print(currentUser.addresses);
     return Scaffold(
       appBar: AppBar(
         title: Text("Your Details"),
@@ -58,19 +80,41 @@ class Register extends StatelessWidget {
                       borderRadius: BorderRadius.circular(30.0)),
                 ),
                 onChanged: (val) {
-                  name = val;
+                  setState(() {
+                    name = val;
+                  });
                 }),
             divider(),
             TextFormField(
-                cursorColor: base,
-                decoration: InputDecoration(
-                  hintText: "Your Address",
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30.0)),
-                ),
-                onChanged: (val) {
-                  add = val;
-                }),
+              cursorColor: base,
+              decoration: InputDecoration(
+                hintText: "Your Address",
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0)),
+              ),
+              controller: addController,
+              validator: (val) {
+                if (val.isEmpty) {
+                  return "Address cannot be empty";
+                } else {
+                  return null;
+                }
+              },
+              onTap: () async {
+                await Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => RegisterAddress()));
+                print('here gone to end');
+                if (currentUser.addresses.isNotEmpty) {
+                  setState(() {
+                    List<dynamic> temp = currentUser.addresses.keys.toList();
+                    var first = temp.first;
+                    add = currentUser.addresses[first]['address'];
+                    addController.text = add;
+                    print('-------------------$add');
+                  });
+                }
+              },
+            ),
             divider(),
             Center(
               child: FlatButton(
@@ -107,8 +151,8 @@ class Register extends StatelessWidget {
                             fontSize: 19.0,
                             fontWeight: FontWeight.w600));
                     await pr.show();
-                    bool rs =
-                        await DatabaseService().createUser(name, uid, contact);
+                    bool rs = await DatabaseService().createUser(name,
+                        widget.uid, widget.contact, currentUser.addresses);
                     await pr.hide();
                     if (rs) {
                       Navigator.pushReplacement(
