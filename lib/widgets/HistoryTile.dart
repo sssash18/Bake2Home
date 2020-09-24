@@ -6,14 +6,21 @@ import 'package:bake2home/functions/order.dart';
 import 'package:bake2home/functions/shop.dart';
 
 
-class HistoryTile extends StatelessWidget {
+class HistoryTile extends StatefulWidget {
   final Order order;
   HistoryTile({this.order});
+
+  @override
+  _HistoryTileState createState() => _HistoryTileState();
+}
+
+class _HistoryTileState extends State<HistoryTile> {
 
   Widget _cancelButton(){
     return FlatButton.icon(
       onPressed: (){
-        DatabaseService().cancelOrder(order.orderId);
+        DatabaseService().cancelOrder(widget.order);
+        
       },
       color: Colors.red,
       icon: Icon(Icons.cancel), 
@@ -22,16 +29,16 @@ class HistoryTile extends StatelessWidget {
       ),
       label: Text("Cancel"));
   }
-  
+
   @override
   Widget build(BuildContext context) {
-    Shop shop  = shopMap[shopMap.keys.where((element) => shopMap[element].shopId == order.shopId).elementAt(0)];
+    Shop shop  = shopMap[shopMap.keys.where((element) => shopMap[element].shopId == widget.order.shopId).elementAt(0)];
     String itemList="";
-    order.items.keys.where((element) => element!='shopId').forEach((element) { 
-      itemList += '${order.items[element]['quantity']} X ${order.items[element]['itemName']}, ';
+    widget.order.items.keys.where((element) => element!='shopId').forEach((element) { 
+      itemList += '${widget.order.items[element]['quantity']} X ${widget.order.items[element]['itemName']}, ';
     });
     Color _decisionColor;
-    switch (order.status) {
+    switch (widget.order.status) {
       case "PENDING" : _decisionColor = Colors.amber[400];
         break;
       case "ACCEPTED" : _decisionColor = Colors.blue;
@@ -148,13 +155,13 @@ class HistoryTile extends StatelessWidget {
                   Container(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      order.orderTime.toString(),
+                      widget.order.orderTime.toDate().toString(),
                     ),
                   ),
                   Container(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      "AMOUNT",
+                      "DELIVERY ON",
                       style: TextStyle(
                         color: Colors.grey[700]
                       ),
@@ -163,7 +170,22 @@ class HistoryTile extends StatelessWidget {
                   Container(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      '\u20B9 ${order.amount+50}'
+                      widget.order.deliveryTime.toDate().toString()
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "AMOUNT" ,
+                      style: TextStyle(
+                        color: Colors.grey[700]
+                      ),
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                    '\u20B9 ${widget.order.amount+50}' ,
                     ),
                   ),
                 ],
@@ -184,7 +206,7 @@ class HistoryTile extends StatelessWidget {
             borderRadius: BorderRadius.circular(border),
           ),
           alignment: Alignment.center,
-          child: Text(order.status ?? "",style: TextStyle(fontSize:10.0,fontWeight: FontWeight.bold)),
+          child: Text(widget.order.status ?? "",style: TextStyle(fontSize:10.0,fontWeight: FontWeight.bold)),
         ),
       ),
       Positioned(
@@ -192,7 +214,7 @@ class HistoryTile extends StatelessWidget {
         bottom: MediaQuery.of(context).size.height/70,
         child: Container(
           alignment: Alignment.center,
-          child: (order.status == "PENDING" || order.status == "ACCEPTED") ? _cancelButton() : Text(""),
+          child: (widget.order.status == "PENDING" || widget.order.status == "ACCEPTED") ? _cancelButton() : Text(""),
         ),
       ),
       

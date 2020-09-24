@@ -156,12 +156,26 @@ class DatabaseService {
     return rs;
   }
 
-  Future<bool> cancelOrder(String orderId) async {
+  
+
+  Future<bool> cancelOrder(Order order) async {
+    double refundAmount=0;
+    if(DateTime.now().isBefore(order.orderTime.toDate().add(Duration(hours: 1)).add(Duration(minutes: 30))) == true ){
+      refundAmount = order.amount;
+    }else{
+      if(order.cod==false){
+        refundAmount = 0;
+      }else{
+        refundAmount = (100 - shopMap[order.shopId].advance)/100 * order.amount;
+      }
+    }
+    order.refund = refundAmount;
     bool rs = false;
     await orderCollection
-        .doc(orderId)
+        .doc(order.orderId)
         .update({
           'status': "CANCELLED",
+          'refund' : refundAmount,
         })
         .then((value) => rs = true)
         .catchError((e) {

@@ -314,7 +314,8 @@ class _CartState extends State<Cart> {
                                           orderTime: Timestamp.now(),
                                           deliveryTime: delTime,
                                           deliveryAddress: _selectedAddress,
-                                          items: cartMap
+                                          items: cartMap,
+                                          cod: true,
                                         );
                                         DatabaseService().createOrder(order);
                                         Navigator.push(context, MaterialPageRoute(builder: (BuildContext context){return Checkout(order: order);}));
