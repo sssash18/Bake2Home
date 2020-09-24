@@ -22,6 +22,8 @@ class _RouterState extends State<Router> {
       FirebaseFirestore.instance.collection("TopPicks");
   CollectionReference categoryCollection =
       FirebaseFirestore.instance.collection("Categories");
+  CollectionReference deliveryCollection = 
+      FirebaseFirestore.instance.collection("DeliveryCharges");
   FirebaseAuth _auth = FirebaseAuth.instance;
   @override
   void initState() {
@@ -58,6 +60,7 @@ class _RouterState extends State<Router> {
     //await getTopPick();
     await getUser();
     await getCategories();
+    getDeliveryCharges();
     // await getCardDetails();
     _auth.currentUser != null
         ? Navigator.pushReplacement(context,
@@ -141,6 +144,17 @@ class _RouterState extends State<Router> {
       advance: document.data()['advance'].toDouble(),
       cod : document.data()['cod'],
     );
+  }
+
+  Future<void> getDeliveryCharges() async{
+    deliveryCollection.doc('charges').get().then((value){
+      value.data().keys.forEach((element) { 
+        delChargesList.add(value.data()[element].toDouble());
+      });
+      print("DDDDDD ${delChargesList.toString()}") ;
+    }
+    );
+    
   }
 
   Future<void> createDynamicLink() async {

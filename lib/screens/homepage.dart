@@ -1,6 +1,7 @@
 import 'package:bake2home/screens/ProfileOrders.dart';
 import 'package:bake2home/screens/ProfilePage.dart';
 import 'package:bake2home/screens/mainPage.dart';
+import 'package:bake2home/services/PushNotification.dart';
 import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/constants.dart';
@@ -20,6 +21,11 @@ class _HomePageState extends State<HomePage> {
       print('tapped');
       _index = index;
     });
+  }
+
+  void initState(){
+    super.initState();
+    PushNotification().init();
   }
 
   final List<Widget> _children = [

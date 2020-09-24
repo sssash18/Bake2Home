@@ -23,11 +23,9 @@ class PushNotification{
       firebaseMessaging.configure();
       firebaseMessaging.onTokenRefresh.last.then((value){
         token = value;
-        print("TTTTTTT ${token}");
       });
      
       String token1 = await firebaseMessaging.getToken();
-      print("toke" + token1);
       _initialized = true;
       
     }
@@ -55,7 +53,7 @@ class PushNotification{
          'id': '1',
          'status': 'done'
        },
-       'to': await firebaseMessaging.getToken()
+       'to': token
      },
     ),
   );

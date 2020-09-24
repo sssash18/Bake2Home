@@ -353,6 +353,7 @@ class _ItemPageState extends State<ItemPage> {
                       if(quantity==1){
                         CartItemMap cartItem = CartItemMap(
                           itemName: widget.model.itemName,
+                          itemCategory: widget.model.itemCategory,
                           quantity: quantity,
                           size: tt,
                           notes: [noteItem],
@@ -367,6 +368,7 @@ class _ItemPageState extends State<ItemPage> {
                           'quantity' : cartItem.quantity,
                           'notes' : cartItem.notes,
                           'photoUrl' : cartItem.photoUrl,
+                          'itemCategory' : cartItem.itemCategory,
                           'flavour' : _selectedFlavour,
                         });
                         cartMap.putIfAbsent('shopId', () => widget.shopId);
