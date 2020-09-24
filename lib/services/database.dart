@@ -3,11 +3,14 @@ import 'dart:math';
 
 import 'package:bake2home/constants.dart';
 import 'package:bake2home/screens/Address.dart';
+import 'package:bake2home/services/PushNotification.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:bake2home/functions/user.dart' as LocalUser;
 import 'package:bake2home/functions/order.dart';
+import 'package:http/http.dart';
+import 'package:upi_india/upi_response.dart';
 
 class DatabaseService {
   final CollectionReference shopCollection =
@@ -19,6 +22,21 @@ class DatabaseService {
   final String uid;
 
   DatabaseService({this.uid});
+
+  Future<bool> updateTransaction(Order order,UpiResponse response,double codAmount) async{
+    bool rs = false;
+    await orderCollection.doc(order.orderId).update({
+      'codAmount' : codAmount, 
+      'transaction' : {
+        'transactionId' : response.transactionId,
+        'transactionRefId' : response.transactionRefId,
+        'responseCode' : response.responseCode,
+        'appRefNo' : response.approvalRefNo,
+        'status' : response.status,
+      }
+    }).then((value) => rs=true).catchError((e) => rs = false);
+    return rs;
+  }
 
   Future<bool> createUser(String name, String uid, String contact,
       Map<dynamic, dynamic> address) async {
@@ -162,6 +180,7 @@ class DatabaseService {
 
   Future<bool> cancelOrder(Order order) async {
     double refundAmount=0;
+    double compensationAmount =0;
     if(order.deliveryTime.toDate().isBefore(order.orderTime.toDate().add(Duration(hours: 3)))){
       refundAmount = 0;
     }else{
@@ -175,6 +194,7 @@ class DatabaseService {
         }
       }
     }
+    compensationAmount =  (order.amount - refundAmount) - 0.05 * order.amount; 
     
     order.refund = refundAmount;
     bool rs = false;
@@ -183,8 +203,12 @@ class DatabaseService {
         .update({
           'status': "CANCELLED",
           'refund' : refundAmount,
+          'compensation' : compensationAmount,
         })
-        .then((value) => rs = true)
+        .then((value){
+          rs = true;
+          PushNotification().pushMessage("Order ${order.orderId} cancelled", "Compensation Amount: ${compensationAmount}", token);
+        } )
         .catchError((e) {
           print(e.toString());
           rs = false;
