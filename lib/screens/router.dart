@@ -58,7 +58,6 @@ class _RouterState extends State<Router> {
     //await getTopPick();
     await getUser();
     await getCategories();
-    // await getCardDetails();
     _auth.currentUser != null
         ? Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (BuildContext context) => HomePage()))
@@ -86,6 +85,7 @@ class _RouterState extends State<Router> {
               : Map.from(user.data()['addresses']),
           contact: user.data()['contact'],
           token: user.data()['token']);
+      await getCartDetails(uid);
     }
 
     return true;
@@ -164,30 +164,28 @@ class _RouterState extends State<Router> {
         shortLink.warnings.toString());
   }
 
-  // Future<void> getCardDetails() async {
-  //   Stream<DocumentSnapshot> ss = FirebaseFirestore.instance
-  //       .collection('Users')
-  //       .doc(currentUserID)
-  //       .snapshots();
-  //   ss.listen((event) {
-  //     if (event.exists) {
-  //       print('startting cartMap ${event.data()['cart']}');
-  //       Map<String, dynamic> someMap = Map();
-  //       if (event.data()['cart'] != null) {
-  //         someMap = Map<String, dynamic>.from(event.data()['cart']);
-  //       }
-  //       setState(() {
-  //         print('fetched shopId is $currentShopId');
-  //         if (someMap.isNotEmpty) {
-  //           cartMap = Map<String, dynamic>.from(someMap);
-  //         }
-  //         cartLengthNotifier.value = cartMap.length;
-  //         currentShopId = someMap['shopId'].toString();
-  //         print('cartMap is $cartMap');
-  //       });
-  //     }
-  //   });
-  // }
+  Future<void> getCartDetails(String uid) async {
+    Stream<DocumentSnapshot> ss =
+        FirebaseFirestore.instance.collection('Users').doc(uid).snapshots();
+    ss.listen((event) {
+      if (event.exists) {
+        print('startting cartMap ${event.data()['cart']}');
+        Map<String, dynamic> someMap = Map();
+        if (event.data()['cart'] != null) {
+          someMap = Map<String, dynamic>.from(event.data()['cart']);
+        }
+        setState(() {
+          print('fetched shopId is $currentShopId');
+          if (someMap.isNotEmpty) {
+            cartMap = Map<String, dynamic>.from(someMap);
+          }
+          cartLengthNotifier.value = cartMap.length;
+          currentShopId = someMap['shopId'].toString();
+          print('cartMap is $cartMap');
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

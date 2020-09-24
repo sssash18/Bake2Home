@@ -62,7 +62,7 @@ class AuthService {
                       topRight: Radius.circular(20.0))),
               // isScrollControlled: true,
               isDismissible: false,
-              builder: (BuildContext context) {
+              builder: (context) {
                 return Padding(
                   padding: MediaQuery.of(context).viewInsets,
                   child: Column(
