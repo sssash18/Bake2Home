@@ -24,7 +24,7 @@ Map<String, Shop> shopMap = new Map<String, Shop>();
 Map<String, Shop> topPickMap = new Map<String, Shop>();
 LocalUser.MyUser currentUser;
 String currentUserID = '94ON8vhE5kxa7SfOyBWJ';
-String cartShopId = null;
+String cartShopId = 'null';
 Map<String, dynamic> cartMap = Map<String, dynamic>();
 ValueNotifier<int> cartLengthNotifier = ValueNotifier<int>(0);
 String currentShopId = 'null';

@@ -26,7 +26,7 @@ class _ItemPageState extends State<ItemPage> {
   SplayTreeSet<double> dropDownList = SplayTreeSet();
   Map<double, double> priceMap = new Map();
   Map<double, String> vidMap = new Map();
-  double selectedSize = 0.0,price,tt;
+  double selectedSize = 0.0, price, tt;
   @override
   Widget build(BuildContext context) {
     _flavour = widget.model.flavours;
@@ -61,11 +61,11 @@ class _ItemPageState extends State<ItemPage> {
     }
     return SafeArea(
       child: WillPopScope(
-          onWillPop: () async{
-            DatabaseService(uid : currentUserID).updateCart(cartMap);
-            return true;
-          },
-          child: Scaffold(
+        onWillPop: () async {
+          DatabaseService(uid: currentUserID).updateCart(cartMap);
+          return true;
+        },
+        child: Scaffold(
           resizeToAvoidBottomInset: true,
           body: CustomScrollView(
             slivers: <Widget>[
@@ -102,10 +102,13 @@ class _ItemPageState extends State<ItemPage> {
                             Rect.fromLTRB(0, 0, rect.width, 1.5 * rect.height));
                       },
                       blendMode: BlendMode.dstIn,
-                      child: widget.model.photoUrl!=null ? CachedNetworkImage(
-                        imageUrl: widget.model.photoUrl,
-                        fit: BoxFit.fill,
-                      ) : Image.asset("assets/images/cake.jpeg",fit:BoxFit.fill) ,
+                      child: widget.model.photoUrl != null
+                          ? CachedNetworkImage(
+                              imageUrl: widget.model.photoUrl,
+                              fit: BoxFit.fill,
+                            )
+                          : Image.asset("assets/images/cake.jpeg",
+                              fit: BoxFit.fill),
                     ),
                   ),
                   Positioned(
@@ -137,19 +140,20 @@ class _ItemPageState extends State<ItemPage> {
                     ),
                   ),
                   Positioned(
-            child: IconButton(
-                icon: Icon(
-                  Icons.arrow_back,
-                  color: white,
-                  size: 40.0,
-                ),
-                onPressed: () {
-                  DatabaseService(uid:currentUserID).updateCart(cartMap);
-                  Navigator.pop(context);
-                }),
-            top: 0,
-            left: 0,
-          ),
+                    child: IconButton(
+                        icon: Icon(
+                          Icons.arrow_back,
+                          color: white,
+                          size: 40.0,
+                        ),
+                        onPressed: () {
+                          DatabaseService(uid: currentUserID)
+                              .updateCart(cartMap);
+                          Navigator.pop(context);
+                        }),
+                    top: 0,
+                    left: 0,
+                  ),
                 ]),
               ),
               SliverToBoxAdapter(
@@ -165,7 +169,6 @@ class _ItemPageState extends State<ItemPage> {
                 child: Column(
                   children: <Widget>[
                     quantity == 0.0 ? cartAdder(context) : cartAdded(context),
-                    
                     Container(
                         margin: EdgeInsets.fromLTRB(15.0, 45.0, 0, 0),
                         alignment: Alignment.topLeft,
@@ -303,9 +306,10 @@ class _ItemPageState extends State<ItemPage> {
     );
   }
 
-  void addToCartNewItem() {
+  Future<void> addToCartNewItem() async {
     bool note = true;
     String noteItem = "";
+
     if(note){
       showModalBottomSheet( 
         context: context,
@@ -380,16 +384,97 @@ class _ItemPageState extends State<ItemPage> {
                       Navigator.pop(context);
                    }); 
 
-                  },
-                  icon: Icon(Icons.done,color: white,),
-                  label: Text('Done',style: TextStyle(color : white),)
-                )
-              ]
-            ), 
-              ),
-          );
-        }
-      );
+
+    if (cartMap['shopId'] == null) {
+      shopId = 'null';
+    } else {
+      shopId = cartMap['shopId'];
+    }
+    if (shopId == 'null' || this.widget.shopId == shopId) {
+      if (note) {
+        showModalBottomSheet(
+            context: context,
+            builder: (builder) {
+              return Container(
+                child: Form(
+                  child: Column(children: <Widget>[
+                    SizedBox(height: MediaQuery.of(context).size.height / 30),
+                    Container(
+                      margin: EdgeInsets.fromLTRB(
+                          MediaQuery.of(context).size.height / 30,
+                          0,
+                          MediaQuery.of(context).size.height / 30,
+                          0),
+                      child: TextFormField(
+                        autofocus: true,
+                        decoration: InputDecoration(
+                            labelText: "Special Note",
+                            helperText: "* will be printed on the product",
+                            border: OutlineInputBorder()),
+                        onChanged: (val) {
+                          noteItem = val;
+                        },
+                      ),
+                    ),
+                    SizedBox(height: MediaQuery.of(context).size.height / 100),
+                    FlatButton.icon(
+                        color: base,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(border),
+                        ),
+                        onPressed: () async {
+                          setState(() {
+                            quantity++;
+                            if (quantity == 1) {
+                              CartItemMap cartItem = CartItemMap(
+                                  itemName: widget.model.itemName,
+                                  quantity: quantity,
+                                  size: tt,
+                                  notes: [noteItem],
+                                  price: price,
+                                  photoUrl: widget.model.photoUrl);
+                              cartMap.putIfAbsent(
+                                  vid,
+                                  () => {
+                                        'itemName': cartItem.itemName,
+                                        'size': cartItem.size,
+                                        'price': cartItem.price,
+                                        'quantity': cartItem.quantity,
+                                        'notes': cartItem.notes,
+                                        'photoUrl': cartItem.photoUrl
+                                      });
+                              cartMap.putIfAbsent(
+                                  'shopId', () => widget.shopId);
+                            } else {
+                              cartMap[vid]['quantity']++;
+                              cartMap[vid]['notes'].add(noteItem);
+                            }
+                            print(cartMap);
+                            Navigator.pop(context);
+                          });
+                        },
+                        icon: Icon(
+                          Icons.done,
+                          color: white,
+                        ),
+                        label: Text(
+                          'Done',
+                          style: TextStyle(color: white),
+                        ))
+                  ]),
+                ),
+              );
+            });
+      }
+    } else {
+      bool rs = await genDialog(
+          context,
+          "Cart already has items from another shops \n Adding new items would remove any items previously added",
+          'Clear Cart',
+          'Cancel');
+      if (rs) {
+        cartMap.clear();
+      }
     }
   }
 
@@ -421,7 +506,6 @@ class _ItemPageState extends State<ItemPage> {
               child: dButton(),
             )),
         InkWell(
-          
           child: Container(
             width: width / 2,
             decoration: BoxDecoration(
@@ -438,12 +522,12 @@ class _ItemPageState extends State<ItemPage> {
                     Icons.remove_circle_outline,
                     color: Colors.black,
                   ),
-                  onTap: (){
+                  onTap: () {
                     setState(() {
                       --quantity;
                       cartMap[vid]['quantity']--;
                       cartMap[vid]['notes'].removeLast();
-                      if(cartMap[vid]['quantity']==0){
+                      if (cartMap[vid]['quantity'] == 0) {
                         cartMap.remove(vid);
                       }
                     });
@@ -454,9 +538,8 @@ class _ItemPageState extends State<ItemPage> {
                   onTap: () {
                     setState(() {
                       ++quantity;
-                      addToCartNewItem();  
+                      addToCartNewItem();
                     });
-                    
                   },
                   child: Icon(
                     Icons.add_circle_outline,
