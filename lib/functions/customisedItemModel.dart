@@ -4,8 +4,9 @@ class CustomisedItemModel {
   String itemName;
   double ingPrice;
   String photoUrl;
+  String itemCategory;
   String recipe;
-  List<String> ingredients;
+  List<String> ingredients,flavours;
   Map<String, dynamic> variants;
   CustomisedItemModel(
       {this.availability,
@@ -15,5 +16,7 @@ class CustomisedItemModel {
       this.itemName,
       this.photoUrl,
       this.recipe,
+      this.flavours,
+      this.itemCategory,
       this.variants});
 }

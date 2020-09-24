@@ -32,6 +32,7 @@ StopWatchTimer timer;
 bool activeTimer = false;
 String timerVal;
 List<Category> categoryList = [];
+List<double> delChargesList = [];
 bool timerOver = false;
 StreamController<bool> controller = StreamController();
 FirebaseMessaging firebaseMessaging = FirebaseMessaging();

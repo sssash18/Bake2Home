@@ -6,13 +6,14 @@ class Order{
   orderId,
   status,
   paymentType,
+  comments,
   deliveryAddress;
 
-  double amount,
+  double amount,refund = 0,
   delCharges;
 
   int otp;
-  bool pickUp;
+  bool pickUp,cod;
 
   Timestamp orderTime,deliveryTime;
 
@@ -32,5 +33,7 @@ class Order{
     this.deliveryTime,
     this.deliveryAddress,
     this.items,
+    this.comments,
+    this.cod,
   });
 }

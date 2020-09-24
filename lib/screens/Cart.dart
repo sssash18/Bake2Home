@@ -26,11 +26,35 @@ class _CartState extends State<Cart> {
     Shop shop;
     String _date,_time;
     Timestamp delTime;
+    double cakeQuantity = 0,cakeCount = 0;
+    double delCharges = delChargesList.first;
     cartMap.keys.where((element) => element!=cartMap['shopId']).forEach((element) { 
       if(element!='shopId'){
         subtotal += cartMap[element]['price'] * cartMap[element]['quantity'];
+        if(cartMap[element]['itemCategory']=="cake"){
+          cakeQuantity += cartMap[element]['quantity'] * cartMap[element]['size'] ;
+          cakeCount += cartMap[element]['quantity'];
+        }
+        print("XCCC" + '${cakeQuantity}');
       }
     });
+
+    void calculateDeliveryCharges(double cakeQuantity){
+      if(cakeQuantity <= 2){
+        delCharges = delChargesList[0];
+      }else{
+        if(cakeQuantity > 2 ){
+          delCharges = delChargesList[1];
+        }
+        if(cakeQuantity > 2 && cakeCount == 2){
+          delCharges = delChargesList[2];
+        }
+        if(cakeCount > 2){
+          delCharges = delChargesList[3];
+        }
+      }
+    }
+    calculateDeliveryCharges(cakeQuantity);
     print("SSSSSSSSSSS");
     print(shopMap.toString());
     
@@ -205,7 +229,7 @@ class _CartState extends State<Cart> {
                       MediaQuery.of(context).size.width / 20,
                       0),
                   alignment: Alignment.centerRight,
-                  child: Text('Rs 50',
+                  child: Text('\u20B9 ${delCharges}',
                       //textAlign: TextAlign.right,
                       style: TextStyle(
                           color: white,
@@ -227,7 +251,7 @@ class _CartState extends State<Cart> {
                         borderRadius: BorderRadius.circular(border)),
                     color: Colors.white,
                     textColor: base,
-                    child: Text('Checkout (\u20B9 ${subtotal})'),
+                    child: Text('Checkout (\u20B9 ${subtotal + delCharges})'),
                     onPressed: () {
                       showModalBottomSheet(
                         context: context,
@@ -304,7 +328,7 @@ class _CartState extends State<Cart> {
                                         }
                                         Order order = Order(
                                           userId: currentUserID,
-                                          shopId: currentShopId,
+                                          shopId: shop.shopId,
                                           status: "PENDING",
                                           otp : _otp,
                                           paymentType: "UPI",
@@ -314,7 +338,8 @@ class _CartState extends State<Cart> {
                                           orderTime: Timestamp.now(),
                                           deliveryTime: delTime,
                                           deliveryAddress: _selectedAddress,
-                                          items: cartMap
+                                          items: cartMap,
+                                          cod: true,
                                         );
                                         DatabaseService().createOrder(order);
                                         Navigator.push(context, MaterialPageRoute(builder: (BuildContext context){return Checkout(order: order);}));

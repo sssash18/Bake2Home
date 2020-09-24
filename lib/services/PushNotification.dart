@@ -23,11 +23,11 @@ class PushNotification{
       firebaseMessaging.configure();
       firebaseMessaging.onTokenRefresh.last.then((value){
         token = value;
-        print("TTTTTTT ${token}");
       });
+     
       String token1 = await firebaseMessaging.getToken();
-      print("toke" + token1);
       _initialized = true;
+      
     }
   }
 
@@ -44,6 +44,8 @@ class PushNotification{
        'notification': <String, dynamic>{
          'body': body,
          'title': title,
+         'sound' : "air.mp3",
+         'icon' : "logo.png"
        },
        'priority': 'high',
        'data': <String, dynamic>{

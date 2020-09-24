@@ -40,9 +40,12 @@ class _CustomisedItemState extends State<CustomisedItem> {
                // ingPrice: value['ingPrice'].toDouble(),
                 ingredients: List<String>.from(value['ingredients']),
                 itemName: value['itemName'],
+                itemCategory : value['itemCategory'],
                 photoUrl: value['photoUrl'],
                 recipe: value['recipe'],
                 variants: Map.from(value['variants']),
+                flavours: List<String>.from(value['flavours'])
+                
               );
               list.add(model);
               });

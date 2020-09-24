@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 class ItemTile extends StatelessWidget {
   CustomisedItemModel model;
   String shopId;
+  
   ItemTile({this.model,this.shopId});
   @override
   Widget build(BuildContext context) {

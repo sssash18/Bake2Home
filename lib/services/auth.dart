@@ -2,6 +2,7 @@ import 'package:bake2home/constants.dart';
 import 'package:bake2home/functions/user.dart';
 import 'package:bake2home/screens/homepage.dart';
 import 'package:bake2home/screens/register.dart';
+import 'package:bake2home/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:otp_text_field/otp_text_field.dart';
@@ -37,6 +38,7 @@ class AuthService {
       Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (BuildContext context) => HomePage()));
     }
+    DatabaseService().updateToken(await firebaseMessaging.getToken());
   }
 
   Future<void> verifyPhone(
