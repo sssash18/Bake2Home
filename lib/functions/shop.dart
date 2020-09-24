@@ -10,7 +10,9 @@ class Shop {
       experience,
       contact,token;
   int numOrders, ingPrice;
-  double rating;
+  double rating,advance;
+  bool cod;
+
   Map<String, dynamic> cookTime, items;
 
   Shop({
@@ -30,5 +32,7 @@ class Shop {
     this.rating,
     this.ingPrice,
     this.token,
+    this.advance,
+    this.cod
   });
 }

@@ -12,7 +12,7 @@ class CartItemMap{
     this.price,
     this.photoUrl,
     this.flavour,
-    this.color
+    this.color,
   });
 
 }

@@ -138,6 +138,8 @@ class _RouterState extends State<Router> {
       rating: (document.data()['rating'] ?? 0).toDouble(),
       ingPrice: document.data()['ingPrice'],
       token: document.data()['token'],
+      advance: document.data()['advance'].toDouble(),
+      cod : document.data()['cod'],
     );
   }
 
