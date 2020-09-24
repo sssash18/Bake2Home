@@ -1,5 +1,5 @@
 class CartItemMap{
-  String itemName,photoUrl;
+  String itemName,photoUrl,itemCategory;
   int quantity;
   double size,price;
   String flavour,color;
@@ -13,6 +13,7 @@ class CartItemMap{
     this.photoUrl,
     this.flavour,
     this.color,
+    this.itemCategory
   });
 
 }

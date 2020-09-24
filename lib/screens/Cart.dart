@@ -26,11 +26,27 @@ class _CartState extends State<Cart> {
     Shop shop;
     String _date,_time;
     Timestamp delTime;
+    double cakeQuantity = 0;
+    double delCharges = 0;
     cartMap.keys.where((element) => element!=cartMap['shopId']).forEach((element) { 
       if(element!='shopId'){
         subtotal += cartMap[element]['price'] * cartMap[element]['quantity'];
+        if(cartMap[element]['itemCategory']=="cake"){
+          cakeQuantity += cartMap[element]['quantity'] * cartMap[element]['size'] ;
+        }
+        print("XCCC" + '${cakeQuantity}');
       }
     });
+
+    int calculateDeliveryCharges(double cakeQuantity){
+      if(cakeQuantity <= 2){
+        delCharges = 39;
+      }else{
+        if(cakeQuantity > 2 ){
+          delCharges = 49;
+        }
+      }
+    }
     print("SSSSSSSSSSS");
     print(shopMap.toString());
     
