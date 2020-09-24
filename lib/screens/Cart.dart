@@ -40,8 +40,6 @@ class _CartState extends State<Cart> {
     });
 
     void calculateDeliveryCharges(double cakeQuantity){
-      print(delChargesList.toString());
-      print(cakeCount.toString() + "       " + cakeQuantity.toString());
       if(cakeQuantity <= 2){
         delCharges = delChargesList[0];
       }else{

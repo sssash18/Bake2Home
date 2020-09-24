@@ -1,3 +1,4 @@
+import 'package:bake2home/services/PushNotification.dart';
 import 'package:bake2home/services/database.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -19,10 +20,11 @@ class _HistoryTileState extends State<HistoryTile> {
   Widget _cancelButton(){
     return FlatButton.icon(
       onPressed: (){
-        DatabaseService().cancelOrder(widget.order);
+        DatabaseService().cancelOrder(widget.order).then((value){
+        });
         
       },
-      color: Colors.red,
+      color: Colors.red[700],
       icon: Icon(Icons.cancel), 
       shape: RoundedRectangleBorder(
         borderRadius : BorderRadius.circular(border),

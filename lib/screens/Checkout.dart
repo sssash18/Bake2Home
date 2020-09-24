@@ -22,6 +22,7 @@ class Checkout extends StatefulWidget {
 class _CheckoutState extends State<Checkout> {
   int _index = 0;  
   int count = 0;
+  double codAmount = 0;
   UpiIndia _upiIndia = UpiIndia();
   List<UpiApp> apps;
   
@@ -64,13 +65,18 @@ class _CheckoutState extends State<Checkout> {
     List<DropdownMenuItem> paymentOptions = [
     DropdownMenuItem(
       value: "full",
-      child: Text("Full Payment(100 %)",)
+      child: Text("Full Payment(\u20B9 ${widget.order.amount})",)
     ),
     DropdownMenuItem(
       value: "partial",
-      child: Text("Partial COD(${100 - shopMap[widget.order.shopId].advance} %)")
+      child: Text("Partial COD(\u20B9 ${(100 - shopMap[widget.order.shopId].advance)*widget.order.amount/100})")
     )
   ];
+    if(_selectedOption=="full"){
+      codAmount = 0;
+    }else{
+      codAmount = (100 - shopMap[widget.order.shopId].advance)*widget.order.amount;
+    }
     return Scaffold(
           body: StreamProvider.value(
                 value: DatabaseService().orderUpdate(widget.order.orderId),
@@ -151,7 +157,15 @@ class _CheckoutState extends State<Checkout> {
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(border)),
                                   color: white,
                                   onPressed: () async{
-                                    _response = await initiateTransaction(apps[index].app);
+                                    //_response = await initiateTransaction(apps[index].app);
+                                     Future.delayed(Duration(seconds: 3)).then((value){
+                                       setState(() {
+                                         _index++;
+                                       });
+                                        DatabaseService().updateTransaction(widget.order,_response,codAmount);
+                                     }
+
+                                    );
                                     if(_response.error != null){
                                       showDialog(context :context,child: 
                                         AlertDialog(
@@ -169,10 +183,12 @@ class _CheckoutState extends State<Checkout> {
                                         )
                                       );
                                     }else{
-                                      if(_response.status == UpiPaymentStatus.SUCCESS){
+                                      if(_response.status == UpiPaymentStatus.SUCCESS ){
                                         setState(() {
                                           _index++;
                                         });
+                                        DatabaseService().updateTransaction(widget.order,_response,codAmount);
+
                                       }
                                     }
                                   },

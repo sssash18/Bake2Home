@@ -27,6 +27,7 @@ class DatabaseService {
     bool rs = false;
     await orderCollection.doc(order.orderId).update({
       'codAmount' : codAmount, 
+      'status' : "PAID",
       'transaction' : {
         'transactionId' : response.transactionId,
         'transactionRefId' : response.transactionRefId,
