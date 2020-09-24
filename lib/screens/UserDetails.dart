@@ -16,7 +16,7 @@ class _UserDetailsState extends State<UserDetails> {
   Widget _icon = Icon(Icons.edit);
   String contactHint = "";
   final _formKey = GlobalKey<FormState>();
-
+  String firstAddress;
   Widget _returnWidget(bool edit, String _initialText, String _label) {
     if (!edit) {
       return AnimatedContainer(
@@ -54,6 +54,12 @@ class _UserDetailsState extends State<UserDetails> {
 
   @override
   Widget build(BuildContext context) {
+    if (currentUser.addresses.isEmpty) {
+      firstAddress = 'No address found';
+    } else {
+      List<dynamic> list = currentUser.addresses.keys.toList();
+      firstAddress = currentUser.addresses[list[0]]['address'];
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text("Profile", style: TextStyle(color: base)),
@@ -156,25 +162,32 @@ class _UserDetailsState extends State<UserDetails> {
                       : AnimatedContainer(
                           child: _returnWidget(
                               _editMode,
-                              currentUser.addresses['Ad1']['address'],
+                              '$firstAddress',
+                              // currentUser.addresses['Ad1']['address'],
                               "Address"),
                           margin: EdgeInsets.only(
                               top: MediaQuery.of(context).size.height / 20),
                           duration: Duration(microseconds: 100),
                         ),
-                  FlatButton(
-                    color: base,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0)),
-                    child: Text('Manage Addresses',
-                        style: TextStyle(
-                            color: white, fontWeight: FontWeight.bold)),
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext context) => Address()));
-                    },
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: FlatButton(
+                      color: base,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0)),
+                      child: Text('Manage Addresses',
+                          style: TextStyle(
+                              color: white, fontWeight: FontWeight.bold)),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) => Address()));
+                      },
+                    ),
                   ),
                 ],
               ),

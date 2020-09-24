@@ -1,4 +1,5 @@
 import 'package:bake2home/screens/ProfileOrders.dart';
+import 'package:bake2home/screens/signIn.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/constants.dart';
@@ -10,8 +11,15 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  String firstAddress;
   @override
   Widget build(BuildContext context) {
+    if (currentUser.addresses.isEmpty) {
+      firstAddress = 'No address found';
+    } else {
+      List<dynamic> list = currentUser.addresses.keys.toList();
+      firstAddress = currentUser.addresses[list[0]]['address'];
+    }
     print("UUUUUUUUU" + currentUser.uid);
     return Scaffold(
         appBar: AppBar(
@@ -51,7 +59,7 @@ class _ProfilePageState extends State<ProfilePage> {
             Stack(children: <Widget>[
               Container(
                 margin: EdgeInsets.fromLTRB(20.0, 0.0, 0.0, 0.0),
-                child: Text(' asfasf',
+                child: Text('$firstAddress',
                     // ${currentUser.addresses['Ad1']['address']}
                     // ',
                     style: TextStyle()),
@@ -124,6 +132,10 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         onTap: () async {
                           await FirebaseAuth.instance.signOut();
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(builder: (context) => SignIn()),
+                              (route) => false);
                         },
                         title: Text(
                           "Sign Out",

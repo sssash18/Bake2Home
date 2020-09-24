@@ -55,9 +55,11 @@ class AuthService {
           await pr.hide();
           showModalBottomSheet(
               context: context,
-              isScrollControlled: true,
+              // isScrollControlled: true,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0)),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20.0),
+                      topRight: Radius.circular(20.0))),
               // isScrollControlled: true,
               isDismissible: false,
               builder: (BuildContext context) {

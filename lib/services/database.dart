@@ -20,7 +20,8 @@ class DatabaseService {
 
   DatabaseService({this.uid});
 
-  Future<bool> createUser(String name, String uid, String contact) async {
+  Future<bool> createUser(String name, String uid, String contact,
+      Map<dynamic, dynamic> address) async {
     String token = await firebaseMessaging.getToken();
     bool rs = false;
     currentUser = FirebaseAuth.instance.currentUser != null
@@ -28,7 +29,7 @@ class DatabaseService {
             uid: FirebaseAuth.instance.currentUser.uid,
             contact: contact,
             name: name,
-          )
+            addresses: address)
         : LocalUser.MyUser();
     await userCollection.doc(uid).set({
       'name': name,
@@ -36,7 +37,7 @@ class DatabaseService {
       'uid': uid,
       'token': token,
       'cart': {},
-      'addresses': {}
+      'addresses': address
     }).then((value) {
       rs = true;
     }).catchError((e) {
