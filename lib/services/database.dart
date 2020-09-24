@@ -147,7 +147,8 @@ class DatabaseService {
           'pickUp': order.pickUp,
           'orderTime': order.orderTime,
           'deliveryTime': order.deliveryTime,
-          'items': order.items
+          'items': order.items,
+
         })
         .then((value) => {rs = true, print("Order Placed")})
         .catchError((e) {
@@ -161,15 +162,20 @@ class DatabaseService {
 
   Future<bool> cancelOrder(Order order) async {
     double refundAmount=0;
-    if(DateTime.now().isBefore(order.orderTime.toDate().add(Duration(hours: 1)).add(Duration(minutes: 30))) == true ){
-      refundAmount = order.amount;
+    if(order.deliveryTime.toDate().isBefore(order.orderTime.toDate().add(Duration(hours: 3)))){
+      refundAmount = 0;
     }else{
-      if(order.cod==false){
-        refundAmount = 0;
+      if(DateTime.now().isBefore(order.orderTime.toDate().add(Duration(hours: 1)).add(Duration(minutes: 30))) == true ){
+        refundAmount = order.amount;
       }else{
-        refundAmount = (100 - shopMap[order.shopId].advance)/100 * order.amount;
+        if(order.cod==false){
+          refundAmount = 0;
+        }else{
+          refundAmount = (100 - shopMap[order.shopId].advance)/100 * order.amount;
+        }
       }
     }
+    
     order.refund = refundAmount;
     bool rs = false;
     await orderCollection

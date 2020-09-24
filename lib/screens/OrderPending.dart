@@ -1,5 +1,6 @@
 
 import 'package:bake2home/screens/Payment.dart';
+import 'package:bake2home/services/database.dart';
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -41,8 +42,7 @@ class _OrderPendingState extends State<OrderPending> {
     
     return 
      Container(
-      height: 200,
-      width: 400,
+      height: MediaQuery.of(context).size.height/3,
       alignment: Alignment.center,
       child : CircularCountDownTimer(
         width: MediaQuery.of(context).size.width/2, 

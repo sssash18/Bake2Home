@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:bake2home/services/PushNotification.dart';
 import 'package:bake2home/services/database.dart';
 import 'package:bake2home/widgets/FinalAmount.dart';
+import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:upi_india/upi_india.dart';
 import 'package:bake2home/screens/OrderPending.dart';
@@ -23,6 +24,7 @@ class _CheckoutState extends State<Checkout> {
   int count = 0;
   UpiIndia _upiIndia = UpiIndia();
   List<UpiApp> apps;
+  
   UpiResponse _response;
   @override
   void initState() {
@@ -38,7 +40,7 @@ class _CheckoutState extends State<Checkout> {
   Future<UpiResponse> initiateTransaction(String app) {
     return _upiIndia.startTransaction(
       app: app,
-      receiverUpiId: 'pmcares@sbi',
+      receiverUpiId: 'suyashchoudhary42@oksbi',
       receiverName: "BakeMyCake",
       transactionRefId: "1233434",
       transactionNote: '#bmc2323111',
@@ -58,6 +60,17 @@ class _CheckoutState extends State<Checkout> {
     }else{
       //subs.cancel();
     }
+    String _selectedOption = "full";
+    List<DropdownMenuItem> paymentOptions = [
+    DropdownMenuItem(
+      value: "full",
+      child: Text("Full Payment(100 %)",)
+    ),
+    DropdownMenuItem(
+      value: "partial",
+      child: Text("Partial COD(${100 - shopMap[widget.order.shopId].advance} %)")
+    )
+  ];
     return Scaffold(
           body: StreamProvider.value(
                 value: DatabaseService().orderUpdate(widget.order.orderId),
@@ -111,48 +124,74 @@ class _CheckoutState extends State<Checkout> {
                     state: _index<=2 ? StepState.indexed : StepState.complete,
                     subtitle: Text('Only UPI payments are accepted currently',style: TextStyle(color:white,)),
                     content:  Container(
-                        height: MediaQuery.of(context).size.height/3,
-                        child: ListView.builder(
-                        itemCount: (apps ?? []).length,
-                        itemBuilder: (BuildContext context,int index){
-                          return Container(
-                            margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width/20, MediaQuery.of(context).size.height/40, MediaQuery.of(context).size.width/20, 0),
-                            child: FlatButton(
-                              child: Text(apps[index].name,style: TextStyle(color:base),),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(border)),
-                              color: white,
-                              onPressed: () async{
-                                _response = await initiateTransaction(apps[index].app);
-                                if(_response.error != null){
-                                  showDialog(context :context,child: 
-                                    AlertDialog(
-                                      title: Text("Payment Failed!"),
-                                      content: Text('Payment Fail Try Again'),
-                                      actions: [
-                                        FlatButton(
-                                          child: Text("OK"),
-                                          onPressed: (){
-                                            Navigator.pop(context);
-                                            
-                                          },
-                                        ),
-                                      ],
-                                    )
-                                  );
-                                }
-                              },
-                            ),
-                          );
-                        },
+                        height: MediaQuery.of(context).size.height/2.8,
+                        child: Container(
+                          height: MediaQuery.of(context).size.height/4,
+                          child: Column(
+                            children: [
+                          DropdownButton(
+                            value: _selectedOption,
+                            items: paymentOptions, 
+                            onChanged: (val){
+                              setState(() {
+                                _selectedOption = val;
+                              });
+                            }
+                          ),
+                          Container(
+                            height: MediaQuery.of(context).size.height/3.5,
+                            child: ListView.builder(
+                            itemCount: (apps ?? []).length,
+                            itemBuilder: (BuildContext context,int index){
+                              return Container(
+                                height: 50,
+                                margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width/20, MediaQuery.of(context).size.height/40, MediaQuery.of(context).size.width/20, 0),
+                                child: FlatButton(
+                                  child: Text(apps[index].name,style: TextStyle(color:base),),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(border)),
+                                  color: white,
+                                  onPressed: () async{
+                                    _response = await initiateTransaction(apps[index].app);
+                                    if(_response.error != null){
+                                      showDialog(context :context,child: 
+                                        AlertDialog(
+                                          title: Text("Payment Failed!"),
+                                          content: Text('Payment Fail Try Again'),
+                                          actions: [
+                                            FlatButton(
+                                              child: Text("OK"),
+                                              onPressed: (){
+                                                Navigator.pop(context);
+                                                
+                                              },
+                                            ),
+                                          ],
+                                        )
+                                      );
+                                    }else{
+                                      if(_response.status == UpiPaymentStatus.SUCCESS){
+                                        setState(() {
+                                          _index++;
+                                        });
+                                      }
+                                    }
+                                  },
+                                ),
+                             );
+                            },
                       ),
+                          ),]
+                                                 ),
+                        ),
                     ),
                     isActive: _index==2 ? true : false,
                   ),
                   Step(
-                    title: Text("Order Placed Successfully")  , 
+                    title: Text("Order Placed Successfully",style: TextStyle(color:white,fontWeight: FontWeight.bold,fontSize: 15))  , 
                     content: FlatButton.icon(
                       onPressed: () async{
                         DatabaseService(uid: currentUserID).emptyCart();
+
                         Navigator.pop(context);
                         Navigator.pop(context);
                         PushNotification().pushMessage("Order Placed Successfully", 'Order Id : ${widget.order.orderId}',shopMap[widget.order.shopId].token );
