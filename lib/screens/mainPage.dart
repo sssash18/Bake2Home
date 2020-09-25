@@ -143,7 +143,7 @@ class _MainPageState extends State<MainPage> {
             Homeheading(
               heading: "Trend in Town",
               showAll: true,
-              showPage: () {
+              showPage: (context) {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -214,8 +214,11 @@ class _MainPageState extends State<MainPage> {
                         },
                       );
                     })),
-                    Homeheading(heading: "Top Reviews",showAll: false,),
-                    CarouselSlider(
+            Homeheading(
+              heading: "Top Reviews",
+              showAll: false,
+            ),
+            CarouselSlider(
               options: CarouselOptions(
                 height: MediaQuery.of(context).size.height / 6,
                 enableInfiniteScroll: true,
@@ -244,7 +247,6 @@ class _MainPageState extends State<MainPage> {
               }).toList(),
             ),
           ],
-        
         ),
       ),
     );
