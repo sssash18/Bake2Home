@@ -214,7 +214,37 @@ class _MainPageState extends State<MainPage> {
                         },
                       );
                     })),
+                    Homeheading(heading: "Top Reviews",showAll: false,),
+                    CarouselSlider(
+              options: CarouselOptions(
+                height: MediaQuery.of(context).size.height / 6,
+                enableInfiniteScroll: true,
+                autoPlay: true,
+                autoPlayInterval: Duration(seconds: 2),
+              ),
+              items: [1, 2, 3, 4, 5].map((i) {
+                return Builder(
+                  builder: (BuildContext context) {
+                    return Container(
+                      width: MediaQuery.of(context).size.width,
+                      margin: EdgeInsets.symmetric(horizontal: 5.0),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [Color(0xffeaafc8), Color(0xff654ea3)]),
+                        borderRadius: BorderRadius.circular(border),
+                        image: DecorationImage(
+                            image: AssetImage('assets/images/cake.jpeg'),
+                            fit: BoxFit.fill),
+                      ),
+                    );
+                  },
+                );
+              }).toList(),
+            ),
           ],
+        
         ),
       ),
     );

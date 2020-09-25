@@ -11,7 +11,7 @@ class TrendingPage extends StatelessWidget {
     Widget _showItem(){
      return  Container(
        margin: EdgeInsets.symmetric(horizontal: 10),
-       height: MediaQuery.of(context).size.height/1.1,
+       height: MediaQuery.of(context).size.height/1.2,
             child: Stack(
                 children: <Widget>[Stack(
                 overflow: Overflow.visible,
@@ -115,8 +115,8 @@ class TrendingPage extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         body: Container(
-          height: double.infinity,
-          width: double.infinity,
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
           decoration:BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,

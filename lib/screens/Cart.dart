@@ -290,12 +290,63 @@ class _CartState extends State<Cart> {
                                     SizedBox(height: MediaQuery.of(context).size.height/40,),
                                     FlatButton.icon(
                                       onPressed: ()async{
-                                        TimeOfDay time = await showTimePicker(context: context, initialTime: TimeOfDay.now());
+                                        TimeOfDay time = TimeOfDay(hour: 9, minute: 0);
+                                        while(!(time.hour >=10 && time.hour<=22)){
+                                          time = await showTimePicker(context: context,helpText: "Please choose time between 10:00 A.M. to 10:00 P.M. ",initialTime: TimeOfDay(hour: 10, minute: 00),initialEntryMode: TimePickerEntryMode.input);
+                                          if(!(time.hour >=10 && time.hour<=22)){
+                                            showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                title: Text('Alert'),
+                                                content: Text("Please choose time between 10:00 A.M. to 10:00 P.M."),
+                                                actions: [
+                                                  RaisedButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(context, true);
+                                                    },
+                                                    color: base,
+                                                    child: Text(
+                                                      "OK",
+                                                    style: TextStyle(color: white),
+                                                      ),
+                                                  ),
+            
+                                                ],
+                                                );
+                                              });
+                                          }
+                                          print(time.toString());
+                                        }
                                         setState((){
                                           delTime.toDate().add(Duration(hours: time.hour));
                                           delTime.toDate().add(Duration(minutes: time.minute));
                                           _time = time.format(context);
                                         });
+              
+                                        if(delTime.toDate().isBefore(DateTime.now().add(Duration(hours: 1)))){
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                title: Text('Alert'),
+                                                content: Text("Minimum time for this order is 1 hour. Choose the delivery time after the current one."),
+                                                actions: [
+                                                  RaisedButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(context, true);
+                                                    },
+                                                    color: base,
+                                                    child: Text(
+                                                      "OK",
+                                                    style: TextStyle(color: white),
+                                                      ),
+                                                  ),
+            
+                                                ],
+                                                );
+                                              });
+                                        }
                                         
                                       },
                                       shape: RoundedRectangleBorder(

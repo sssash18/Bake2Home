@@ -157,15 +157,8 @@ class _CheckoutState extends State<Checkout> {
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(border)),
                                   color: white,
                                   onPressed: () async{
-                                    //_response = await initiateTransaction(apps[index].app);
-                                     Future.delayed(Duration(seconds: 3)).then((value){
-                                       setState(() {
-                                         _index++;
-                                       });
-                                        DatabaseService().updateTransaction(widget.order,_response,codAmount);
-                                     }
-
-                                    );
+                                    _response = await initiateTransaction(apps[index].app);
+                                     
                                     if(_response.error != null){
                                       showDialog(context :context,child: 
                                         AlertDialog(

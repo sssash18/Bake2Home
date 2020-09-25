@@ -57,7 +57,7 @@ class _RouterState extends State<Router> {
 
   void getThings() async {
     await getShops();
-    //await getTopPick();
+    await getTopPick();
     await getUser();
     await getCategories();
 
