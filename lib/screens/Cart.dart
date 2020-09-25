@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:bake2home/functions/order.dart';
 import 'package:bake2home/screens/Checkout.dart';
+import 'package:bake2home/screens/Noorders.dart';
 import 'package:bake2home/screens/OrderPending.dart';
 import 'package:bake2home/services/PushNotification.dart';
 import 'package:bake2home/services/database.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:bake2home/constants.dart';
 import 'package:bake2home/functions/shop.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 
 class Cart extends StatefulWidget {
@@ -21,6 +23,7 @@ class Cart extends StatefulWidget {
 class _CartState extends State<Cart> {
   @override
   Widget build(BuildContext context) {
+    bool status = Provider.of<bool>(context) ?? true;
     print(cartMap.toString());
     double subtotal  = 0;
     Shop shop;
@@ -78,7 +81,7 @@ class _CartState extends State<Cart> {
               style: TextStyle(
                 color: base,
               ))),
-      body: Container(
+      body: status==true ? Container(
         height: double.infinity,
         child: Column(children: <Widget>[
           Container(
@@ -412,7 +415,7 @@ class _CartState extends State<Cart> {
             ]),
           )
         ]),
-      ),
+      ):NoOrders(),
     );
 
   }

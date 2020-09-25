@@ -15,6 +15,8 @@ import 'package:upi_india/upi_response.dart';
 class DatabaseService {
   final CollectionReference shopCollection =
       FirebaseFirestore.instance.collection('Shops');
+  final CollectionReference statusCollection =
+      FirebaseFirestore.instance.collection('Status');
   final CollectionReference userCollection =
       FirebaseFirestore.instance.collection("Users");
   final CollectionReference orderCollection =
@@ -250,6 +252,13 @@ class DatabaseService {
         .where('userId', isEqualTo: currentUserID)
         .snapshots()
         .map((_ordersFromSnapshot));
+  }
+
+  Stream<bool> get status {
+    bool getStatus(DocumentSnapshot doc){
+      return doc.data()['status'];
+    }
+    return statusCollection.doc('status').snapshots().map(getStatus);
   }
 
   Stream<List<Order>>  orderUpdate(String orderId){

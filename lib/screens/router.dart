@@ -1,14 +1,16 @@
+import 'dart:async';
+
 import 'package:bake2home/functions/category.dart';
 import 'package:bake2home/functions/user.dart';
 import 'package:bake2home/screens/homepage.dart';
 import 'package:bake2home/screens/signIn.dart';
-import 'package:bake2home/services/auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:bake2home/functions/shop.dart';
 import 'package:bake2home/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:connectivity/connectivity.dart';
 
 class Router extends StatefulWidget {
   @override
@@ -31,6 +33,7 @@ class _RouterState extends State<Router> {
     getThings();
     //createDynamicLink();
     initDynamicLinks();
+    
   }
 
   Future<void> initDynamicLinks() async {
@@ -97,6 +100,7 @@ class _RouterState extends State<Router> {
     return true;
   }
 
+  
   Future<bool> getShops() async {
     QuerySnapshot shops = await shopCollection.get();
     shops.docs.forEach((element) {
@@ -176,7 +180,6 @@ class _RouterState extends State<Router> {
           imageUrl: Uri.parse(
               'https://firebasestorage.googleapis.com/v0/b/bakemycake-1d1dc.appspot.com/o/atom.png?alt=media&token=789c85bc-5234-4fb9-a317-957f98bb0abe'),
         ));
-    final dynamicLink = await parameters.buildUrl();
     final ShortDynamicLink shortLink = await parameters.buildShortLink();
     print('linkkkkkkkkk' +
         shortLink.shortUrl.toString() +
@@ -207,10 +210,24 @@ class _RouterState extends State<Router> {
     });
   }
 
+  final Connectivity _connectivity = Connectivity();
+  StreamSubscription<ConnectivityResult> subs ;
+  bool internetStatus = true;
   @override
   Widget build(BuildContext context) {
+    subs = _connectivity.onConnectivityChanged.listen((ConnectivityResult event) { 
+      setState(() {
+        print("No connection");
+        if(event == ConnectivityResult.none){
+          internetStatus = false;
+        }else{
+          internetStatus = true;
+        }
+      });
+    });
+    
     return Scaffold(
-      body: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+      body: internetStatus==true ? Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
         Center(
           child: Container(
               child: Image.asset(
@@ -219,7 +236,14 @@ class _RouterState extends State<Router> {
           )),
         ),
         CircularProgressIndicator(),
-      ]),
+      ]) : Text("No Connection"),
     );
+  }
+
+  @override
+  void dispose(){
+    super.dispose();
+    subs.cancel();
+    
   }
 }

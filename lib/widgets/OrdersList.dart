@@ -13,7 +13,7 @@ class OrdersList extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Order> orders = Provider.of<List<Order>>(context) ?? [];
     print(orders.toString());
-    return Review(shop: shopMap["emYlLuBFbRcw1hhlitvGuePI7Rh1"]);
+    //return Review(shop: shopMap["emYlLuBFbRcw1hhlitvGuePI7Rh1"]);
     return ListView.builder(
         itemCount: orders.length,
         itemBuilder: (BuildContext context, int index){
