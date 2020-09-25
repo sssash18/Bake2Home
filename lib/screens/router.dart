@@ -146,6 +146,7 @@ class _RouterState extends State<Router> {
       token: document.data()['token'],
       advance: document.data()['advance'].toDouble(),
       cod : document.data()['cod'],
+      reviews: List<String>.from(document.data()['reviews']),
     );
   }
 

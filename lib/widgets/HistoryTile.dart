@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:bake2home/constants.dart';
 import 'package:bake2home/functions/order.dart';
 import 'package:bake2home/functions/shop.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 
 class HistoryTile extends StatefulWidget {
@@ -16,6 +17,7 @@ class HistoryTile extends StatefulWidget {
 }
 
 class _HistoryTileState extends State<HistoryTile> {
+
 
   Widget _cancelButton(){
     return FlatButton.icon(
@@ -34,6 +36,7 @@ class _HistoryTileState extends State<HistoryTile> {
 
   @override
   Widget build(BuildContext context) {
+    
     Shop shop  = shopMap[shopMap.keys.where((element) => shopMap[element].shopId == widget.order.shopId).elementAt(0)];
     String itemList="";
     widget.order.items.keys.where((element) => element!='shopId').forEach((element) { 
@@ -188,6 +191,21 @@ class _HistoryTileState extends State<HistoryTile> {
                     alignment: Alignment.centerLeft,
                     child: Text(
                     '\u20B9 ${widget.order.amount+50}' ,
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "OTP" ,
+                      style: TextStyle(
+                        color: Colors.grey[700]
+                      ),
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                    '${widget.order.otp}' ,
                     ),
                   ),
                 ],

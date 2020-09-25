@@ -73,7 +73,7 @@ class _MainPageState extends State<MainPage> {
                 height: MediaQuery.of(context).size.height / 3,
                 enableInfiniteScroll: true,
                 autoPlay: true,
-                autoPlayInterval: Duration(seconds: 2),
+                autoPlayInterval: Duration(seconds: 3),
               ),
               items: [1, 2, 3, 4, 5].map((i) {
                 return Builder(

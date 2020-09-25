@@ -95,6 +95,6 @@ Future<bool> genDialog(
 showSnackBar(GlobalKey<ScaffoldState> key, String msg) {
   key.currentState.showSnackBar(SnackBar(
     content: Text("$msg"),
-    duration: Duration(milliseconds: 1),
+    duration: Duration(seconds: 2),
   ));
 }

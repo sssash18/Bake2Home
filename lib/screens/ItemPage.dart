@@ -19,6 +19,7 @@ class ItemPage extends StatefulWidget {
 class _ItemPageState extends State<ItemPage> {
   String _price = '100';
   String vid;
+  GlobalKey _key = GlobalKey<ScaffoldState>();
   int quantity = 0;
   SplayTreeSet<double> dropDownList = SplayTreeSet();
   Map<double, double> priceMap = new Map();
@@ -54,6 +55,7 @@ class _ItemPageState extends State<ItemPage> {
           return true;
         },
         child: Scaffold(
+          key: _key,
           resizeToAvoidBottomInset: true,
           body: CustomScrollView(
             slivers: <Widget>[
@@ -364,6 +366,7 @@ class _ItemPageState extends State<ItemPage> {
                             }
                             print(cartMap);
                             Navigator.pop(context);
+                            showSnackBar(_key, "Item Added to Cart");
                           });
                         },
                         icon: Icon(

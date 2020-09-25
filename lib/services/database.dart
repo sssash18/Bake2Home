@@ -39,6 +39,18 @@ class DatabaseService {
     return rs;
   }
 
+  Future<bool> submitReview(String shopId,String review, int rating) async{
+    bool rs  = false;
+    int nums = shopMap[shopId].reviews.length;
+    shopMap[shopId].reviews.add(review);
+    double ratingFinal = (shopMap[shopId].rating + rating)/(nums+1);
+    await shopCollection.doc(shopId).update({
+      'rating' : ratingFinal,
+      'reviews' : shopMap[shopId].reviews,
+    }).then((value) => rs=true).catchError((e) => rs=false);
+    return rs;
+  }
+
   Future<bool> createUser(String name, String uid, String contact,
       Map<dynamic, dynamic> address) async {
     String token = await firebaseMessaging.getToken();
