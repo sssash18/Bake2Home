@@ -39,7 +39,7 @@ class _CheckoutState extends State<Checkout> {
   Future<UpiResponse> initiateTransaction(String app) {
     return _upiIndia.startTransaction(
       app: app,
-      receiverUpiId: 'suyashchoudhary42@oksbi',
+      receiverUpiId: 'bakemycake@ybl',
       receiverName: "BakeMyCake",
       transactionRefId: "1233434",
       transactionNote: '#bmc2323111',

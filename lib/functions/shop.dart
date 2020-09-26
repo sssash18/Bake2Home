@@ -12,7 +12,7 @@ class Shop {
   int numOrders, ingPrice;
   double rating,advance;
   bool cod;
-
+  List<String> reviews;
   Map<String, dynamic> cookTime, items;
 
   Shop({
@@ -33,6 +33,7 @@ class Shop {
     this.ingPrice,
     this.token,
     this.advance,
-    this.cod
+    this.cod,
+    this.reviews
   });
 }

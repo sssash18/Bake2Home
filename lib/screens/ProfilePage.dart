@@ -1,5 +1,9 @@
+import 'dart:async';
+
+import 'package:bake2home/screens/NoInternet.dart';
 import 'package:bake2home/screens/ProfileOrders.dart';
 import 'package:bake2home/screens/signIn.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/constants.dart';
@@ -12,8 +16,26 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   String firstAddress;
+  final Connectivity _connectivity = Connectivity();
+  StreamSubscription<ConnectivityResult> subs ;
+  bool internetStatus = true;
   @override
   Widget build(BuildContext context) {
+    _connectivity.checkConnectivity().then((value){
+      if(value == ConnectivityResult.none){
+        internetStatus = false;
+      }
+    });
+    subs = _connectivity.onConnectivityChanged.listen((ConnectivityResult event) { 
+      setState(() {
+        if(event == ConnectivityResult.none){
+          internetStatus = false;
+        }else{
+          internetStatus = true;
+        }
+      });
+    });
+    
     if (currentUser.addresses.isEmpty) {
       firstAddress = 'No address found';
     } else {
@@ -21,7 +43,7 @@ class _ProfilePageState extends State<ProfilePage> {
       firstAddress = currentUser.addresses[list[0]]['address'];
     }
     print("UUUUUUUUU" + currentUser.uid);
-    return Scaffold(
+    return internetStatus ? Scaffold(
         appBar: AppBar(
           elevation: 0.0,
           iconTheme: IconThemeData(
@@ -143,6 +165,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   ],
                 )),
           ]),
-        ));
+        )) : NoInternet();
+  }
+  @override
+  void dispose(){
+    super.dispose();
+    subs.cancel();
   }
 }

@@ -1,11 +1,15 @@
+import 'dart:async';
 import 'dart:math';
 import 'package:bake2home/functions/order.dart';
 import 'package:bake2home/screens/Checkout.dart';
+import 'package:bake2home/screens/NoInternet.dart';
+import 'package:bake2home/screens/Noorders.dart';
 import 'package:bake2home/screens/OrderPending.dart';
 import 'package:bake2home/services/PushNotification.dart';
 import 'package:bake2home/services/database.dart';
 import 'package:bake2home/widgets/CartTile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/constants.dart';
@@ -27,7 +31,13 @@ class _CartState extends State<Cart> {
   Timestamp delTime;
   String _selectedAddress;
   double subtotal;
+  bool internetStatus;
+  StreamSubscription<ConnectivityResult> subs;
+  Connectivity _connectivity;
   ProgressDialog pr;
+  double delCharges;
+  double cakeQuantity;
+  int cakeCount;
   final cartKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
@@ -36,7 +46,12 @@ class _CartState extends State<Cart> {
     startTime = TimeOfDay(hour: 10, minute: 00);
     endTime = TimeOfDay(hour: 22, minute: 00);
     _addresses = [];
+    delCharges = 0.0;
+    cakeCount = 0;
+    cakeQuantity = 0;
     subtotal = 0.0;
+    internetStatus = true;
+    _connectivity = Connectivity();
     currentUser.addresses.keys.forEach((element) {
       _addresses.add(
         DropdownMenuItem(
@@ -44,8 +59,39 @@ class _CartState extends State<Cart> {
           value: currentUser.addresses[element]['address'],
         ),
       );
+      subs = _connectivity.onConnectivityChanged
+          .listen((ConnectivityResult event) {
+        setState(() {
+          if (event == ConnectivityResult.none) {
+            internetStatus = false;
+          } else {
+            internetStatus = true;
+          }
+        });
+        _connectivity.checkConnectivity().then((value) {
+          if (value == ConnectivityResult.none) {
+            internetStatus = false;
+          }
+        });
+      });
     });
-    _selectedAddress = _addresses.first.value;
+  }
+
+  double calculateDeliveryCharges(double cakeQuantity) {
+    if (cakeQuantity <= 2) {
+      delCharges = delChargesList[0];
+    } else {
+      if (cakeQuantity > 2) {
+        delCharges = delChargesList[1];
+      }
+      if (cakeQuantity > 2 && cakeCount == 2) {
+        delCharges = delChargesList[2];
+      }
+      if (cakeCount > 2) {
+        delCharges = delChargesList[3];
+      }
+    }
+    return delCharges;
   }
 
   @override
@@ -66,180 +112,212 @@ class _CartState extends State<Cart> {
         messageTextStyle: TextStyle(
             color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600));
     print(cartMap.toString());
+    bool status = Provider.of<bool>(context) ?? true;
+    print(cartMap.toString());
+    delCharges = 0.0;
+    cakeQuantity = 0;
+    cakeCount = 0;
+    subtotal = 0.0;
+    delCharges = delChargesList.first;
     cartMap.keys
         .where((element) => element != cartMap['shopId'])
         .forEach((element) {
       if (element != 'shopId') {
         subtotal += cartMap[element]['price'] * cartMap[element]['quantity'];
+        if (cartMap[element]['itemCategory'] == "cake") {
+          cakeQuantity +=
+              cartMap[element]['quantity'] * cartMap[element]['size'];
+          cakeCount += cartMap[element]['quantity'];
+        }
+        print("XCCC" + '$cakeQuantity');
       }
     });
+
+    calculateDeliveryCharges(cakeQuantity);
     subtotal = 0.0;
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width - 20;
     Shop shop;
-    return Scaffold(
-      key: cartKey,
-      appBar: AppBar(
-          backgroundColor: white,
-          elevation: 0.0,
-          iconTheme: IconThemeData(color: base),
-          title: Text('Cart',
-              style: TextStyle(
-                color: base,
-              ))),
-      body: Container(
-        height: height,
-        padding: EdgeInsets.symmetric(horizontal: 10.0),
-        child: Column(children: <Widget>[
-          Container(
-            height: height * 0.15,
-            width: width,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Color(0xffeaafc8), Color(0xff654ea3)]),
-              borderRadius: BorderRadius.circular(border),
-            ),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  SizedBox(
-                    width: 10.0,
-                  ),
-                  Icon(
-                    Icons.shopping_cart,
-                    color: white,
-                    size: MediaQuery.of(context).size.height / 20,
-                  ),
-                  SizedBox(
-                    width: 10.0,
-                  ),
-                  Expanded(
-                    // width: width * 0.9,
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            'Shopping Cart',
-                            style: TextStyle(
-                              color: white,
-                              fontSize: head,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text('Verify your quantities and proceed to checkout',
-                              style: TextStyle(
+    return internetStatus
+        ? Scaffold(
+            key: cartKey,
+            appBar: AppBar(
+                backgroundColor: white,
+                elevation: 0.0,
+                iconTheme: IconThemeData(color: base),
+                title: Text('Cart',
+                    style: TextStyle(
+                      color: base,
+                    ))),
+            body: status == true
+                ? Container(
+                    height: double.infinity,
+                    child: Column(children: <Widget>[
+                      Container(
+                        height: height * 0.15,
+                        width: width,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [Color(0xffeaafc8), Color(0xff654ea3)]),
+                          borderRadius: BorderRadius.circular(border),
+                        ),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              SizedBox(
+                                width: 10.0,
+                              ),
+                              Icon(
+                                Icons.shopping_cart,
                                 color: white,
-                              ))
-                        ]),
-                  ),
-                ]),
-          ),
-          (cartMap != null && cartMap.isNotEmpty)
-              ? Expanded(
-                  child: Container(
-                    width: double.infinity,
-                    color: white,
-                    child: ListView.builder(
-                        itemCount: cartMap.length - 1,
-                        itemBuilder: (BuildContext context, int index) {
-                          shop = shopMap[shopMap.keys.firstWhere(
-                              (element) => element == cartMap['shopId'])];
+                                size: MediaQuery.of(context).size.height / 20,
+                              ),
+                              SizedBox(
+                                width: 10.0,
+                              ),
+                              Expanded(
+                                // width: width * 0.9,
+                                child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Text(
+                                        'Shopping Cart',
+                                        style: TextStyle(
+                                          color: white,
+                                          fontSize: head,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                          'Verify your quantities and proceed to checkout',
+                                          style: TextStyle(
+                                            color: white,
+                                          ))
+                                    ]),
+                              ),
+                            ]),
+                      ),
+                      (cartMap != null && cartMap.isNotEmpty)
+                          ? Expanded(
+                              child: Container(
+                                width: double.infinity,
+                                color: white,
+                                child: ListView.builder(
+                                    itemCount: cartMap.length - 1,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      shop = shopMap[shopMap.keys.firstWhere(
+                                          (element) =>
+                                              element == cartMap['shopId'])];
 
-                          return CartTile(
-                            item: cartMap[cartMap.keys
-                                .where((element) => element != 'shopId')
-                                .elementAt(index)],
-                            shopName: shop.shopName,
-                            vid: cartMap.keys
-                                .where((element) => element != 'shopId')
-                                .elementAt(index),
-                          );
-                        }),
-                  ),
-                )
-              : Expanded(child: Container()),
-          (cartMap != null && cartMap.isNotEmpty)
-              ? Container(
-                  height: height * 0.16,
-                  width: width,
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [Color(0xffeaafc8), Color(0xff654ea3)]),
-                    borderRadius: BorderRadius.circular(border),
-                  ),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text('SubTotal',
-                                  style: TextStyle(
-                                      color: white,
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.bold)),
-                              Text('\u20B9 $subtotal',
-                                  style: TextStyle(
-                                      color: white,
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.bold)),
-                            ]),
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text(
-                                'Delivery charges',
-                                style: TextStyle(
-                                  color: white,
-                                  fontSize: 12.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                      return CartTile(
+                                        item: cartMap[cartMap.keys
+                                            .where((element) =>
+                                                element != 'shopId')
+                                            .elementAt(index)],
+                                        shopName: shop.shopName,
+                                        vid: cartMap.keys
+                                            .where((element) =>
+                                                element != 'shopId')
+                                            .elementAt(index),
+                                      );
+                                    }),
                               ),
-                              Text(
-                                'Rs 50',
-                                style: TextStyle(
-                                  color: white,
-                                  fontSize: 12.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                            )
+                          : Expanded(child: Container()),
+                      (cartMap != null && cartMap.isNotEmpty)
+                          ? Container(
+                              height: height * 0.16,
+                              width: width,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10.0, vertical: 5.0),
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                      Color(0xffeaafc8),
+                                      Color(0xff654ea3)
+                                    ]),
+                                borderRadius: BorderRadius.circular(border),
                               ),
-                            ]),
-                        Container(
-                          child: ButtonTheme(
-                            minWidth: double.infinity,
-                            child: FlatButton(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(border)),
-                              color: Colors.white,
-                              textColor: base,
-                              child: Text('Checkout (\u20B9 $subtotal)'),
-                              onPressed: () async {
-                                await showBottomSheet(
-                                    context,
-                                    delTime,
-                                    _date,
-                                    _time,
-                                    _selectedAddress,
-                                    _addresses,
-                                    subtotal,
-                                    shop);
-                              },
-                            ),
-                          ),
-                        )
-                      ]),
-                )
-              : SizedBox.shrink()
-        ]),
-      ),
-    );
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Text('SubTotal',
+                                              style: TextStyle(
+                                                  color: white,
+                                                  fontSize: 18.0,
+                                                  fontWeight: FontWeight.bold)),
+                                          Text('\u20B9 $subtotal',
+                                              style: TextStyle(
+                                                  color: white,
+                                                  fontSize: 18.0,
+                                                  fontWeight: FontWeight.bold)),
+                                        ]),
+                                    Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Text(
+                                            'Delivery charges',
+                                            style: TextStyle(
+                                              color: white,
+                                              fontSize: 12.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            'Rs 50',
+                                            style: TextStyle(
+                                              color: white,
+                                              fontSize: 12.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ]),
+                                    Container(
+                                      child: ButtonTheme(
+                                        minWidth: double.infinity,
+                                        child: FlatButton(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      border)),
+                                          color: Colors.white,
+                                          textColor: base,
+                                          child: Text(
+                                              'Checkout (\u20B9 $subtotal)'),
+                                          onPressed: () async {
+                                            await showBottomSheet(
+                                                context,
+                                                delTime,
+                                                _date,
+                                                _time,
+                                                _selectedAddress,
+                                                _addresses,
+                                                subtotal,
+                                                shop);
+                                          },
+                                        ),
+                                      ),
+                                    )
+                                  ]),
+                            )
+                          : SizedBox.shrink()
+                    ]),
+                  )
+                : NoOrders(),
+          )
+        : NoInternet();
   }
 
   showBottomSheet(
@@ -396,5 +474,11 @@ class _CartState extends State<Cart> {
             ]);
           });
         });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    subs.cancel();
   }
 }

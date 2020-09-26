@@ -10,6 +10,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:bake2home/functions/shop.dart';
 import 'package:bake2home/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:connectivity/connectivity.dart';
 
 class Router extends StatefulWidget {
   @override
@@ -17,6 +18,9 @@ class Router extends StatefulWidget {
 }
 
 class _RouterState extends State<Router> {
+  Connectivity _connectivity;
+  StreamSubscription<ConnectivityResult> subs;
+  bool internetStatus = true;
   CollectionReference shopCollection =
       FirebaseFirestore.instance.collection("Shops");
   CollectionReference topCollection =
@@ -29,56 +33,82 @@ class _RouterState extends State<Router> {
   @override
   void initState() {
     super.initState();
+    _connectivity = Connectivity();
+    subs =
+        _connectivity.onConnectivityChanged.listen((ConnectivityResult event) {
+      setState(() {
+        if (event == ConnectivityResult.none) {
+          internetStatus = false;
+        } else {
+          internetStatus = true;
+        }
+      });
+    });
     getThings();
-    //createDynamicLink();
-    initDynamicLinks();
+    createDynamicLink();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    subs.cancel();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body:
-            Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-      Center(
-        child: Container(
-            child: Image.asset(
-          "assets/images/logo.png",
-          height: 120,
-        )),
-      ),
-      CircularProgressIndicator(),
-    ]));
+      body: internetStatus
+          ? Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+              Center(
+                child: Container(
+                    child: Image.asset(
+                  "assets/images/logo.png",
+                  height: 120,
+                )),
+              ),
+              CircularProgressIndicator(),
+            ])
+          : Text("No Internet"),
+    );
   }
 
   Future<void> initDynamicLinks() async {
+    final PendingDynamicLinkData link =
+        await FirebaseDynamicLinks.instance.getInitialLink();
+    _handleDeepLink(link);
+    final Uri deeplink = link?.link;
+    print("LLLLL" + deeplink.toString());
     FirebaseDynamicLinks.instance.onLink(
         onSuccess: (PendingDynamicLinkData link) async {
-      final Uri deeplink = link?.link;
-      if (deeplink != null) {
-        final String param = deeplink.queryParameters['Id'];
-        print(param);
-        Shop shop = shopMap[param];
-        print(shop.shopName);
-        Navigator.pushNamed(context, deeplink.path, arguments: shop);
-      }
+      _handleDeepLink(link);
     }, onError: (OnLinkErrorException e) async {
       print('onLinkError');
       print(e.message);
     });
-    final PendingDynamicLinkData link =
-        await FirebaseDynamicLinks.instance.getInitialLink();
-    //FirebaseDynamicLinks.instance.getDynamicLink(url);
-    final Uri deeplink = link?.link;
-    print("LLLLL" + deeplink.toString());
+  }
+
+  void _handleDeepLink(PendingDynamicLinkData link) {
+    print("link:  " + '${link?.link}');
+    Uri deepLink = link?.link;
+    if (deepLink != null) {
+      final String param = deepLink.queryParameters['Id'];
+      print(param);
+      Shop shop = shopMap[param];
+      print(shop.shopName);
+      print(deepLink.path);
+      Navigator.pushNamed(context, deepLink.path, arguments: shop);
+      print('cant Handle');
+    }
   }
 
   void getThings() async {
+    //await initDynamicLinks();
     await getShops();
     await getTopPick();
     await getUser();
     await getCategories();
 
-    await getDeliveryCharges();
+    getDeliveryCharges();
     // await getCardDetails();
 
     _auth.currentUser != null
@@ -86,6 +116,7 @@ class _RouterState extends State<Router> {
             MaterialPageRoute(builder: (BuildContext context) => HomePage()))
         : Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (BuildContext context) => SignIn()));
+    await initDynamicLinks();
   }
 
   Future<bool> getUser() async {
@@ -163,6 +194,7 @@ class _RouterState extends State<Router> {
       token: document.data()['token'],
       advance: document.data()['advance'].toDouble(),
       cod: document.data()['cod'],
+      reviews: List<String>.from(document.data()['reviews']),
     );
   }
 
@@ -181,7 +213,7 @@ class _RouterState extends State<Router> {
             NavigationInfoParameters(forcedRedirectEnabled: true),
         uriPrefix: 'https://bakemycakevendor.page.link',
         link: Uri.parse(
-            'https://bakemycakevendor/profile?Id=FKAEYVHnogOZvI4g6ba5'),
+            'https://bakemycakevendor/profile?Id=emYlLuBFbRcw1hhlitvGuePI7Rh1'),
         androidParameters:
             AndroidParameters(packageName: 'com.example.bake2home'),
         socialMetaTagParameters: SocialMetaTagParameters(

@@ -9,6 +9,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 
+import 'functions/shop.dart';
+
 bool USE_FIRESTORE_EMULATOR = false;
 
 void main() async {
@@ -27,6 +29,11 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+
+  void initState(){
+    super.initState();
+     WidgetsBinding.instance.addObserver(this);
+  }
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -55,5 +62,44 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           fontFamily: 'Sora'),
       home: Router(),
     );
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+               //do your stuff
+        initDynamicLinks();
+    }
+  }
+
+  Future<void> initDynamicLinks() async {
+    Navigator.pushNamed(context, '/profile',arguments: shopMap['emYlLuBFbRcw1hhlitvGuePI7Rh1']);
+    FirebaseDynamicLinks.instance.onLink(
+        onSuccess: (PendingDynamicLinkData link) async {      
+      _handleDeepLink(link);
+    }, onError: (OnLinkErrorException e) async {
+      print('onLinkError');
+      print(e.message);
+    });
+    final PendingDynamicLinkData link =
+        await FirebaseDynamicLinks.instance.getInitialLink();
+    _handleDeepLink(link);
+    final Uri deeplink = link?.link;
+    print("LLLLL" + deeplink.toString());
+    
+    
+  }
+  void _handleDeepLink(PendingDynamicLinkData link){
+    print("link:  " + '${link?.link}');
+    Uri deepLink = link?.link;
+    if (deepLink != null) {
+        final String param = deepLink.queryParameters['Id'];
+        print(param);
+        Shop shop = shopMap[param];
+        print(shop.shopName);
+        print(deepLink.path);
+        Navigator.pushNamed(context, deepLink.path, arguments: shop);
+        print('cant Handle');
+    }
   }
 }

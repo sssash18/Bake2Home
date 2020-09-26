@@ -15,6 +15,8 @@ import 'package:upi_india/upi_response.dart';
 class DatabaseService {
   final CollectionReference shopCollection =
       FirebaseFirestore.instance.collection('Shops');
+  final CollectionReference statusCollection =
+      FirebaseFirestore.instance.collection('Status');
   final CollectionReference userCollection =
       FirebaseFirestore.instance.collection("Users");
   final CollectionReference orderCollection =
@@ -38,6 +40,22 @@ class DatabaseService {
             'appRefNo': response.approvalRefNo,
             'status': response.status,
           }
+        })
+        .then((value) => rs = true)
+        .catchError((e) => rs = false);
+    return rs;
+  }
+
+  Future<bool> submitReview(String shopId, String review, int rating) async {
+    bool rs = false;
+    int nums = shopMap[shopId].reviews.length;
+    shopMap[shopId].reviews.add(review);
+    double ratingFinal = (shopMap[shopId].rating + rating) / (nums + 1);
+    await shopCollection
+        .doc(shopId)
+        .update({
+          'rating': ratingFinal,
+          'reviews': shopMap[shopId].reviews,
         })
         .then((value) => rs = true)
         .catchError((e) => rs = false);
@@ -171,6 +189,7 @@ class DatabaseService {
           'orderTime': order.orderTime,
           'deliveryTime': order.deliveryTime,
           'items': order.items,
+          'codAmount': 0,
         })
         .then((value) => {rs = true, print("Order Placed")})
         .catchError((e) {
@@ -183,24 +202,18 @@ class DatabaseService {
   Future<bool> cancelOrder(Order order) async {
     double refundAmount = 0;
     double compensationAmount = 0;
-    if (order.deliveryTime
-        .toDate()
-        .isBefore(order.orderTime.toDate().add(Duration(hours: 3)))) {
-      refundAmount = 0;
+    if (DateTime.now().isBefore(order.orderTime
+            .toDate()
+            .add(Duration(hours: 1))
+            .add(Duration(minutes: 30))) ==
+        true) {
+      refundAmount = order.amount;
     } else {
-      if (DateTime.now().isBefore(order.orderTime
-              .toDate()
-              .add(Duration(hours: 1))
-              .add(Duration(minutes: 30))) ==
-          true) {
-        refundAmount = order.amount;
+      if (order.cod == false) {
+        refundAmount = 0;
       } else {
-        if (order.cod == false) {
-          refundAmount = 0;
-        } else {
-          refundAmount =
-              (100 - shopMap[order.shopId].advance) / 100 * order.amount;
-        }
+        refundAmount =
+            (100 - shopMap[order.shopId].advance) / 100 * order.amount;
       }
     }
     compensationAmount = (order.amount - refundAmount) - 0.05 * order.amount;
@@ -242,6 +255,14 @@ class DatabaseService {
         .where('userId', isEqualTo: currentUserID)
         .snapshots()
         .map((_ordersFromSnapshot));
+  }
+
+  Stream<bool> get status {
+    bool getStatus(DocumentSnapshot doc) {
+      return doc.data()['status'];
+    }
+
+    return statusCollection.doc('status').snapshots().map(getStatus);
   }
 
   Stream<List<Order>> orderUpdate(String orderId) {
