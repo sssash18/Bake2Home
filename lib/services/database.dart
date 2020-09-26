@@ -181,6 +181,7 @@ class DatabaseService {
           'orderTime': order.orderTime,
           'deliveryTime': order.deliveryTime,
           'items': order.items,
+          'codAmount' : 0,
 
         })
         .then((value) => {rs = true, print("Order Placed")})
@@ -196,10 +197,7 @@ class DatabaseService {
   Future<bool> cancelOrder(Order order) async {
     double refundAmount=0;
     double compensationAmount =0;
-    if(order.deliveryTime.toDate().isBefore(order.orderTime.toDate().add(Duration(hours: 3)))){
-      refundAmount = 0;
-    }else{
-      if(DateTime.now().isBefore(order.orderTime.toDate().add(Duration(hours: 1)).add(Duration(minutes: 30))) == true ){
+    if(DateTime.now().isBefore(order.orderTime.toDate().add(Duration(hours: 1)).add(Duration(minutes: 30))) == true ){
         refundAmount = order.amount;
       }else{
         if(order.cod==false){
@@ -208,7 +206,6 @@ class DatabaseService {
           refundAmount = (100 - shopMap[order.shopId].advance)/100 * order.amount;
         }
       }
-    }
     compensationAmount =  (order.amount - refundAmount) - 0.05 * order.amount; 
     
     order.refund = refundAmount;

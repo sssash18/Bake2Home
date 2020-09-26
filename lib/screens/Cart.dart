@@ -1,12 +1,15 @@
+import 'dart:async';
 import 'dart:math';
 import 'package:bake2home/functions/order.dart';
 import 'package:bake2home/screens/Checkout.dart';
+import 'package:bake2home/screens/NoInternet.dart';
 import 'package:bake2home/screens/Noorders.dart';
 import 'package:bake2home/screens/OrderPending.dart';
 import 'package:bake2home/services/PushNotification.dart';
 import 'package:bake2home/services/database.dart';
 import 'package:bake2home/widgets/CartTile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/constants.dart';
@@ -21,8 +24,26 @@ class Cart extends StatefulWidget {
 }
 
 class _CartState extends State<Cart> {
+  final Connectivity _connectivity = Connectivity();
+  StreamSubscription<ConnectivityResult> subs ;
+  bool internetStatus = true;
   @override
   Widget build(BuildContext context) {
+    _connectivity.checkConnectivity().then((value){
+      if(value == ConnectivityResult.none){
+        internetStatus = false;
+      }
+    });
+    subs = _connectivity.onConnectivityChanged.listen((ConnectivityResult event) { 
+      setState(() {
+        if(event == ConnectivityResult.none){
+          internetStatus = false;
+        }else{
+          internetStatus = true;
+        }
+      });
+    });
+    
     bool status = Provider.of<bool>(context) ?? true;
     print(cartMap.toString());
     double subtotal  = 0;
@@ -42,7 +63,7 @@ class _CartState extends State<Cart> {
       }
     });
 
-    void calculateDeliveryCharges(double cakeQuantity){
+    double calculateDeliveryCharges(double cakeQuantity){
       if(cakeQuantity <= 2){
         delCharges = delChargesList[0];
       }else{
@@ -56,6 +77,7 @@ class _CartState extends State<Cart> {
           delCharges = delChargesList[3];
         }
       }
+      return delCharges;
     }
     calculateDeliveryCharges(cakeQuantity);
     print("SSSSSSSSSSS");
@@ -72,7 +94,7 @@ class _CartState extends State<Cart> {
     });
     String _selectedAddress = _addresses.first.value;
     print(currentUser.addresses[currentUser.addresses.keys.elementAt(0)]['address']);
-    return Scaffold(
+    return internetStatus ? Scaffold(
       appBar: AppBar(
           backgroundColor: white,
           elevation: 0.0,
@@ -386,8 +408,8 @@ class _CartState extends State<Cart> {
                                           status: "PENDING",
                                           otp : _otp,
                                           paymentType: "UPI",
-                                          amount: subtotal + 50,
-                                          delCharges: 50,
+                                          amount: subtotal + delCharges,
+                                          delCharges: delCharges,
                                           pickUp: false,
                                           orderTime: Timestamp.now(),
                                           deliveryTime: delTime,
@@ -416,7 +438,12 @@ class _CartState extends State<Cart> {
           )
         ]),
       ):NoOrders(),
-    );
+    ):NoInternet();
 
+  }
+  @override
+  void dispose(){
+    super.dispose();
+    subs.cancel();
   }
 }

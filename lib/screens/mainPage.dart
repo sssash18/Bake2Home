@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:bake2home/constants.dart';
 import 'package:bake2home/screens/ItemPage.dart';
+import 'package:bake2home/screens/NoInternet.dart';
 import 'package:bake2home/services/database.dart';
 import 'package:bake2home/services/searchDelegate.dart';
 import 'package:bake2home/screens/TrendingPage.dart';
@@ -10,6 +13,7 @@ import 'package:bake2home/widgets/PastryTile.dart';
 import 'package:bake2home/widgets/RecipeTile.dart';
 import 'package:bake2home/widgets/VendorList.dart';
 import 'package:bake2home/screens/VendorListPage.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:provider/provider.dart';
@@ -24,10 +28,30 @@ class _MainPageState extends State<MainPage> {
     Icons.search,
     color: base,
   );
+
+  final Connectivity _connectivity = Connectivity();
+  StreamSubscription<ConnectivityResult> subs ;
+  bool internetStatus = true;
+  
   Widget appBarTitle = Text('BakeMyCake');
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    _connectivity.checkConnectivity().then((value){
+      if(value == ConnectivityResult.none){
+        internetStatus = false;
+      }
+    });
+    subs = _connectivity.onConnectivityChanged.listen((ConnectivityResult event) { 
+      setState(() {
+        if(event == ConnectivityResult.none){
+          internetStatus = false;
+        }else{
+          internetStatus = true;
+        }
+      });
+    });
+    
+    return internetStatus==true ? Scaffold(
       appBar: AppBar(
         leading: Container(
             margin: EdgeInsets.only(left: 10.0),
@@ -249,6 +273,11 @@ class _MainPageState extends State<MainPage> {
           
           ),
         ),
-    );
+    ) : NoInternet();
+  }
+  @override
+  void dispose(){
+    super.dispose();
+    subs.cancel();
   }
 }

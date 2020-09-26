@@ -31,38 +31,49 @@ class _RouterState extends State<Router> {
   void initState() {
     super.initState();
     getThings();
+
     //createDynamicLink();
-    initDynamicLinks();
     
   }
 
   Future<void> initDynamicLinks() async {
+
+    final PendingDynamicLinkData link =
+        await FirebaseDynamicLinks.instance.getInitialLink();
+    _handleDeepLink(link);
+    final Uri deeplink = link?.link;
+    print("LLLLL" + deeplink.toString());
     FirebaseDynamicLinks.instance.onLink(
-        onSuccess: (PendingDynamicLinkData link) async {
-      final Uri deeplink = link?.link;
-      if (deeplink != null) {
-        final String param = deeplink.queryParameters['Id'];
-        print(param);
-        Shop shop = shopMap[param];
-        print(shop.shopName);
-        Navigator.pushNamed(context, deeplink.path, arguments: shop);
-      }
+        onSuccess: (PendingDynamicLinkData link) async {      
+      _handleDeepLink(link);
     }, onError: (OnLinkErrorException e) async {
       print('onLinkError');
       print(e.message);
     });
-    final PendingDynamicLinkData link =
-        await FirebaseDynamicLinks.instance.getInitialLink();
-    //FirebaseDynamicLinks.instance.getDynamicLink(url);
-    final Uri deeplink = link?.link;
-    print("LLLLL" + deeplink.toString());
+    
+  }
+
+  void _handleDeepLink(PendingDynamicLinkData link){
+    print("link:  " + '${link?.link}');
+    Uri deepLink = link?.link;
+    if (deepLink != null) {
+        final String param = deepLink.queryParameters['Id'];
+        print(param);
+        Shop shop = shopMap[param];
+        print(shop.shopName);
+        print(deepLink.path);
+        Navigator.pushNamed(context, deepLink.path, arguments: shop);
+        print('cant Handle');
+    }
   }
 
   void getThings() async {
+    //await initDynamicLinks();
     await getShops();
     await getTopPick();
     await getUser();
     await getCategories();
+
 
     getDeliveryCharges();
     // await getCardDetails();
@@ -72,6 +83,8 @@ class _RouterState extends State<Router> {
             MaterialPageRoute(builder: (BuildContext context) => HomePage()))
         : Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (BuildContext context) => SignIn()));
+    await initDynamicLinks();
+
   }
 
   Future<bool> getUser() async {
@@ -171,7 +184,7 @@ class _RouterState extends State<Router> {
             NavigationInfoParameters(forcedRedirectEnabled: true),
         uriPrefix: 'https://bakemycakevendor.page.link',
         link: Uri.parse(
-            'https://bakemycakevendor/profile?Id=FKAEYVHnogOZvI4g6ba5'),
+            'https://bakemycakevendor/profile?Id=emYlLuBFbRcw1hhlitvGuePI7Rh1'),
         androidParameters:
             AndroidParameters(packageName: 'com.example.bake2home'),
         socialMetaTagParameters: SocialMetaTagParameters(
@@ -217,7 +230,6 @@ class _RouterState extends State<Router> {
   Widget build(BuildContext context) {
     subs = _connectivity.onConnectivityChanged.listen((ConnectivityResult event) { 
       setState(() {
-        print("No connection");
         if(event == ConnectivityResult.none){
           internetStatus = false;
         }else{
@@ -227,7 +239,7 @@ class _RouterState extends State<Router> {
     });
     
     return Scaffold(
-      body: internetStatus==true ? Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+      body: internetStatus ? Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
         Center(
           child: Container(
               child: Image.asset(
@@ -236,14 +248,12 @@ class _RouterState extends State<Router> {
           )),
         ),
         CircularProgressIndicator(),
-      ]) : Text("No Connection"),
+      ]) : Text("No Internet"),
     );
   }
-
   @override
   void dispose(){
     super.dispose();
     subs.cancel();
-    
   }
 }
