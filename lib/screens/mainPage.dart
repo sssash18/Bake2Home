@@ -1,5 +1,6 @@
 import 'package:bake2home/constants.dart';
 import 'package:bake2home/screens/ItemPage.dart';
+import 'package:bake2home/services/database.dart';
 import 'package:bake2home/services/searchDelegate.dart';
 import 'package:bake2home/screens/TrendingPage.dart';
 import 'package:bake2home/screens/VendorProfile.dart';
@@ -11,6 +12,7 @@ import 'package:bake2home/widgets/VendorList.dart';
 import 'package:bake2home/screens/VendorListPage.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:provider/provider.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -73,7 +75,7 @@ class _MainPageState extends State<MainPage> {
                 height: MediaQuery.of(context).size.height / 3,
                 enableInfiniteScroll: true,
                 autoPlay: true,
-                autoPlayInterval: Duration(seconds: 2),
+                autoPlayInterval: Duration(seconds: 3),
               ),
               items: [1, 2, 3, 4, 5].map((i) {
                 return Builder(
@@ -143,7 +145,7 @@ class _MainPageState extends State<MainPage> {
             Homeheading(
               heading: "Trend in Town",
               showAll: true,
-              showPage: (context) {
+              showPage: () {
                 Navigator.push(
                     context,
                     MaterialPageRoute(

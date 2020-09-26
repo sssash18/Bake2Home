@@ -1,8 +1,9 @@
+import 'dart:async';
+
 import 'package:bake2home/functions/category.dart';
 import 'package:bake2home/functions/user.dart';
 import 'package:bake2home/screens/homepage.dart';
 import 'package:bake2home/screens/signIn.dart';
-import 'package:bake2home/services/auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -22,7 +23,7 @@ class _RouterState extends State<Router> {
       FirebaseFirestore.instance.collection("TopPicks");
   CollectionReference categoryCollection =
       FirebaseFirestore.instance.collection("Categories");
-  CollectionReference deliveryCollection = 
+  CollectionReference deliveryCollection =
       FirebaseFirestore.instance.collection("DeliveryCharges");
   FirebaseAuth _auth = FirebaseAuth.instance;
   @override
@@ -31,6 +32,22 @@ class _RouterState extends State<Router> {
     getThings();
     //createDynamicLink();
     initDynamicLinks();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body:
+            Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+      Center(
+        child: Container(
+            child: Image.asset(
+          "assets/images/logo.png",
+          height: 120,
+        )),
+      ),
+      CircularProgressIndicator(),
+    ]));
   }
 
   Future<void> initDynamicLinks() async {
@@ -61,7 +78,7 @@ class _RouterState extends State<Router> {
     await getUser();
     await getCategories();
 
-    getDeliveryCharges();
+    await getDeliveryCharges();
     // await getCardDetails();
 
     _auth.currentUser != null
@@ -145,19 +162,17 @@ class _RouterState extends State<Router> {
       ingPrice: document.data()['ingPrice'],
       token: document.data()['token'],
       advance: document.data()['advance'].toDouble(),
-      cod : document.data()['cod'],
+      cod: document.data()['cod'],
     );
   }
 
-  Future<void> getDeliveryCharges() async{
-    deliveryCollection.doc('charges').get().then((value){
-      value.data().keys.forEach((element) { 
+  Future<void> getDeliveryCharges() async {
+    await deliveryCollection.doc('charges').get().then((value) {
+      value.data().keys.forEach((element) {
         delChargesList.add(value.data()[element].toDouble());
       });
-      print("DDDDDD ${delChargesList.toString()}") ;
-    }
-    );
-    
+      print("DDDDDD ${delChargesList.toString()}");
+    });
   }
 
   Future<void> createDynamicLink() async {
@@ -175,7 +190,6 @@ class _RouterState extends State<Router> {
           imageUrl: Uri.parse(
               'https://firebasestorage.googleapis.com/v0/b/bakemycake-1d1dc.appspot.com/o/atom.png?alt=media&token=789c85bc-5234-4fb9-a317-957f98bb0abe'),
         ));
-    final dynamicLink = await parameters.buildUrl();
     final ShortDynamicLink shortLink = await parameters.buildShortLink();
     print('linkkkkkkkkk' +
         shortLink.shortUrl.toString() +
@@ -193,32 +207,16 @@ class _RouterState extends State<Router> {
         if (event.data()['cart'] != null) {
           someMap = Map<String, dynamic>.from(event.data()['cart']);
         }
-        setState(() {
-          print('fetched shopId is $currentShopId');
-          if (someMap.isNotEmpty) {
-            cartMap = Map<String, dynamic>.from(someMap);
-          }
-          cartLengthNotifier.value = cartMap.length;
-          currentShopId = someMap['shopId'].toString();
-          print('cartMap is $cartMap');
-        });
+        // setState(() {
+        print('fetched shopId is $currentShopId');
+        if (someMap.isNotEmpty) {
+          cartMap = Map<String, dynamic>.from(someMap);
+        }
+        cartLengthNotifier.value = cartMap.length;
+        currentShopId = someMap['shopId'].toString();
+        print('cartMap is $cartMap');
+        // });
       }
     });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-        Center(
-          child: Container(
-              child: Image.asset(
-            "assets/images/logo.png",
-            height: 120,
-          )),
-        ),
-        CircularProgressIndicator(),
-      ]),
-    );
   }
 }

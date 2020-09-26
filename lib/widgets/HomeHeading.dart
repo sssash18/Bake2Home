@@ -33,7 +33,9 @@ class Homeheading extends StatelessWidget {
               color: button,
               fontSize: sideButton,
             )),
-        onPressed: showPage,
+        onPressed: () {
+          showPage(context);
+        },
         color: white,
       ),
     );

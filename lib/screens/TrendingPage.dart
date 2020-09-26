@@ -19,47 +19,41 @@ class TrendingPage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(border),
                   color: white,
                 ),
-                child: Stack(
+                child: Column(
                   children: <Widget>[
-                    Positioned(
-                        bottom: 10.0,
-                        height: MediaQuery.of(context).size.height / 8,
-                        width: MediaQuery.of(context).size.width / 1.2,
-                        child: Container(
-                          alignment: Alignment.center,
-                          margin: EdgeInsets.fromLTRB(20.0, 0, 20.0, 0.0),
-                          child: Column(
-                            children: <Widget>[
-                              Container(
-                                  alignment: Alignment.center,
-                                  child: Text("Offered By",
-                                      style:
-                                          TextStyle(color: Colors.grey[700]))),
-                              SizedBox(height: 10.0),
-                              Container(
-                                  alignment: Alignment.center,
-                                  child: Text("The Dessert Town",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20.0))),
-                              SizedBox(height: 10.0),
-                              RatingBar(
-                                  initialRating: 3.2,
-                                  itemSize: 15.0,
-                                  ignoreGestures: true,
-                                  itemCount: 5,
-                                  glow: true,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return Icon(
-                                      Icons.star,
-                                      color: Colors.amber,
-                                    );
-                                  },
-                                  onRatingUpdate: (rating) {})
-                            ],
-                          ),
-                        ))
+                    Container(
+                      alignment: Alignment.center,
+                      margin: EdgeInsets.fromLTRB(20.0, 0, 20.0, 0.0),
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                              alignment: Alignment.center,
+                              child: Text("Offered By",
+                                  style: TextStyle(color: Colors.grey[700]))),
+                          SizedBox(height: 10.0),
+                          Container(
+                              alignment: Alignment.center,
+                              child: Text("The Dessert Town",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20.0))),
+                          SizedBox(height: 10.0),
+                          RatingBar(
+                              initialRating: 3.2,
+                              itemSize: 15.0,
+                              ignoreGestures: true,
+                              itemCount: 5,
+                              glow: true,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Icon(
+                                  Icons.star,
+                                  color: Colors.amber,
+                                );
+                              },
+                              onRatingUpdate: (rating) {})
+                        ],
+                      ),
+                    )
                   ],
                 )),
             Positioned(
@@ -104,31 +98,33 @@ class TrendingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.green,
-        body: Container(
-          child: Text("Hello", style: TextStyle(color: white)),
-        )
-
-        // Container(
-        //   // height: MediaQuery.of(context).size.height,
-        //   // width: MediaQuery.of(context).size.width,
-        //   decoration: BoxDecoration(
-        //       gradient: LinearGradient(
-        //           begin: Alignment.topCenter,
-        //           end: Alignment.bottomCenter,
-        //           colors: [Color(0xffeaafc8), Color(0xff654ea3)])),
-        //   alignment: Alignment.center,
-        //   child: Center(
-        //     child: CarouselSlider.builder(
-        //         itemBuilder: (context, i) {
-        //           return showItem(context);
-        //         },
-        //         itemCount: 5,
-        //         options: CarouselOptions(
-        //             enableInfiniteScroll: false,
-        //             height: MediaQuery.of(context).size.height / 2)),
-        //   ),
-        // ),
-        );
+      appBar: AppBar(
+        title: Text("Trends in town "),
+      ),
+      // backgroundColor: Colors.green,
+      // body: Container(
+      //   child: Text("Hello", style: TextStyle(color: white)),
+      // )
+      body: Container(
+        // height: MediaQuery.of(context).size.height,
+        // width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xffeaafc8), Color(0xff654ea3)])),
+        alignment: Alignment.center,
+        child: Center(
+          child: CarouselSlider.builder(
+              itemBuilder: (context, i) {
+                return showItem(context);
+              },
+              itemCount: 5,
+              options: CarouselOptions(
+                  enableInfiniteScroll: false,
+                  height: MediaQuery.of(context).size.height / 2)),
+        ),
+      ),
+    );
   }
 }

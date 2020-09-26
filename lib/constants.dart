@@ -98,3 +98,19 @@ showSnackBar(GlobalKey<ScaffoldState> key, String msg) {
     duration: Duration(milliseconds: 1),
   ));
 }
+
+Future showGenDialog(BuildContext context, String msg) {
+  return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(title: Text("Alert"), content: Text(msg), actions: [
+          RaisedButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            color: base,
+            child: Text("Ok", style: TextStyle(color: white)),
+          )
+        ]);
+      });
+}

@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:bake2home/functions/order.dart';
 import 'package:bake2home/screens/Checkout.dart';
+// import 'package:bake2home/screens/Noorders.dart';
 import 'package:bake2home/screens/OrderPending.dart';
 import 'package:bake2home/services/PushNotification.dart';
 import 'package:bake2home/services/database.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:bake2home/constants.dart';
 import 'package:bake2home/functions/shop.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class Cart extends StatefulWidget {
   @override
@@ -20,6 +22,7 @@ class Cart extends StatefulWidget {
 class _CartState extends State<Cart> {
   @override
   Widget build(BuildContext context) {
+    bool status = Provider.of<bool>(context) ?? true;
     print(cartMap.toString());
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width - 20;
