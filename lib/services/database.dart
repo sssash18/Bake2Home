@@ -155,7 +155,6 @@ class DatabaseService {
       'counter': FieldValue.increment(1),
     });
     order.orderId = orderId;
-
     await orderCollection
         .doc(orderId)
         .set({

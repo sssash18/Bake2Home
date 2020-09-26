@@ -1,5 +1,6 @@
 import 'package:bake2home/constants.dart';
 import 'package:bake2home/screens/ItemPage.dart';
+import 'package:bake2home/screens/somenullpage.dart';
 import 'package:bake2home/services/database.dart';
 import 'package:bake2home/services/searchDelegate.dart';
 import 'package:bake2home/screens/TrendingPage.dart';
@@ -145,7 +146,7 @@ class _MainPageState extends State<MainPage> {
             Homeheading(
               heading: "Trend in Town",
               showAll: true,
-              showPage: () {
+              showPage: (context) {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -167,7 +168,7 @@ class _MainPageState extends State<MainPage> {
                             context,
                             MaterialPageRoute(
                                 builder: (BuildContext context) =>
-                                    Container()));
+                                    SomeNullPage()));
                       },
                     );
                   }),

@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'package:bake2home/functions/order.dart';
 import 'package:bake2home/screens/Checkout.dart';
-// import 'package:bake2home/screens/Noorders.dart';
 import 'package:bake2home/screens/OrderPending.dart';
 import 'package:bake2home/services/PushNotification.dart';
 import 'package:bake2home/services/database.dart';
@@ -12,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:bake2home/constants.dart';
 import 'package:bake2home/functions/shop.dart';
 import 'package:intl/intl.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
 
 class Cart extends StatefulWidget {
@@ -20,27 +20,23 @@ class Cart extends StatefulWidget {
 }
 
 class _CartState extends State<Cart> {
+  TimeOfDay startTime;
+  TimeOfDay endTime;
+  String _date, _time;
+  List<DropdownMenuItem<String>> _addresses;
+  Timestamp delTime;
+  String _selectedAddress;
+  double subtotal;
+  ProgressDialog pr;
+  final cartKey = GlobalKey<ScaffoldState>();
   @override
-  Widget build(BuildContext context) {
-    bool status = Provider.of<bool>(context) ?? true;
-    print(cartMap.toString());
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width - 20;
-    double subtotal = 0;
-    Shop shop;
-    String _date, _time;
-    Timestamp delTime;
-    cartMap.keys
-        .where((element) => element != cartMap['shopId'])
-        .forEach((element) {
-      if (element != 'shopId') {
-        subtotal += cartMap[element]['price'] * cartMap[element]['quantity'];
-      }
-    });
-    print("SSSSSSSSSSS");
-    print(shopMap.toString());
-
-    List<DropdownMenuItem<String>> _addresses = [];
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    startTime = TimeOfDay(hour: 10, minute: 00);
+    endTime = TimeOfDay(hour: 22, minute: 00);
+    _addresses = [];
+    subtotal = 0.0;
     currentUser.addresses.keys.forEach((element) {
       _addresses.add(
         DropdownMenuItem(
@@ -49,10 +45,40 @@ class _CartState extends State<Cart> {
         ),
       );
     });
-    String _selectedAddress = _addresses.first.value;
-    print(currentUser.addresses[currentUser.addresses.keys.elementAt(0)]
-        ['address']);
+    _selectedAddress = _addresses.first.value;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    pr = ProgressDialog(context,
+        type: ProgressDialogType.Normal, isDismissible: true, showLogs: true);
+    pr.style(
+        message: 'Preparing Your Order...',
+        borderRadius: 10.0,
+        backgroundColor: Colors.white,
+        progressWidget: Center(child: CircularProgressIndicator()),
+        elevation: 10.0,
+        insetAnimCurve: Curves.easeInOut,
+        progress: 0.0,
+        maxProgress: 100.0,
+        progressTextStyle: TextStyle(
+            color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+        messageTextStyle: TextStyle(
+            color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600));
+    print(cartMap.toString());
+    cartMap.keys
+        .where((element) => element != cartMap['shopId'])
+        .forEach((element) {
+      if (element != 'shopId') {
+        subtotal += cartMap[element]['price'] * cartMap[element]['quantity'];
+      }
+    });
+    subtotal = 0.0;
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width - 20;
+    Shop shop;
     return Scaffold(
+      key: cartKey,
       appBar: AppBar(
           backgroundColor: white,
           elevation: 0.0,
@@ -253,10 +279,12 @@ class _CartState extends State<Cart> {
                         initialDate: DateTime.now(),
                         firstDate: DateTime.now(),
                         lastDate: DateTime.now().add(Duration(days: 12)));
-                    setState(() {
-                      delTime = Timestamp.fromDate(date);
-                      _date = DateFormat.yMMMd().format(date);
-                    });
+                    if (date != null) {
+                      setState(() {
+                        delTime = Timestamp.fromDate(date);
+                        _date = DateFormat.yMMMd().format(date);
+                      });
+                    }
                   },
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(border),
@@ -272,13 +300,31 @@ class _CartState extends State<Cart> {
               ),
               FlatButton.icon(
                   onPressed: () async {
-                    TimeOfDay time = await showTimePicker(
-                        context: context, initialTime: TimeOfDay.now());
-                    setState(() {
-                      delTime.toDate().add(Duration(hours: time.hour));
-                      delTime.toDate().add(Duration(minutes: time.minute));
-                      _time = time.format(context);
-                    });
+                    if (_date != null) {
+                      TimeOfDay time = await showTimePicker(
+                          context: context, initialTime: TimeOfDay.now());
+                      if (time != null) {
+                        int timeInMinutes = time.hour * 60 + time.minute;
+                        int startInMinutes =
+                            startTime.hour * 60 + startTime.minute;
+                        int endInMinutes = endTime.hour * 60 + endTime.minute;
+                        if (timeInMinutes >= startInMinutes &&
+                            timeInMinutes <= endInMinutes) {
+                          setState(() {
+                            delTime.toDate().add(Duration(hours: time.hour));
+                            delTime
+                                .toDate()
+                                .add(Duration(minutes: time.minute));
+                            _time = time.format(context);
+                          });
+                        } else {
+                          showGenDialog(context,
+                              "We provide service only from 10am to 10 pm only!");
+                        }
+                      }
+                    } else {
+                      showGenDialog(context, "Please select date first");
+                    }
                   },
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(border),
@@ -326,13 +372,20 @@ class _CartState extends State<Cart> {
                       deliveryTime: delTime,
                       deliveryAddress: _selectedAddress,
                       items: cartMap);
-                  DatabaseService().createOrder(order);
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (BuildContext context) {
-                    return Checkout(order: order);
-                  }));
-                  PushNotification().pushMessage('New Order Request',
-                      'Request from ${currentUser.name}', shop.token);
+                  await pr.show();
+                  bool rs = await DatabaseService().createOrder(order);
+                  await pr.hide();
+                  if (rs) {
+                    await PushNotification().pushMessage('New Order Request',
+                        'Request from ${currentUser.name}', shop.token);
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (BuildContext context) {
+                      return Checkout(order: order);
+                    }));
+                  } else {
+                    showSnackBar(
+                        cartKey, "Cannot Prepare Order... try again later");
+                  }
                 },
                 icon: Icon(
                   Icons.done,
