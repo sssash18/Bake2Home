@@ -19,28 +19,17 @@ class ItemPage extends StatefulWidget {
 class _ItemPageState extends State<ItemPage> {
   String _price = '100';
   String vid;
+  GlobalKey _key = GlobalKey<ScaffoldState>();
   int quantity = 0;
-  List<String>  _flavour = [];
-  String _selectedFlavour;
-  List<DropdownMenuItem> flavours = [];
   SplayTreeSet<double> dropDownList = SplayTreeSet();
   Map<double, double> priceMap = new Map();
   Map<double, String> vidMap = new Map();
   double selectedSize = 0.0, price, tt;
   @override
   Widget build(BuildContext context) {
-    _flavour = widget.model.flavours;
     vidMap.clear();
     priceMap.clear();
     dropDownList.clear();
-    flavours.clear();
-    _flavour.forEach((element) {
-      flavours.add(DropdownMenuItem(
-        value: element,
-        child: Text(element),
-      ));
-     });
-     _selectedFlavour = flavours.first.value;
 
     this.widget.model.variants.forEach((key, value) {
       print("VVVVVVV" + value.toString());
@@ -66,6 +55,7 @@ class _ItemPageState extends State<ItemPage> {
           return true;
         },
         child: Scaffold(
+          key: _key,
           resizeToAvoidBottomInset: true,
           body: CustomScrollView(
             slivers: <Widget>[
@@ -309,82 +299,7 @@ class _ItemPageState extends State<ItemPage> {
   Future<void> addToCartNewItem() async {
     bool note = true;
     String noteItem = "";
-
-    if(note){
-      showModalBottomSheet( 
-        context: context,
-        builder: (builder){
-          return Container(
-            child: Form(
-            child: Column(
-              children : <Widget>[
-                SizedBox(height: MediaQuery.of(context).size.height/30),
-                Container(
-                    margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.height/30,0, MediaQuery.of(context).size.height/30, 0),
-                    child: TextFormField(
-                    autofocus: true,
-                    decoration: InputDecoration(
-                      labelText: "Special Note",
-                      helperText: "* will be printed on the product",
-                      border: OutlineInputBorder()
-                    ), 
-                    onChanged: (val){
-                      noteItem = val;
-                    }, 
-                  ),
-                ),
-                SizedBox(height: MediaQuery.of(context).size.height/100),
-                Text('Choose the Flavour',style: TextStyle(color: base),),
-                SizedBox(height: MediaQuery.of(context).size.height/100),
-                DropdownButton(
-                  value: _selectedFlavour,
-                  items: flavours,
-                  onChanged: (val){
-                    setState(() {
-                      _selectedFlavour = val;
-                    });
-                  },
-                ),
-               
-                FlatButton.icon(
-                  color: base,
-                  shape: RoundedRectangleBorder(
-                    borderRadius : BorderRadius.circular(border),
-                  ),
-                  onPressed: (){
-                   setState(() {
-                      quantity++;
-                      if(quantity==1){
-                        CartItemMap cartItem = CartItemMap(
-                          itemName: widget.model.itemName,
-                          itemCategory: widget.model.itemCategory,
-                          quantity: quantity,
-                          size: tt,
-                          notes: [noteItem],
-                          price: price,
-                          photoUrl: widget.model.photoUrl,
-                          flavour : _selectedFlavour,
-                        );
-                        cartMap.putIfAbsent(vid,() => {
-                          'itemName' : cartItem.itemName,
-                          'size'  : cartItem.size,
-                          'price' : cartItem.price,
-                          'quantity' : cartItem.quantity,
-                          'notes' : cartItem.notes,
-                          'photoUrl' : cartItem.photoUrl,
-                          'itemCategory' : cartItem.itemCategory,
-                          'flavour' : _selectedFlavour,
-                        });
-                        cartMap.putIfAbsent('shopId', () => widget.shopId);
-                      }else{
-                        cartMap[vid]['quantity']++;
-                        cartMap[vid]['notes'].add(noteItem);
-                      }
-                      print(cartMap);
-                      Navigator.pop(context);
-                   }); 
-
-
+    String shopId;
     if (cartMap['shopId'] == null) {
       shopId = 'null';
     } else {
@@ -451,6 +366,7 @@ class _ItemPageState extends State<ItemPage> {
                             }
                             print(cartMap);
                             Navigator.pop(context);
+                            showSnackBar(_key, "Item Added to Cart");
                           });
                         },
                         icon: Icon(

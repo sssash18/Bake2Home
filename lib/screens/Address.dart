@@ -12,6 +12,7 @@ class Address extends StatefulWidget {
 }
 
 class _AddressState extends State<Address> {
+  
   //center location
   Map _addval = {'lat': 23.344888, 'long': 75.0352145, 'add': 'mera ghar'};
   bool _loading = false;
@@ -34,7 +35,13 @@ class _AddressState extends State<Address> {
               setState(() {
                 _loading = true;
               });
-              await DatabaseService(uid: currentUserID)
+              double startlat,startlong;
+              await Geolocator().placemarkFromAddress("CNI Church Katju Nagar Ratlam").then((value){
+                startlat = value[0].position.latitude;
+                startlong = value[0].position.longitude;
+              });
+              if(await Geolocator().distanceBetween(startlat, startlong, _newaddress['lat'],_newaddress['long']) <= 2759.630859375){
+                await DatabaseService(uid: currentUserID)
                   .addAddress(_newaddress)
                   .then((value) {
                 setState(() {
@@ -48,6 +55,13 @@ class _AddressState extends State<Address> {
               }).catchError((e) {
                 showSnackBar(mapKey, "Error Encountered,Try Again Later");
               });
+              }else{
+                showSnackBar(mapKey, "Service not available at this address");
+                setState(() {
+                  _loading = false;
+                });
+              }
+              
             },
             icon: Icon(
               Icons.done,
@@ -70,6 +84,7 @@ class _AddressState extends State<Address> {
                 borderRadius: BorderRadius.circular(border)),
           );
   }
+
 
   Widget _returnMap(double lat, double longi, String address) {
     final CameraPosition _position =

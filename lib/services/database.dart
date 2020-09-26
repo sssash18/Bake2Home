@@ -15,6 +15,8 @@ import 'package:upi_india/upi_response.dart';
 class DatabaseService {
   final CollectionReference shopCollection =
       FirebaseFirestore.instance.collection('Shops');
+  final CollectionReference statusCollection =
+      FirebaseFirestore.instance.collection('Status');
   final CollectionReference userCollection =
       FirebaseFirestore.instance.collection("Users");
   final CollectionReference orderCollection =
@@ -36,6 +38,18 @@ class DatabaseService {
         'status' : response.status,
       }
     }).then((value) => rs=true).catchError((e) => rs = false);
+    return rs;
+  }
+
+  Future<bool> submitReview(String shopId,String review, int rating) async{
+    bool rs  = false;
+    int nums = shopMap[shopId].reviews.length;
+    shopMap[shopId].reviews.add(review);
+    double ratingFinal = (shopMap[shopId].rating + rating)/(nums+1);
+    await shopCollection.doc(shopId).update({
+      'rating' : ratingFinal,
+      'reviews' : shopMap[shopId].reviews,
+    }).then((value) => rs=true).catchError((e) => rs=false);
     return rs;
   }
 
@@ -238,6 +252,13 @@ class DatabaseService {
         .where('userId', isEqualTo: currentUserID)
         .snapshots()
         .map((_ordersFromSnapshot));
+  }
+
+  Stream<bool> get status {
+    bool getStatus(DocumentSnapshot doc){
+      return doc.data()['status'];
+    }
+    return statusCollection.doc('status').snapshots().map(getStatus);
   }
 
   Stream<List<Order>>  orderUpdate(String orderId){

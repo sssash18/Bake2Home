@@ -2,10 +2,12 @@ import 'package:bake2home/screens/ProfileOrders.dart';
 import 'package:bake2home/screens/ProfilePage.dart';
 import 'package:bake2home/screens/mainPage.dart';
 import 'package:bake2home/services/PushNotification.dart';
+import 'package:bake2home/services/database.dart';
 import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/constants.dart';
 import 'package:bake2home/screens/Cart.dart';
+import 'package:provider/provider.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -37,7 +39,10 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: _children[_index],
+        body: StreamProvider<bool>.value(
+          value: DatabaseService().status,
+          child: _children[_index]
+        ),
         bottomNavigationBar: FloatingNavbar(
           onTap: (index) {
             _incrementTab(index);
