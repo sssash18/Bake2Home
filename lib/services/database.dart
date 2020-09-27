@@ -211,14 +211,18 @@ class DatabaseService {
         true) {
       refundAmount = order.amount;
     } else {
-      if (order.cod == false) {
+      if (order.codAmount == 0) {
         refundAmount = 0;
       } else {
         refundAmount =
             (100 - shopMap[order.shopId].advance) / 100 * order.amount;
       }
     }
-    compensationAmount = (order.amount - refundAmount) - 0.05 * order.amount;
+    compensationAmount = max(0,(order.amount - refundAmount) - 0.05 * order.amount);
+    if(order.status!="PAID"){
+      refundAmount = 0;
+      compensationAmount = 0;
+    }
 
     order.refund = refundAmount;
     bool rs = false;
