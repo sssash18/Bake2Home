@@ -25,31 +25,40 @@ class DatabaseService {
 
   DatabaseService({this.uid});
 
-  Future<bool> updateTransaction(Order order,UpiResponse response,double codAmount) async{
+  Future<bool> updateTransaction(
+      Order order, UpiResponse response, double codAmount) async {
     bool rs = false;
-    await orderCollection.doc(order.orderId).update({
-      'codAmount' : codAmount, 
-      'status' : "PAID",
-      'transaction' : {
-        'transactionId' : response.transactionId,
-        'transactionRefId' : response.transactionRefId,
-        'responseCode' : response.responseCode,
-        'appRefNo' : response.approvalRefNo,
-        'status' : response.status,
-      }
-    }).then((value) => rs=true).catchError((e) => rs = false);
+    await orderCollection
+        .doc(order.orderId)
+        .update({
+          'codAmount': codAmount,
+          'status': "PAID",
+          'transaction': {
+            'transactionId': response.transactionId,
+            'transactionRefId': response.transactionRefId,
+            'responseCode': response.responseCode,
+            'appRefNo': response.approvalRefNo,
+            'status': response.status,
+          }
+        })
+        .then((value) => rs = true)
+        .catchError((e) => rs = false);
     return rs;
   }
 
-  Future<bool> submitReview(String shopId,String review, int rating) async{
-    bool rs  = false;
+  Future<bool> submitReview(String shopId, String review, int rating) async {
+    bool rs = false;
     int nums = shopMap[shopId].reviews.length;
     shopMap[shopId].reviews.add(review);
-    double ratingFinal = (shopMap[shopId].rating + rating)/(nums+1);
-    await shopCollection.doc(shopId).update({
-      'rating' : ratingFinal,
-      'reviews' : shopMap[shopId].reviews,
-    }).then((value) => rs=true).catchError((e) => rs=false);
+    double ratingFinal = (shopMap[shopId].rating + rating) / (nums + 1);
+    await shopCollection
+        .doc(shopId)
+        .update({
+          'rating': ratingFinal,
+          'reviews': shopMap[shopId].reviews,
+        })
+        .then((value) => rs = true)
+        .catchError((e) => rs = false);
     return rs;
   }
 
@@ -155,7 +164,7 @@ class DatabaseService {
 
   Future<bool> createOrder(Order order) async {
     int counter;
-    bool rs = false;
+    bool rs;
     DocumentSnapshot doc = await orderCollection.doc('counter').get();
     counter = doc.data()['counter'];
     int random = Random().nextInt(9999);
@@ -164,8 +173,7 @@ class DatabaseService {
       'counter': FieldValue.increment(1),
     });
     order.orderId = orderId;
-
-    orderCollection
+    await orderCollection
         .doc(orderId)
         .set({
           'orderId': order.orderId,
@@ -181,7 +189,7 @@ class DatabaseService {
           'orderTime': order.orderTime,
           'deliveryTime': order.deliveryTime,
           'items': order.items,
-
+          'codAmount': 0,
         })
         .then((value) => {rs = true, print("Order Placed")})
         .catchError((e) {
@@ -191,46 +199,41 @@ class DatabaseService {
     return rs;
   }
 
-  
-
   Future<bool> cancelOrder(Order order) async {
-    double refundAmount=0;
-    double compensationAmount =0;
-    if(order.deliveryTime.toDate().isBefore(order.orderTime.toDate().add(Duration(hours: 3)))){
-      refundAmount = 0;
-    }else{
-      if(DateTime.now().isBefore(order.orderTime.toDate().add(Duration(hours: 1)).add(Duration(minutes: 30))) == true ){
-        refundAmount = order.amount;
-      }else{
-        if(order.cod==false){
-          refundAmount = 0;
-        }else{
-          refundAmount = (100 - shopMap[order.shopId].advance)/100 * order.amount;
-        }
+    double refundAmount = 0;
+    double compensationAmount = 0;
+    if (DateTime.now().isBefore(order.orderTime
+            .toDate()
+            .add(Duration(hours: 1))
+            .add(Duration(minutes: 30))) ==
+        true) {
+      refundAmount = order.amount;
+    } else {
+      if (order.cod == false) {
+        refundAmount = 0;
+      } else {
+        refundAmount =
+            (100 - shopMap[order.shopId].advance) / 100 * order.amount;
       }
     }
-    compensationAmount =  (order.amount - refundAmount) - 0.05 * order.amount; 
-    
+    compensationAmount = (order.amount - refundAmount) - 0.05 * order.amount;
+
     order.refund = refundAmount;
     bool rs = false;
-    await orderCollection
-        .doc(order.orderId)
-        .update({
-          'status': "CANCELLED",
-          'refund' : refundAmount,
-          'compensation' : compensationAmount,
-        })
-        .then((value){
-          rs = true;
-          PushNotification().pushMessage("Order ${order.orderId} cancelled", "Compensation Amount: ${compensationAmount}", token);
-        } )
-        .catchError((e) {
-          print(e.toString());
-          rs = false;
-        });
+    await orderCollection.doc(order.orderId).update({
+      'status': "CANCELLED",
+      'refund': refundAmount,
+      'compensation': compensationAmount,
+    }).then((value) {
+      rs = true;
+      PushNotification().pushMessage("Order ${order.orderId} cancelled",
+          "Compensation Amount: $compensationAmount", token);
+    }).catchError((e) {
+      print(e.toString());
+      rs = false;
+    });
     return rs;
   }
-
 
   Future<bool> emptyCart() async {
     bool rs = false;
@@ -255,36 +258,37 @@ class DatabaseService {
   }
 
   Stream<bool> get status {
-    bool getStatus(DocumentSnapshot doc){
+    bool getStatus(DocumentSnapshot doc) {
       return doc.data()['status'];
     }
+
     return statusCollection.doc('status').snapshots().map(getStatus);
   }
 
-  Stream<List<Order>>  orderUpdate(String orderId){
-    return orderCollection.where('orderId',isEqualTo: orderId).snapshots().map(( _ordersFromSnapshot));
+  Stream<List<Order>> orderUpdate(String orderId) {
+    return orderCollection
+        .where('orderId', isEqualTo: orderId)
+        .snapshots()
+        .map((_ordersFromSnapshot));
   }
 
-  List<Order> _ordersFromSnapshot(QuerySnapshot snapshot){
-    
-    return snapshot.docs.map((e) => Order(
-      userId : e.data()['userId'],
-      shopId: e.data()['shopId'],
-      status: e.data()['status'],
-      otp : e.data()['otp'],
-      paymentType: e.data()['paymentType'],
-      amount: e.data()['amount'],
-      delCharges: e.data()['deliveryCharges'],
-      pickUp: e.data()['pickUp'],
-      orderTime: e.data()['orderTime'],
-      deliveryTime: e.data()['deliveryTime'],
-      deliveryAddress: e.data()['deliveryAddress'],
-      items: e.data()['items'],
-      orderId: e.data()['orderId'],
-      comments: e.data()['comments']
-    )).toList();
+  List<Order> _ordersFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.docs
+        .map((e) => Order(
+            userId: e.data()['userId'],
+            shopId: e.data()['shopId'],
+            status: e.data()['status'],
+            otp: e.data()['otp'],
+            paymentType: e.data()['paymentType'],
+            amount: e.data()['amount'],
+            delCharges: e.data()['deliveryCharges'],
+            pickUp: e.data()['pickUp'],
+            orderTime: e.data()['orderTime'],
+            deliveryTime: e.data()['deliveryTime'],
+            deliveryAddress: e.data()['deliveryAddress'],
+            items: e.data()['items'],
+            orderId: e.data()['orderId'],
+            comments: e.data()['comments']))
+        .toList();
   }
-
-  
 }
-
