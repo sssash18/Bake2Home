@@ -64,42 +64,5 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     );
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-               //do your stuff
-        initDynamicLinks();
-    }
-  }
-
-  Future<void> initDynamicLinks() async {
-    Navigator.pushNamed(context, '/profile',arguments: shopMap['emYlLuBFbRcw1hhlitvGuePI7Rh1']);
-    FirebaseDynamicLinks.instance.onLink(
-        onSuccess: (PendingDynamicLinkData link) async {      
-      _handleDeepLink(link);
-    }, onError: (OnLinkErrorException e) async {
-      print('onLinkError');
-      print(e.message);
-    });
-    final PendingDynamicLinkData link =
-        await FirebaseDynamicLinks.instance.getInitialLink();
-    _handleDeepLink(link);
-    final Uri deeplink = link?.link;
-    print("LLLLL" + deeplink.toString());
-    
-    
-  }
-  void _handleDeepLink(PendingDynamicLinkData link){
-    print("link:  " + '${link?.link}');
-    Uri deepLink = link?.link;
-    if (deepLink != null) {
-        final String param = deepLink.queryParameters['Id'];
-        print(param);
-        Shop shop = shopMap[param];
-        print(shop.shopName);
-        print(deepLink.path);
-        Navigator.pushNamed(context, deepLink.path, arguments: shop);
-        print('cant Handle');
-    }
-  }
+ 
 }

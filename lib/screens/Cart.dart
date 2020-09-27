@@ -27,6 +27,9 @@ class _CartState extends State<Cart> {
   final Connectivity _connectivity = Connectivity();
   StreamSubscription<ConnectivityResult> subs ;
   bool internetStatus = true;
+  bool pickUp = false;
+  
+
   @override
   Widget build(BuildContext context) {
     _connectivity.checkConnectivity().then((value){
@@ -50,8 +53,8 @@ class _CartState extends State<Cart> {
     Shop shop;
     String _date,_time;
     Timestamp delTime;
-    double cakeQuantity = 0,cakeCount = 0;
     double delCharges = delChargesList.first;
+    double cakeQuantity = 0,cakeCount = 0;
     cartMap.keys.where((element) => element!=cartMap['shopId']).forEach((element) { 
       if(element!='shopId'){
         subtotal += cartMap[element]['price'] * cartMap[element]['quantity'];
@@ -62,8 +65,8 @@ class _CartState extends State<Cart> {
         print("XCCC" + '${cakeQuantity}');
       }
     });
-
-    double calculateDeliveryCharges(double cakeQuantity){
+    double calculateDeliveryCharges(double cakeQuantity,bool pickUp){
+      
       if(cakeQuantity <= 2){
         delCharges = delChargesList[0];
       }else{
@@ -77,9 +80,14 @@ class _CartState extends State<Cart> {
           delCharges = delChargesList[3];
         }
       }
+      if(pickUp == true){
+        delCharges = 0;
+      }
       return delCharges;
     }
-    calculateDeliveryCharges(cakeQuantity);
+    calculateDeliveryCharges(cakeQuantity, pickUp);
+
+    
     print("SSSSSSSSSSS");
     print(shopMap.toString());
     
@@ -189,7 +197,7 @@ class _CartState extends State<Cart> {
             ),
           ) : Expanded(child: Container()),
           Container(
-            height: MediaQuery.of(context).size.height / 5.5,
+            height: MediaQuery.of(context).size.height / 4.5,
             margin: EdgeInsets.fromLTRB(
                 MediaQuery.of(context).size.width / 30,
                 MediaQuery.of(context).size.height / 200,
@@ -262,7 +270,17 @@ class _CartState extends State<Cart> {
                           fontWeight: FontWeight.bold)),
                 ),
               ])),
-              SizedBox(height: MediaQuery.of(context).size.height / 50),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(margin: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width / 20),child: Text("Would you like to pickup the order",style: TextStyle(color:white,fontWeight: FontWeight.bold,fontSize: 10))),
+                  Switch(value: pickUp, onChanged: (val){
+                    setState(() {
+                      pickUp = val;
+                    });
+                  })
+                ],
+              ),
               Container(
                 margin: EdgeInsets.fromLTRB(
                     MediaQuery.of(context).size.width / 20,
@@ -410,12 +428,11 @@ class _CartState extends State<Cart> {
                                           paymentType: "UPI",
                                           amount: subtotal + delCharges,
                                           delCharges: delCharges,
-                                          pickUp: false,
+                                          pickUp: pickUp,
                                           orderTime: Timestamp.now(),
                                           deliveryTime: delTime,
                                           deliveryAddress: _selectedAddress,
                                           items: cartMap,
-                                          cod: true,
                                         );
                                         DatabaseService().createOrder(order);
                                         Navigator.push(context, MaterialPageRoute(builder: (BuildContext context){return Checkout(order: order);}));

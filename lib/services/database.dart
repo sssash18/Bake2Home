@@ -46,6 +46,7 @@ class DatabaseService {
     int nums = shopMap[shopId].reviews.length;
     shopMap[shopId].reviews.add(review);
     double ratingFinal = (shopMap[shopId].rating + rating)/(nums+1);
+    shopMap[shopId].rating = ratingFinal;
     await shopCollection.doc(shopId).update({
       'rating' : ratingFinal,
       'reviews' : shopMap[shopId].reviews,
@@ -200,14 +201,17 @@ class DatabaseService {
     if(DateTime.now().isBefore(order.orderTime.toDate().add(Duration(hours: 1)).add(Duration(minutes: 30))) == true ){
         refundAmount = order.amount;
       }else{
-        if(order.cod==false){
+        if(order.codAmount != 0){
           refundAmount = 0;
         }else{
           refundAmount = (100 - shopMap[order.shopId].advance)/100 * order.amount;
         }
       }
-    compensationAmount =  (order.amount - refundAmount) - 0.05 * order.amount; 
-    
+    compensationAmount =  max(0,(order.amount - refundAmount) - 0.05 * order.amount); 
+    if(order.status!="PAID"){
+      refundAmount = 0;
+      compensationAmount= 0;
+    }
     order.refund = refundAmount;
     bool rs = false;
     await orderCollection

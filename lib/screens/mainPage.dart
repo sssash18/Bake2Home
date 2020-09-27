@@ -13,6 +13,7 @@ import 'package:bake2home/widgets/PastryTile.dart';
 import 'package:bake2home/widgets/RecipeTile.dart';
 import 'package:bake2home/widgets/VendorList.dart';
 import 'package:bake2home/screens/VendorListPage.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -101,7 +102,7 @@ class _MainPageState extends State<MainPage> {
           autoPlay: true,
           autoPlayInterval: Duration(seconds: 3),
         ),
-        items: [1, 2, 3, 4, 5].map((i) {
+        items: slidesUrl.map((i) {
           return Builder(
             builder: (BuildContext context) {
               return Container(
@@ -114,7 +115,7 @@ class _MainPageState extends State<MainPage> {
                       colors: [Color(0xffeaafc8), Color(0xff654ea3)]),
                   borderRadius: BorderRadius.circular(border),
                   image: DecorationImage(
-                      image: AssetImage('assets/images/cake.jpeg'),
+                      image: CachedNetworkImageProvider(i),
                       fit: BoxFit.fill),
                 ),
               );

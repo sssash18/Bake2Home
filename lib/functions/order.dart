@@ -13,7 +13,8 @@ class Order{
   delCharges;
 
   int otp;
-  bool pickUp,cod;
+  bool pickUp;
+  double codAmount;
 
   Timestamp orderTime,deliveryTime;
 
@@ -34,6 +35,6 @@ class Order{
     this.deliveryAddress,
     this.items,
     this.comments,
-    this.cod,
+    this.codAmount,
   });
 }
