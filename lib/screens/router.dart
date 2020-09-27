@@ -18,13 +18,16 @@ class Router extends StatefulWidget {
 }
 
 class _RouterState extends State<Router> {
+  Connectivity _connectivity;
+  StreamSubscription<ConnectivityResult> subs;
+  bool internetStatus = true;
   CollectionReference shopCollection =
       FirebaseFirestore.instance.collection("Shops");
   CollectionReference topCollection =
       FirebaseFirestore.instance.collection("TopPicks");
   CollectionReference categoryCollection =
       FirebaseFirestore.instance.collection("Categories");
-  CollectionReference deliveryCollection = 
+  CollectionReference deliveryCollection =
       FirebaseFirestore.instance.collection("DeliveryCharges");
   CollectionReference slidesCollection = 
       FirebaseFirestore.instance.collection("Slides");
@@ -32,13 +35,73 @@ class _RouterState extends State<Router> {
   @override
   void initState() {
     super.initState();
+    _connectivity = Connectivity();
+    subs =
+        _connectivity.onConnectivityChanged.listen((ConnectivityResult event) {
+      setState(() {
+        if (event == ConnectivityResult.none) {
+          internetStatus = false;
+        } else {
+          internetStatus = true;
+        }
+      });
+    });
     getThings();
-
-    //createDynamicLink();
-    
+    createDynamicLink();
   }
 
-  
+  @override
+  void dispose() {
+    super.dispose();
+    subs.cancel();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: internetStatus
+          ? Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+              Center(
+                child: Container(
+                    child: Image.asset(
+                  "assets/images/logo.png",
+                  height: 120,
+                )),
+              ),
+              CircularProgressIndicator(),
+            ])
+          : Text("No Internet"),
+    );
+  }
+
+  Future<void> initDynamicLinks() async {
+    final PendingDynamicLinkData link =
+        await FirebaseDynamicLinks.instance.getInitialLink();
+    _handleDeepLink(link);
+    final Uri deeplink = link?.link;
+    print("LLLLL" + deeplink.toString());
+    FirebaseDynamicLinks.instance.onLink(
+        onSuccess: (PendingDynamicLinkData link) async {
+      _handleDeepLink(link);
+    }, onError: (OnLinkErrorException e) async {
+      print('onLinkError');
+      print(e.message);
+    });
+  }
+
+  void _handleDeepLink(PendingDynamicLinkData link) {
+    print("link:  " + '${link?.link}');
+    Uri deepLink = link?.link;
+    if (deepLink != null) {
+      final String param = deepLink.queryParameters['Id'];
+      print(param);
+      Shop shop = shopMap[param];
+      print(shop.shopName);
+      print(deepLink.path);
+      Navigator.pushNamed(context, deepLink.path, arguments: shop);
+      print('cant Handle');
+    }
+  }
 
   void getThings() async {
     //await initDynamicLinks();
@@ -49,7 +112,6 @@ class _RouterState extends State<Router> {
     await getCategories();
     
 
-
     getDeliveryCharges();
     // await getCardDetails();
 
@@ -59,7 +121,6 @@ class _RouterState extends State<Router> {
         : Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (BuildContext context) => SignIn()));
     await initDynamicLinks();
-
   }
 
   Future<bool> getUser() async {
@@ -146,20 +207,18 @@ class _RouterState extends State<Router> {
       ingPrice: document.data()['ingPrice'],
       token: document.data()['token'],
       advance: document.data()['advance'].toDouble(),
-      cod : document.data()['cod'],
+      cod: document.data()['cod'],
       reviews: List<String>.from(document.data()['reviews']),
     );
   }
 
-  Future<void> getDeliveryCharges() async{
-    deliveryCollection.doc('charges').get().then((value){
-      value.data().keys.forEach((element) { 
+  Future<void> getDeliveryCharges() async {
+    await deliveryCollection.doc('charges').get().then((value) {
+      value.data().keys.forEach((element) {
         delChargesList.add(value.data()[element].toDouble());
       });
-      print("DDDDDD ${delChargesList.toString()}") ;
-    }
-    );
-    
+      print("DDDDDD ${delChargesList.toString()}");
+    });
   }
 
   Future<void> createDynamicLink() async {
@@ -194,51 +253,17 @@ class _RouterState extends State<Router> {
         if (event.data()['cart'] != null) {
           someMap = Map<String, dynamic>.from(event.data()['cart']);
         }
-        setState(() {
-          print('fetched shopId is $currentShopId');
-          if (someMap.isNotEmpty) {
-            cartMap = Map<String, dynamic>.from(someMap);
-          }
-          cartLengthNotifier.value = cartMap.length;
-          currentShopId = someMap['shopId'].toString();
-          print('cartMap is $cartMap');
-        });
+        // setState(() {
+        print('fetched shopId is $currentShopId');
+        if (someMap.isNotEmpty) {
+          cartMap = Map<String, dynamic>.from(someMap);
+        }
+        cartLengthNotifier.value = cartMap.length;
+        currentShopId = someMap['shopId'].toString();
+        print('cartMap is $cartMap');
+        // });
       }
     });
-  }
-
-  final Connectivity _connectivity = Connectivity();
-  StreamSubscription<ConnectivityResult> subs ;
-  bool internetStatus = true;
-  @override
-  Widget build(BuildContext context) {
-    subs = _connectivity.onConnectivityChanged.listen((ConnectivityResult event) { 
-      setState(() {
-        if(event == ConnectivityResult.none){
-          internetStatus = false;
-        }else{
-          internetStatus = true;
-        }
-      });
-    });
-    
-    return Scaffold(
-      body: internetStatus ? Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-        Center(
-          child: Container(
-              child: Image.asset(
-            "assets/images/logo.png",
-            height: 120,
-          )),
-        ),
-        CircularProgressIndicator(),
-      ]) : Text("No Internet"),
-    );
-  }
-  @override
-  void dispose(){
-    super.dispose();
-    subs.cancel();
   }
 
 
