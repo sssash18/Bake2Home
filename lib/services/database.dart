@@ -89,10 +89,11 @@ class DatabaseService {
     return rs;
   }
 
-  Future<bool> updateToken(String token) async {
+  Future<bool> updateToken(String id) async {
     bool rs = false;
+    String token = await firebaseMessaging.getToken();
     await userCollection
-        .doc(uid)
+        .doc(id)
         .update({
           'token': token,
         })

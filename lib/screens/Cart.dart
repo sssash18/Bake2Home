@@ -309,7 +309,7 @@ class _CartState extends State<Cart> {
                                                         ),
                                                       ),
                                                       Text(
-                                                        'Rs 50',
+                                                        '$delCharges',
                                                         style: TextStyle(
                                                           color: white,
                                                           fontSize: 12.0,
@@ -330,7 +330,7 @@ class _CartState extends State<Cart> {
                                                       color: Colors.white,
                                                       textColor: base,
                                                       child: Text(
-                                                          'Checkout (\u20B9 $subtotal)'),
+                                                          'Checkout (\u20B9 ${subtotal + delCharges})'),
                                                       onPressed: () async {
                                                         await showBottomSheet(
                                                             context,
