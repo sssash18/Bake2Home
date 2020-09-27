@@ -1,22 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Order{
+class Order {
   String shopId,
-  userId,
-  orderId,
-  status,
-  paymentType,
-  comments,
-  deliveryAddress;
+      userId,
+      orderId,
+      status,
+      paymentType,
+      comments,
+      deliveryAddress;
 
-  double amount,refund = 0,
-  delCharges;
+  double amount, refund = 0, delCharges;
 
   int otp;
   bool pickUp;
   double codAmount;
 
-  Timestamp orderTime,deliveryTime;
+  Timestamp orderTime, deliveryTime;
 
   Map items;
 

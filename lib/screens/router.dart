@@ -29,7 +29,7 @@ class _RouterState extends State<Router> {
       FirebaseFirestore.instance.collection("Categories");
   CollectionReference deliveryCollection =
       FirebaseFirestore.instance.collection("DeliveryCharges");
-  CollectionReference slidesCollection = 
+  CollectionReference slidesCollection =
       FirebaseFirestore.instance.collection("Slides");
   FirebaseAuth _auth = FirebaseAuth.instance;
   @override
@@ -110,7 +110,6 @@ class _RouterState extends State<Router> {
     await getTopPick();
     await getUser();
     await getCategories();
-    
 
     getDeliveryCharges();
     // await getCardDetails();
@@ -149,16 +148,14 @@ class _RouterState extends State<Router> {
     return true;
   }
 
-  Future<bool> getSlides(){
-    slidesCollection.doc('slides').get().then((value){
-      value.data().forEach((key, value) { 
+  Future<bool> getSlides() {
+    slidesCollection.doc('slides').get().then((value) {
+      value.data().forEach((key, value) {
         slidesUrl.add(value);
       });
-    }
-    );
+    });
   }
 
-  
   Future<bool> getShops() async {
     QuerySnapshot shops = await shopCollection.get();
     shops.docs.forEach((element) {
@@ -266,40 +263,32 @@ class _RouterState extends State<Router> {
     });
   }
 
+  // Future<void> initDynamicLinks() async {
+  //   final PendingDynamicLinkData link =
+  //       await FirebaseDynamicLinks.instance.getInitialLink();
+  //   _handleDeepLink(link);
+  //   final Uri deeplink = link?.link;
+  //   print("LLLLL" + deeplink.toString());
+  //   FirebaseDynamicLinks.instance.onLink(
+  //       onSuccess: (PendingDynamicLinkData link) async {
+  //     _handleDeepLink(link);
+  //   }, onError: (OnLinkErrorException e) async {
+  //     print('onLinkError');
+  //     print(e.message);
+  //   });
+  // }
 
-  Future<void> initDynamicLinks() async {
-
-    
-    final PendingDynamicLinkData link =
-        await FirebaseDynamicLinks.instance.getInitialLink();
-    _handleDeepLink(link);
-    final Uri deeplink = link?.link;
-    print("LLLLL" + deeplink.toString());
-    FirebaseDynamicLinks.instance.onLink(
-        onSuccess: (PendingDynamicLinkData link) async {      
-      _handleDeepLink(link);
-    }, onError: (OnLinkErrorException e) async {
-      print('onLinkError');
-      print(e.message);
-    });
-    
-  }
-
-  void _handleDeepLink(PendingDynamicLinkData link){
-    print("link:  " + '${link?.link}');
-    Uri deepLink = link?.link;
-    if (deepLink != null) {
-        final String param = deepLink.queryParameters['Id'];
-        print(param);
-        Shop shop = shopMap[param];
-        print(shop.shopName);
-        print(deepLink.path);
-        Navigator.pushNamed(context, deepLink.path, arguments: shop);
-        print('cant Handle');
-    }
-  }
-
-  
-  
-  
+  // void _handleDeepLink(PendingDynamicLinkData link) {
+  //   print("link:  " + '${link?.link}');
+  //   Uri deepLink = link?.link;
+  //   if (deepLink != null) {
+  //     final String param = deepLink.queryParameters['Id'];
+  //     print(param);
+  //     Shop shop = shopMap[param];
+  //     print(shop.shopName);
+  //     print(deepLink.path);
+  //     Navigator.pushNamed(context, deepLink.path, arguments: shop);
+  //     print('cant Handle');
+  //   }
+  // }
 }

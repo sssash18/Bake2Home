@@ -201,7 +201,6 @@ class DatabaseService {
   }
 
   Future<bool> cancelOrder(Order order) async {
-
     double refundAmount = 0;
     double compensationAmount = 0;
     if (DateTime.now().isBefore(order.orderTime
@@ -211,7 +210,7 @@ class DatabaseService {
         true) {
       refundAmount = order.amount;
     } else {
-      if (order.cod == false) {
+      if (order.codAmount == 0) {
         refundAmount = 0;
       } else {
         refundAmount =
