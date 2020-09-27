@@ -37,6 +37,7 @@ bool timerOver = false;
 StreamController<bool> controller = StreamController();
 FirebaseMessaging firebaseMessaging = FirebaseMessaging();
 String token = "";
+List<String> slidesUrl = [];
 String createAvatarText() {
   String result = "";
   print('retsult is ${currentUser.name}');

@@ -24,6 +24,7 @@ class Cart extends StatefulWidget {
 }
 
 class _CartState extends State<Cart> {
+
   TimeOfDay startTime;
   TimeOfDay endTime;
   String _date, _time;
@@ -39,6 +40,7 @@ class _CartState extends State<Cart> {
   double cakeQuantity;
   int cakeCount;
   final cartKey = GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     // TODO: implement initState
@@ -114,6 +116,7 @@ class _CartState extends State<Cart> {
     print(cartMap.toString());
     bool status = Provider.of<bool>(context) ?? true;
     print(cartMap.toString());
+
     delCharges = 0.0;
     cakeQuantity = 0;
     cakeCount = 0;
@@ -132,6 +135,7 @@ class _CartState extends State<Cart> {
         print("XCCC" + '$cakeQuantity');
       }
     });
+
 
     calculateDeliveryCharges(cakeQuantity);
     subtotal = 0.0;
@@ -200,12 +204,14 @@ class _CartState extends State<Cart> {
                                     ]),
                               ),
                             ]),
+
                       ),
                       (cartMap != null && cartMap.isNotEmpty)
                           ? Expanded(
                               child: Container(
                                 width: double.infinity,
                                 color: white,
+
                                 child: ListView.builder(
                                     itemCount: cartMap.length - 1,
                                     itemBuilder:
@@ -309,6 +315,7 @@ class _CartState extends State<Cart> {
                                           },
                                         ),
                                       ),
+
                                     )
                                   ]),
                             )

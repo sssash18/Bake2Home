@@ -50,6 +50,7 @@ class DatabaseService {
     bool rs = false;
     int nums = shopMap[shopId].reviews.length;
     shopMap[shopId].reviews.add(review);
+
     double ratingFinal = (shopMap[shopId].rating + rating) / (nums + 1);
     await shopCollection
         .doc(shopId)
@@ -200,6 +201,7 @@ class DatabaseService {
   }
 
   Future<bool> cancelOrder(Order order) async {
+
     double refundAmount = 0;
     double compensationAmount = 0;
     if (DateTime.now().isBefore(order.orderTime
