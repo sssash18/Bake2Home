@@ -3,14 +3,23 @@ import 'package:bake2home/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
-class SignIn extends StatelessWidget {
+class SignIn extends StatefulWidget {
+  @override
+  _SignInState createState() => _SignInState();
+}
+
+class _SignInState extends State<SignIn> {
   final formKey = GlobalKey<FormState>();
+  final loginKey = GlobalKey<ScaffoldState>();
+
   String number;
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
+      key: loginKey,
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -89,7 +98,7 @@ class SignIn extends StatelessWidget {
                                         fontWeight: FontWeight.w600));
                                 await pr.show();
                                 await AuthService()
-                                    .verifyPhone(number, context, pr);
+                                    .verifyPhone(number, context, pr, loginKey);
                               }
                             },
                             icon: Icon(

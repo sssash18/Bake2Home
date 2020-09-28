@@ -89,10 +89,11 @@ class DatabaseService {
     return rs;
   }
 
-  Future<bool> updateToken(String token) async {
+  Future<bool> updateToken(String id) async {
     bool rs = false;
+    String token = await firebaseMessaging.getToken();
     await userCollection
-        .doc(uid)
+        .doc(id)
         .update({
           'token': token,
         })
@@ -201,7 +202,6 @@ class DatabaseService {
   }
 
   Future<bool> cancelOrder(Order order) async {
-
     double refundAmount = 0;
     double compensationAmount = 0;
     if (DateTime.now().isBefore(order.orderTime
@@ -211,7 +211,7 @@ class DatabaseService {
         true) {
       refundAmount = order.amount;
     } else {
-      if (order.cod == false) {
+      if (order.codAmount == 0) {
         refundAmount = 0;
       } else {
         refundAmount =
