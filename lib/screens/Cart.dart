@@ -28,7 +28,7 @@ class _CartState extends State<Cart> {
   TimeOfDay endTime;
   String _date, _time;
   List<DropdownMenuItem<String>> _addresses;
-  Timestamp delTime;
+  DateTime delTime;
   String _selectedAddress;
   double subtotal;
   bool internetStatus;
@@ -54,6 +54,7 @@ class _CartState extends State<Cart> {
     internetStatus = true;
     _connectivity = Connectivity();
     currentUser.addresses.keys.forEach((element) {
+      print(currentUser.addresses[element]['address']);
       _addresses.add(
         DropdownMenuItem(
           child: Text(currentUser.addresses[element]['address'].toString()),
@@ -76,6 +77,12 @@ class _CartState extends State<Cart> {
         });
       });
     });
+    _addresses.forEach((element) {
+      print('----------?${element.value}');
+    });
+    setState(() {
+      _selectedAddress = _addresses.first.value;
+    });
   }
 
   double calculateDeliveryCharges(double cakeQuantity) {
@@ -97,21 +104,6 @@ class _CartState extends State<Cart> {
 
   @override
   Widget build(BuildContext context) {
-    pr = ProgressDialog(context,
-        type: ProgressDialogType.Normal, isDismissible: true, showLogs: true);
-    pr.style(
-        message: 'Preparing Your Order...',
-        borderRadius: 10.0,
-        backgroundColor: Colors.white,
-        progressWidget: Center(child: CircularProgressIndicator()),
-        elevation: 10.0,
-        insetAnimCurve: Curves.easeInOut,
-        progress: 0.0,
-        maxProgress: 100.0,
-        progressTextStyle: TextStyle(
-            color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
-        messageTextStyle: TextStyle(
-            color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600));
     print(cartMap.toString());
     bool status = Provider.of<bool>(context) ?? true;
     print(cartMap.toString());
@@ -366,13 +358,14 @@ class _CartState extends State<Cart> {
 
   showBottomSheet(
       BuildContext context,
-      Timestamp delTime,
+      DateTime delTime,
       String _date,
       String _time,
       String _selectedAddress,
       List<DropdownMenuItem<String>> _addresses,
       double subtotal,
       Shop shop) async {
+    print(_selectedAddress);
     showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
@@ -403,8 +396,10 @@ class _CartState extends State<Cart> {
                         lastDate: DateTime.now().add(Duration(days: 12)));
                     if (date != null) {
                       setState(() {
-                        delTime = Timestamp.fromDate(date);
+                        delTime = date;
                         _date = DateFormat.yMMMd().format(date);
+                        print(delTime);
+                        print(_date);
                       });
                     }
                   },
@@ -433,10 +428,9 @@ class _CartState extends State<Cart> {
                         if (timeInMinutes >= startInMinutes &&
                             timeInMinutes <= endInMinutes) {
                           setState(() {
-                            delTime.toDate().add(Duration(hours: time.hour));
-                            delTime
-                                .toDate()
-                                .add(Duration(minutes: time.minute));
+                            delTime = delTime.add(Duration(hours: time.hour));
+                            delTime =
+                                delTime.add(Duration(minutes: time.minute));
                             _time = time.format(context);
                           });
                         } else {
@@ -477,6 +471,30 @@ class _CartState extends State<Cart> {
                   borderRadius: BorderRadius.circular(border),
                 ),
                 onPressed: () async {
+                  pr = ProgressDialog(context,
+                      type: ProgressDialogType.Normal,
+                      isDismissible: true,
+                      showLogs: true);
+                  pr.style(
+                      message: 'Preparing Your Order...',
+                      borderRadius: 10.0,
+                      backgroundColor: Colors.white,
+                      progressWidget:
+                          Center(child: CircularProgressIndicator()),
+                      elevation: 10.0,
+                      insetAnimCurve: Curves.easeInOut,
+                      progress: 0.0,
+                      maxProgress: 100.0,
+                      progressTextStyle: TextStyle(
+                          color: Colors.black,
+                          fontSize: 13.0,
+                          fontWeight: FontWeight.w400),
+                      messageTextStyle: TextStyle(
+                          color: Colors.black,
+                          fontSize: 19.0,
+                          fontWeight: FontWeight.w600));
+
+                  // print(delTime);
                   int _otp = Random().nextInt(9999);
                   while (_otp < 1000) {
                     _otp *= 10;
@@ -491,7 +509,7 @@ class _CartState extends State<Cart> {
                       delCharges: 50,
                       pickUp: false,
                       orderTime: Timestamp.now(),
-                      deliveryTime: delTime,
+                      deliveryTime: Timestamp.fromDate(delTime),
                       deliveryAddress: _selectedAddress,
                       items: cartMap);
                   await pr.show();
@@ -510,6 +528,9 @@ class _CartState extends State<Cart> {
                     showSnackBar(
                         cartKey, "Cannot Prepare Order... try again later");
                   }
+                  // } else {
+                  //   showGenDialog(context, "Please fill essential Details");
+                  // }
                 },
                 icon: Icon(
                   Icons.done,

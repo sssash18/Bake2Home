@@ -26,6 +26,8 @@ class _CheckoutState extends State<Checkout> {
   UpiIndia _upiIndia = UpiIndia();
   List<UpiApp> apps;
 
+  ProgressDialog pr;
+  StreamSubscription subs;
   UpiResponse _response;
   @override
   void initState() {
@@ -35,29 +37,16 @@ class _CheckoutState extends State<Checkout> {
         apps = value;
       });
     });
+    createStream();
   }
 
-  Future<UpiResponse> initiateTransaction(String app) {
-    return _upiIndia.startTransaction(
-      app: app,
-      receiverUpiId: 'bakemycake@ybl',
-      receiverName: "BakeMyCake",
-      transactionRefId: "1233434",
-      transactionNote: '#bmc2323111',
-      amount: 1.0,
-    );
-  }
-
-  ProgressDialog pr;
-  StreamSubscription subs;
-  final checkoutKey = GlobalKey<ScaffoldState>();
-  @override
-  Widget build(BuildContext context) {
+  createStream() {
     if (count == 0) {
-      controller.stream.listen((event) async {
+      subs = controller.stream.listen((event) async {
         if (event) {
           setState(() {
-            _index++;
+            _index = 1;
+            subs.cancel();
           });
         } else {
           bool ss = await showDialog(
@@ -116,6 +105,22 @@ class _CheckoutState extends State<Checkout> {
     } else {
       //subs.cancel();
     }
+  }
+
+  Future<UpiResponse> initiateTransaction(String app) {
+    return _upiIndia.startTransaction(
+      app: app,
+      receiverUpiId: 'bakemycake@ybl',
+      receiverName: "BakeMyCake",
+      transactionRefId: "1233434",
+      transactionNote: '#bmc2323111',
+      amount: 1.0,
+    );
+  }
+
+  final checkoutKey = GlobalKey<ScaffoldState>();
+  @override
+  Widget build(BuildContext context) {
     String _selectedOption = "full";
     List<DropdownMenuItem> paymentOptions = [
       DropdownMenuItem(

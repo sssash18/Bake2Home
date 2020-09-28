@@ -38,6 +38,7 @@ dependencies:
   firebase_messaging: ^7.0.0
   firebase_dynamic_links: ^0.6.0
   http: ^0.12.2
+  intl: ^0.16.1
   firebase_auth: ^0.18.0+1
   otp_text_field: ^1.0.1
   progress_dialog: ^1.2.4
