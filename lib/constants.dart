@@ -1,4 +1,5 @@
 import 'package:bake2home/functions/category.dart';
+import 'package:bake2home/services/PushNotification.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/functions/shop.dart';
@@ -35,6 +36,7 @@ List<Category> categoryList = [];
 List<double> delChargesList = [];
 bool timerOver = false;
 StreamController<bool> controller = StreamController();
+PushNotification pushNotification = PushNotification();
 FirebaseMessaging firebaseMessaging = FirebaseMessaging();
 String token = "";
 List<String> slidesUrl = [];

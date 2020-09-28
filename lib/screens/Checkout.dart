@@ -194,7 +194,7 @@ class _CheckoutState extends State<Checkout> {
                                         child: AlertDialog(
                                           title: Text("Payment Failed!"),
                                           content:
-                                              Text('Payment Fail Try Again'),
+                                              Text('Payment failed, Try Again'),
                                           actions: [
                                             FlatButton(
                                               child: Text("OK"),

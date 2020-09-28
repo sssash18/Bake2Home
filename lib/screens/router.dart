@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bake2home/functions/category.dart';
 import 'package:bake2home/functions/user.dart';
+import 'package:bake2home/screens/VendorProfile.dart';
 import 'package:bake2home/screens/homepage.dart';
 import 'package:bake2home/screens/signIn.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -17,7 +18,7 @@ class Router extends StatefulWidget {
   _RouterState createState() => _RouterState();
 }
 
-class _RouterState extends State<Router> {
+class _RouterState extends State<Router> with WidgetsBindingObserver{
   Connectivity _connectivity;
   StreamSubscription<ConnectivityResult> subs;
   bool internetStatus = true;
@@ -35,6 +36,7 @@ class _RouterState extends State<Router> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _connectivity = Connectivity();
     subs =
         _connectivity.onConnectivityChanged.listen((ConnectivityResult event) {
@@ -47,7 +49,7 @@ class _RouterState extends State<Router> {
       });
     });
     getThings();
-    createDynamicLink();
+    //createDynamicLink();
   }
 
   @override
@@ -98,7 +100,10 @@ class _RouterState extends State<Router> {
       Shop shop = shopMap[param];
       print(shop.shopName);
       print(deepLink.path);
-      Navigator.pushNamed(context, deepLink.path, arguments: shop);
+      if(deepLink.path == '/profile'){
+        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => VendorProfile(shop: shop)));
+      }
+      //Navigator.pushNamed(context, deepLink.path, arguments: shop);
       print('cant Handle');
     }
   }
@@ -149,13 +154,16 @@ class _RouterState extends State<Router> {
     return true;
   }
 
-  Future<bool> getSlides(){
+  Future<bool> getSlides() async{
+    bool rs = false;
     slidesCollection.doc('slides').get().then((value){
       value.data().forEach((key, value) { 
         slidesUrl.add(value);
+        rs = true;
       });
     }
     );
+    return rs;
   }
 
   
@@ -264,11 +272,14 @@ class _RouterState extends State<Router> {
         // });
       }
     });
+  }  
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print('state = $state');
+    if(state==AppLifecycleState.resumed){
+      initDynamicLinks();
+    }
   }
-
-
-  
-  
-  
   
 }

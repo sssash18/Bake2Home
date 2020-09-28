@@ -41,7 +41,7 @@ class AuthService {
     DatabaseService().updateToken(await firebaseMessaging.getToken());
   }
 
-  Future<void> verifyPhone(
+  Future<void> verifyPhone (
       String contact, BuildContext context, ProgressDialog pr) {
     String otp;
     _auth.verifyPhoneNumber(
@@ -77,6 +77,7 @@ class AuthService {
                           style: TextStyle(
                               color: black, fontWeight: FontWeight.bold),
                         ),
+                        
                         OTPTextField(
                           keyboardType: TextInputType.number,
                           length: 6,
@@ -121,7 +122,9 @@ class AuthService {
                                         fontSize: 19.0,
                                         fontWeight: FontWeight.w600));
                                 await pr.show();
-                                await signIn(verificationId, otp, context, pr);
+                                if(verificationId!=null){
+                                  await signIn(verificationId, otp, context, pr);
+                                }
                               },
                             ),
                             FlatButton(

@@ -53,6 +53,9 @@ class _CartState extends State<Cart> {
     cakeQuantity = 0;
     subtotal = 0.0;
     internetStatus = true;
+    cartMap.forEach((key, value) {
+     
+     });
     _connectivity = Connectivity();
     currentUser.addresses.keys.forEach((element) {
       _addresses.add(
@@ -290,6 +293,27 @@ class _CartState extends State<Cart> {
                                             ),
                                           ),
                                         ]),
+                                        Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Text(
+                                            'Delivery charges',
+                                            style: TextStyle(
+                                              color: white,
+                                              fontSize: 12.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            'Rs 50',
+                                            style: TextStyle(
+                                              color: white,
+                                              fontSize: 12.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ]),
                                     Container(
                                       child: ButtonTheme(
                                         minWidth: double.infinity,
@@ -450,8 +474,8 @@ class _CartState extends State<Cart> {
                       status: "PENDING",
                       otp: _otp,
                       paymentType: "UPI",
-                      amount: subtotal + 50,
-                      delCharges: 50,
+                      amount: subtotal + delCharges,
+                      delCharges: delCharges,
                       pickUp: false,
                       orderTime: Timestamp.now(),
                       deliveryTime: delTime,
@@ -461,7 +485,7 @@ class _CartState extends State<Cart> {
                   bool rs = await DatabaseService().createOrder(order);
                   await pr.hide();
                   if (rs) {
-                    await PushNotification().pushMessage('New Order Request',
+                    await PushNotification().pushMessagewithNewOrder('New Order Request',
                         'Request from ${currentUser.name}', shop.token);
                     Navigator.push(context,
                         MaterialPageRoute(builder: (BuildContext context) {
