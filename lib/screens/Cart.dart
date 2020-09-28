@@ -500,11 +500,13 @@ class _CartState extends State<Cart> {
                   if (rs) {
                     await PushNotification().pushMessage('New Order Request',
                         'Request from ${currentUser.name}', shop.token);
-                    Navigator.push(context,
+                    await Navigator.push(context,
                         MaterialPageRoute(builder: (BuildContext context) {
                       return Checkout(order: order);
                     }));
+                    Navigator.pop(context);
                   } else {
+                    Navigator.pop(context);
                     showSnackBar(
                         cartKey, "Cannot Prepare Order... try again later");
                   }

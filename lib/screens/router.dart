@@ -98,7 +98,7 @@ class _RouterState extends State<Router> {
       Shop shop = shopMap[param];
       print(shop.shopName);
       print(deepLink.path);
-      Navigator.pushNamed(context, deepLink.path, arguments: shop);
+      Navigator.of(context).pushNamed(deepLink.path, arguments: shop);
       print('cant Handle');
     }
   }
@@ -115,9 +115,9 @@ class _RouterState extends State<Router> {
     // await getCardDetails();
 
     _auth.currentUser != null
-        ? Navigator.pushReplacement(context,
+        ? Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (BuildContext context) => HomePage()))
-        : Navigator.pushReplacement(context,
+        : Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (BuildContext context) => SignIn()));
     await initDynamicLinks();
   }

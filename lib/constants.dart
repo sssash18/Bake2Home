@@ -34,7 +34,7 @@ String timerVal;
 List<Category> categoryList = [];
 List<double> delChargesList = [];
 bool timerOver = false;
-StreamController<bool> controller = StreamController();
+StreamController<bool> controller = StreamController<bool>.broadcast();
 FirebaseMessaging firebaseMessaging = FirebaseMessaging();
 String token = "";
 List<String> slidesUrl = [];

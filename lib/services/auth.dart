@@ -41,15 +41,13 @@ class AuthService {
     if (rs) {
       if (_user.additionalUserInfo.isNewUser) {
         await pr.hide();
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (BuildContext context) => Register(
-                    uid: _user.user.uid, contact: _user.user.phoneNumber)));
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (BuildContext context) => Register(
+                uid: _user.user.uid, contact: _user.user.phoneNumber)));
       } else {
         await getUser(currentUserID);
         await pr.hide();
-        Navigator.pushReplacement(context,
+        Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (BuildContext context) => HomePage()));
       }
     }

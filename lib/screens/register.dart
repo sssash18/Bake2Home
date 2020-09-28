@@ -155,10 +155,8 @@ class _RegisterState extends State<Register> {
                         widget.uid, widget.contact, currentUser.addresses);
                     await pr.hide();
                     if (rs) {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext context) => HomePage()));
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (BuildContext context) => HomePage()));
                     } else {
                       showSnackBar(registerScaffold, "Error Encountered");
                     }
