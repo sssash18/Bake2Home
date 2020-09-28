@@ -3,6 +3,7 @@ import 'package:bake2home/functions/user.dart';
 import 'package:bake2home/screens/homepage.dart';
 import 'package:bake2home/screens/register.dart';
 import 'package:bake2home/services/database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:otp_text_field/otp_text_field.dart';
@@ -13,41 +14,97 @@ class AuthService {
   UserCredential _user;
   FirebaseAuth _auth = FirebaseAuth.instance;
   Future<void> signIn(String verificationId, String otp, BuildContext context,
-      ProgressDialog pr) async {
+      ProgressDialog pr, GlobalKey<ScaffoldState> loginKey) async {
     AuthCredential credential = PhoneAuthProvider.credential(
         verificationId: verificationId, smsCode: otp);
-    _user = await _auth.signInWithCredential(credential).catchError((e) {
+    await _auth.signInWithCredential(credential).then((val) {
+      _user = val;
+    }).catchError((e) {
+      // _user = null;
+      // showSnackBar(loginKey, 'Invalid Credentials');
       print(e);
     });
-    LocalUser.MyUser user = LocalUser.MyUser(
-      name: '',
-      contact: '',
-      uid: _user.user.uid,
-    );
+
+    LocalUser.MyUser user;
+    if (_user != null) {
+      user = LocalUser.MyUser(
+        name: '',
+        contact: '',
+        uid: _user.user.uid,
+      );
+    } else {
+      user = null;
+    }
     currentUser = user;
     currentUserID = currentUser.uid;
-    if (_user.additionalUserInfo.isNewUser) {
-      await pr.hide();
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (BuildContext context) => Register(
-                  uid: _user.user.uid, contact: _user.user.phoneNumber)));
-    } else {
-      await pr.hide();
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (BuildContext context) => HomePage()));
+    bool rs = await DatabaseService().updateToken(currentUserID);
+    if (rs) {
+      if (_user.additionalUserInfo.isNewUser) {
+        await pr.hide();
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (BuildContext context) => Register(
+                uid: _user.user.uid, contact: _user.user.phoneNumber)));
+      } else {
+        await getUser(currentUserID);
+        await pr.hide();
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (BuildContext context) => HomePage()));
+      }
     }
-    DatabaseService().updateToken(await firebaseMessaging.getToken());
   }
 
-  Future<void> verifyPhone (
-      String contact, BuildContext context, ProgressDialog pr) {
+  Future<bool> getUser(String userId) async {
+    DocumentSnapshot user = await FirebaseFirestore.instance
+        .collection("Users")
+        .doc(userId)
+        .get()
+        .catchError((e) {
+      print(e.toString());
+    });
+    currentUserID = userId;
+    currentUser = MyUser(
+        uid: userId,
+        name: user.data()['name'],
+        addresses: user.data()['addresses'] == null
+            ? {}
+            : Map.from(user.data()['addresses']),
+        contact: user.data()['contact'],
+        token: user.data()['token']);
+    await getCartDetails(userId);
+
+    return true;
+  }
+
+  Future<void> getCartDetails(String uid) async {
+    Stream<DocumentSnapshot> ss =
+        FirebaseFirestore.instance.collection('Users').doc(uid).snapshots();
+    ss.listen((event) {
+      if (event.exists) {
+        print('startting cartMap ${event.data()['cart']}');
+        Map<String, dynamic> someMap = Map();
+        if (event.data()['cart'] != null) {
+          someMap = Map<String, dynamic>.from(event.data()['cart']);
+        }
+        // setState(() {
+        print('fetched shopId is $currentShopId');
+        if (someMap.isNotEmpty) {
+          cartMap = Map<String, dynamic>.from(someMap);
+        }
+        cartLengthNotifier.value = cartMap.length;
+        currentShopId = someMap['shopId'].toString();
+        print('cartMap is $cartMap');
+        // });
+      }
+    });
+  }
+
+  Future<void> verifyPhone(String contact, BuildContext context,
+      ProgressDialog pr, GlobalKey<ScaffoldState> loginKey) {
     String otp;
     _auth.verifyPhoneNumber(
         phoneNumber: contact,
         verificationCompleted: (crd) {
-          signIn(crd.verificationId, crd.smsCode, context, pr);
+          signIn(crd.verificationId, crd.smsCode, context, pr, loginKey);
         },
         verificationFailed: (e) {
           print("EEEEE" + e.toString());
@@ -122,9 +179,8 @@ class AuthService {
                                         fontSize: 19.0,
                                         fontWeight: FontWeight.w600));
                                 await pr.show();
-                                if(verificationId!=null){
-                                  await signIn(verificationId, otp, context, pr);
-                                }
+                                await signIn(
+                                    verificationId, otp, context, pr, loginKey);
                               },
                             ),
                             FlatButton(

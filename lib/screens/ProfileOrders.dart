@@ -10,7 +10,6 @@ import 'package:bake2home/widgets/HistoryTile.dart';
 import 'package:provider/provider.dart';
 import 'package:bake2home/functions/order.dart';
 
-
 class ProfileOrder extends StatefulWidget {
   @override
   _ProfileOrderState createState() => _ProfileOrderState();
@@ -18,52 +17,55 @@ class ProfileOrder extends StatefulWidget {
 
 class _ProfileOrderState extends State<ProfileOrder> {
   final Connectivity _connectivity = Connectivity();
-
-  StreamSubscription<ConnectivityResult> subs ;
+  final historyKey = GlobalKey<ScaffoldState>();
+  StreamSubscription<ConnectivityResult> subs;
 
   bool internetStatus = true;
 
   @override
   Widget build(BuildContext context) {
-   _connectivity.checkConnectivity().then((value){
-      if(value == ConnectivityResult.none){
+    _connectivity.checkConnectivity().then((value) {
+      if (value == ConnectivityResult.none) {
         internetStatus = false;
       }
     });
-    subs = _connectivity.onConnectivityChanged.listen((ConnectivityResult event) { 
+    subs =
+        _connectivity.onConnectivityChanged.listen((ConnectivityResult event) {
       setState(() {
-        if(event == ConnectivityResult.none){
+        if (event == ConnectivityResult.none) {
           internetStatus = false;
-        }else{
+        } else {
           internetStatus = true;
         }
       });
     });
-    return internetStatus ? Scaffold(
-      appBar: AppBar(
-        backgroundColor: white,
-        elevation: 0.0,
-        iconTheme: IconThemeData(
-          color: base,
-        ),
-        title: Text(
-          'History',
-          style: TextStyle(
-            color: text,
+    return internetStatus
+        ? Scaffold(
+            key: historyKey,
+            appBar: AppBar(
+                backgroundColor: white,
+                elevation: 0.0,
+                iconTheme: IconThemeData(
+                  color: base,
+                ),
+                title: Text('History',
+                    style: TextStyle(
+                      color: text,
+                    ))),
+            body: StreamProvider<List<Order>>.value(
+              value: DatabaseService().orders,
+              child: Container(
+                child: OrdersList(
+                  historyKey: historyKey,
+                ),
+              ),
+            ),
           )
-        )
-      ),
-      body: StreamProvider<List<Order>>.value(
-          value: DatabaseService().orders,
-          child: Container(
-          child: OrdersList(),
-        ),
-      ),
-    ): NoInternet();
+        : NoInternet();
   }
 
   @override
-  void dispose(){
+  void dispose() {
     super.dispose();
     subs.cancel();
   }

@@ -89,10 +89,11 @@ class DatabaseService {
     return rs;
   }
 
-  Future<bool> updateToken(String token) async {
+  Future<bool> updateToken(String id) async {
     bool rs = false;
+    String token = await firebaseMessaging.getToken();
     await userCollection
-        .doc(uid)
+        .doc(id)
         .update({
           'token': token,
         })
@@ -200,10 +201,8 @@ class DatabaseService {
     return rs;
   }
 
-  Future<bool> cancelOrder(Order order) async {
-
+  getRefundAmount(Order order) {
     double refundAmount = 0;
-    double compensationAmount = 0;
     if (DateTime.now().isBefore(order.orderTime
             .toDate()
             .add(Duration(hours: 1))
@@ -218,11 +217,13 @@ class DatabaseService {
             (100 - shopMap[order.shopId].advance) / 100 * order.amount;
       }
     }
-    compensationAmount = max(0,(order.amount - refundAmount) - 0.05 * order.amount);
-    if(order.status!="PAID"){
-      refundAmount = 0;
-      compensationAmount = 0;
-    }
+    return refundAmount;
+  }
+
+  Future<bool> cancelOrder(Order order) async {
+    double refundAmount = getRefundAmount(order);
+    double compensationAmount =
+        max(0,(order.amount - refundAmount) - 0.05 * order.amount);
 
     order.refund = refundAmount;
     bool rs = false;
@@ -232,12 +233,24 @@ class DatabaseService {
       'compensation': compensationAmount,
     }).then((value) {
       rs = true;
-      PushNotification().pushMessage("Order ${order.orderId} cancelled",
-          "Compensation Amount: $compensationAmount", token);
+      PushNotification().pushMessagewithCancel("Order ${order.orderId} cancelled by ${currentUser.name}",
+          "Compensation Amount: $compensationAmount", shopMap[order.shopId].token);
     }).catchError((e) {
       print(e.toString());
       rs = false;
     });
+    return rs;
+  }
+
+
+  Future<bool> missOrderUpdate(String orderId) async {
+    bool rs;
+    await orderCollection.doc(orderId).update({
+      'status': 'MISSED',
+    }).catchError((e) {
+      print(e.toString());
+      rs = false;
+    }).then((value) => {rs = true});
     return rs;
   }
 

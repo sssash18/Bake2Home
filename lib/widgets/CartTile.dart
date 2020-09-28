@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/constants.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 
 class CartTile extends StatefulWidget {
   Map item;
@@ -12,10 +14,35 @@ class CartTile extends StatefulWidget {
 }
 
 class _CartTileState extends State<CartTile> {
+  int quantity;
+  ProgressDialog pr;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    quantity = this.widget.item['quantity'];
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width - 20;
     double height = MediaQuery.of(context).size.height;
+    pr = ProgressDialog(context,
+        type: ProgressDialogType.Normal, isDismissible: true, showLogs: true);
+    pr.style(
+        message: 'Updating Item...',
+        borderRadius: 10.0,
+        backgroundColor: Colors.white,
+        progressWidget: Center(child: CircularProgressIndicator()),
+        elevation: 10.0,
+        insetAnimCurve: Curves.easeInOut,
+        progress: 0.0,
+        maxProgress: 100.0,
+        progressTextStyle: TextStyle(
+            color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+        messageTextStyle: TextStyle(
+            color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600));
 
     return Container(
       height: width * 0.25,
@@ -73,7 +100,10 @@ class _CartTileState extends State<CartTile> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        print(quantity);
+                        addToCartNewItem();
+                      },
                       child: Icon(
                         Icons.add_circle_outline,
                         color: base,
@@ -81,10 +111,14 @@ class _CartTileState extends State<CartTile> {
                     ),
                     Container(
                       margin: EdgeInsets.fromLTRB(0, 5.0, 0, 5.0),
-                      child: Text(widget.item['quantity'].toString()),
+                      child: Text('$quantity'),
                     ),
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        dropItem(context);
+                        print(this.widget.item);
+                        print(cartMap);
+                      },
                       child: Icon(
                         Icons.remove_circle_outline,
                         color: base,
@@ -125,51 +159,141 @@ class _CartTileState extends State<CartTile> {
                     ),
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height / 100),
-                  FlatButton.icon(
-                      color: base,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(border),
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          // quantity++;
-                          // if(quantity==1){
-                          //   CartItemMap cartItem = CartItemMap(
-                          //     itemName: widget.model.itemName,
-                          //     quantity: quantity,
-                          //     size: tt,
-                          //     notes: [noteItem],
-                          //     price: price,
-                          //     photoUrl: widget.model.photoUrl
-                          //   );
-                          //   cartMap.putIfAbsent(widget.vid,() => {
-                          //     'itemName' : cartItem.itemName,
-                          //     'size'  : cartItem.size,
-                          //     'price' : cartItem.price,
-                          //     'quantity' : cartItem.quantity,
-                          //     'notes' : cartItem.notes,
-                          //     'photoUrl' : cartItem.photoUrl
-                          //   });
-                          // }else{
-                          //   cartMap[widget.vid]['quantity']++;
-                          //   cartMap[widget.vid]['notes'].add(noteItem);
-                          // }
-                          print(cartMap);
-                          Navigator.pop(context);
-                        });
-                      },
-                      icon: Icon(
-                        Icons.done,
-                        color: white,
-                      ),
-                      label: Text(
-                        'Done',
-                        style: TextStyle(color: white),
-                      ))
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      FlatButton.icon(
+                          color: base,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(border),
+                          ),
+                          onPressed: () async {
+                            await pr.show();
+                            setState(() {
+                              quantity++;
+                              cartMap[widget.vid]['quantity']++;
+                              cartMap[widget.vid]['notes'].add(noteItem);
+                              print(cartMap);
+                            });
+                            await FirebaseFirestore.instance
+                                .collection('Users')
+                                .doc(currentUser.uid)
+                                .update({
+                              'cart': cartMap,
+                            }).then((value) async {
+                              await pr.hide();
+                            }).catchError((e) async {
+                              await pr.hide();
+                              print(e.toString());
+                            });
+                            Navigator.pop(context);
+                          },
+                          icon: Icon(
+                            Icons.done,
+                            color: white,
+                          ),
+                          label: Text(
+                            'Done',
+                            style: TextStyle(color: white),
+                          )),
+                      FlatButton.icon(
+                          color: Colors.grey,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(border),
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: Icon(
+                            Icons.clear,
+                            color: white,
+                          ),
+                          label: Text(
+                            'Cancel',
+                            style: TextStyle(color: white),
+                          ))
+                    ],
+                  )
                 ]),
               ),
             );
           });
     }
+  }
+
+  void dropItem(BuildContext context) {
+    List<String> notes = List.from(this.widget.item['notes']);
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Color(0xffeaafc8), Color(0xff654ea3)]),
+            ),
+            child: Column(
+              children: List.generate(notes.length, (index) {
+                return ListTile(
+                  title: Text(
+                    notes[index],
+                    style: TextStyle(color: white, fontSize: 16),
+                  ),
+                  trailing: IconButton(
+                    icon: Icon(
+                      Icons.clear,
+                      color: white,
+                    ),
+                    onPressed: () async {
+                      bool rs = await genDialog(context,
+                          "Are you sure to remove the item", "Yes", "No");
+                      if (rs) {
+                        setState(() {
+                          --quantity;
+                        });
+                        if (quantity == 0) {
+                          await pr.show();
+                          await FirebaseFirestore.instance
+                              .collection('Users')
+                              .doc(currentUser.uid)
+                              .update({
+                            'cart': {},
+                          }).then((value) async {
+                            await pr.hide();
+                          }).catchError((e) async {
+                            await pr.hide();
+                            print(e.toString());
+                          });
+                          Navigator.pop(context);
+                        } else {
+                          Map<String, dynamic> item =
+                              Map.from(this.widget.item);
+                          notes.removeAt(index);
+                          item.update('quantity', (value) => quantity);
+                          item.update('notes', (value) => notes);
+                          cartMap.update(this.widget.vid, (value) => item);
+                          await pr.show();
+                          await FirebaseFirestore.instance
+                              .collection('Users')
+                              .doc(currentUser.uid)
+                              .update({
+                            'cart': cartMap,
+                          }).then((value) async {
+                            await pr.hide();
+                          }).catchError((e) async {
+                            await pr.hide();
+                            print(e.toString());
+                          });
+                          Navigator.pop(context);
+                        }
+                      }
+                    },
+                  ),
+                );
+              }),
+            ),
+          );
+        });
   }
 }

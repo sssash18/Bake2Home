@@ -30,7 +30,7 @@ class _RouterState extends State<Router> with WidgetsBindingObserver{
       FirebaseFirestore.instance.collection("Categories");
   CollectionReference deliveryCollection =
       FirebaseFirestore.instance.collection("DeliveryCharges");
-  CollectionReference slidesCollection = 
+  CollectionReference slidesCollection =
       FirebaseFirestore.instance.collection("Slides");
   FirebaseAuth _auth = FirebaseAuth.instance;
   @override
@@ -100,10 +100,7 @@ class _RouterState extends State<Router> with WidgetsBindingObserver{
       Shop shop = shopMap[param];
       print(shop.shopName);
       print(deepLink.path);
-      if(deepLink.path == '/profile'){
-        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => VendorProfile(shop: shop)));
-      }
-      //Navigator.pushNamed(context, deepLink.path, arguments: shop);
+      Navigator.of(context).pushNamed(deepLink.path, arguments: shop);
       print('cant Handle');
     }
   }
@@ -115,15 +112,14 @@ class _RouterState extends State<Router> with WidgetsBindingObserver{
     await getTopPick();
     await getUser();
     await getCategories();
-    
 
     getDeliveryCharges();
     // await getCardDetails();
 
     _auth.currentUser != null
-        ? Navigator.pushReplacement(context,
+        ? Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (BuildContext context) => HomePage()))
-        : Navigator.pushReplacement(context,
+        : Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (BuildContext context) => SignIn()));
     await initDynamicLinks();
   }
@@ -156,17 +152,15 @@ class _RouterState extends State<Router> with WidgetsBindingObserver{
 
   Future<bool> getSlides() async{
     bool rs = false;
-    slidesCollection.doc('slides').get().then((value){
-      value.data().forEach((key, value) { 
+    await slidesCollection.doc('slides').get().then((value) {
+      value.data().forEach((key, value) {
         slidesUrl.add(value);
         rs = true;
       });
-    }
-    );
+    });
     return rs;
   }
 
-  
   Future<bool> getShops() async {
     QuerySnapshot shops = await shopCollection.get();
     shops.docs.forEach((element) {
@@ -274,12 +268,32 @@ class _RouterState extends State<Router> with WidgetsBindingObserver{
     });
   }  
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    print('state = $state');
-    if(state==AppLifecycleState.resumed){
-      initDynamicLinks();
-    }
-  }
-  
+  // Future<void> initDynamicLinks() async {
+  //   final PendingDynamicLinkData link =
+  //       await FirebaseDynamicLinks.instance.getInitialLink();
+  //   _handleDeepLink(link);
+  //   final Uri deeplink = link?.link;
+  //   print("LLLLL" + deeplink.toString());
+  //   FirebaseDynamicLinks.instance.onLink(
+  //       onSuccess: (PendingDynamicLinkData link) async {
+  //     _handleDeepLink(link);
+  //   }, onError: (OnLinkErrorException e) async {
+  //     print('onLinkError');
+  //     print(e.message);
+  //   });
+  // }
+
+  // void _handleDeepLink(PendingDynamicLinkData link) {
+  //   print("link:  " + '${link?.link}');
+  //   Uri deepLink = link?.link;
+  //   if (deepLink != null) {
+  //     final String param = deepLink.queryParameters['Id'];
+  //     print(param);
+  //     Shop shop = shopMap[param];
+  //     print(shop.shopName);
+  //     print(deepLink.path);
+  //     Navigator.pushNamed(context, deepLink.path, arguments: shop);
+  //     print('cant Handle');
+  //   }
+  // }
 }

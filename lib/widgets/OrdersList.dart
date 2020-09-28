@@ -1,4 +1,3 @@
-
 import 'package:bake2home/widgets/Review.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/widgets/HistoryTile.dart';
@@ -9,6 +8,8 @@ import 'package:provider/provider.dart';
 import '../constants.dart';
 
 class OrdersList extends StatelessWidget {
+  final GlobalKey<ScaffoldState> historyKey;
+  OrdersList({this.historyKey});
   @override
   Widget build(BuildContext context) {
     List<Order> orders = Provider.of<List<Order>>(context) ?? [];
@@ -16,9 +17,9 @@ class OrdersList extends StatelessWidget {
     //return Review(shop: shopMap["emYlLuBFbRcw1hhlitvGuePI7Rh1"]);
     return ListView.builder(
         itemCount: orders.length,
-        itemBuilder: (BuildContext context, int index){
-        return HistoryTile(order: orders.elementAt(index));
-      }
-    );
+        itemBuilder: (BuildContext context, int index) {
+          return HistoryTile(
+              historyKey: historyKey, order: orders.elementAt(index));
+        });
   }
 }

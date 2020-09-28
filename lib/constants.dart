@@ -1,5 +1,6 @@
 import 'package:bake2home/functions/category.dart';
 import 'package:bake2home/services/PushNotification.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/functions/shop.dart';
@@ -7,6 +8,8 @@ import 'package:bake2home/functions/user.dart' as LocalUser;
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:intl/intl.dart';
+
 
 Color base = Color(0xff654ea3);
 Color white = Colors.white;
@@ -31,12 +34,12 @@ ValueNotifier<int> cartLengthNotifier = ValueNotifier<int>(0);
 String currentShopId = 'null';
 StopWatchTimer timer;
 bool activeTimer = false;
+PushNotification pushNotification = PushNotification();
 String timerVal;
 List<Category> categoryList = [];
 List<double> delChargesList = [];
 bool timerOver = false;
-StreamController<bool> controller = StreamController();
-PushNotification pushNotification = PushNotification();
+StreamController<bool> controller = StreamController<bool>.broadcast();
 FirebaseMessaging firebaseMessaging = FirebaseMessaging();
 String token = "";
 List<String> slidesUrl = [];
@@ -58,6 +61,22 @@ String createAvatarText() {
   }
   print('retsult is $result');
   return result;
+}
+String readTimestamp(Timestamp timestamp) {
+  DateTime date = timestamp.toDate();
+  String df = DateFormat('HH-mm').format(date);
+  String tp = DateFormat('MMM-dd-yyyy').format(date);
+  List<dynamic> ll = df.split('-');
+  if (int.parse(ll[0]) > 12) {
+    df = '$df PM';
+  } else {
+    df = '$df AM';
+  }
+  df = df.replaceAll('-', ':');
+  tp = tp.replaceAll('-', ', ');
+  String s = '$tp, $df';
+  print("s is f$s");
+  return s;
 }
 
 Future<bool> genDialog(
