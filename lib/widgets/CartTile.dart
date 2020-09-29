@@ -22,6 +22,7 @@ class _CartTileState extends State<CartTile> {
     // TODO: implement initState
     super.initState();
     quantity = this.widget.item['quantity'];
+    print(this.widget.item);
   }
 
   @override
