@@ -417,22 +417,40 @@ class _CartState extends State<Cart> {
               ),
               FlatButton.icon(
                   onPressed: () async {
+                    TimeOfDay nowTime = TimeOfDay.now();
                     if (_date != null) {
                       TimeOfDay time = await showTimePicker(
-                          context: context, initialTime: TimeOfDay.now());
+                          context: context, initialTime: nowTime);
                       if (time != null) {
                         int timeInMinutes = time.hour * 60 + time.minute;
+                        int nowInMinutes = nowTime.hour * 60 + nowTime.minute;
                         int startInMinutes =
                             startTime.hour * 60 + startTime.minute;
                         int endInMinutes = endTime.hour * 60 + endTime.minute;
                         if (timeInMinutes >= startInMinutes &&
                             timeInMinutes <= endInMinutes) {
-                          setState(() {
-                            delTime = delTime.add(Duration(hours: time.hour));
-                            delTime =
-                                delTime.add(Duration(minutes: time.minute));
-                            _time = time.format(context);
-                          });
+                          if (delTime.day == DateTime.now().day &&
+                              delTime.month == DateTime.now().month) {
+                            if (timeInMinutes >= nowInMinutes) {
+                              setState(() {
+                                delTime =
+                                    delTime.add(Duration(hours: time.hour));
+                                delTime =
+                                    delTime.add(Duration(minutes: time.minute));
+                                _time = time.format(context);
+                              });
+                            } else {
+                              showGenDialog(
+                                  context, "Please select valid time");
+                            }
+                          } else {
+                            setState(() {
+                              delTime = delTime.add(Duration(hours: time.hour));
+                              delTime =
+                                  delTime.add(Duration(minutes: time.minute));
+                              _time = time.format(context);
+                            });
+                          }
                         } else {
                           showGenDialog(context,
                               "We provide service only from 10am to 10 pm only!");

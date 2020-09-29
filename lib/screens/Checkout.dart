@@ -22,16 +22,30 @@ class Checkout extends StatefulWidget {
 class _CheckoutState extends State<Checkout> {
   int _index = 0;
   int count = 0;
+  String _selectedOption;
+
   double codAmount = 0;
   UpiIndia _upiIndia = UpiIndia();
   List<UpiApp> apps;
-
+  List<DropdownMenuItem<String>> paymentOptions;
   ProgressDialog pr;
   StreamSubscription subs;
   UpiResponse _response;
   @override
   void initState() {
     super.initState();
+    paymentOptions = [
+      DropdownMenuItem<String>(
+          value: "full",
+          child: Text(
+            "Full Payment(\u20B9 ${widget.order.amount})",
+          )),
+      DropdownMenuItem<String>(
+          value: "partial",
+          child: Text(
+              "Partial COD(\u20B9 ${(100 - shopMap[widget.order.shopId].advance) * widget.order.amount / 100})"))
+    ];
+    _selectedOption = "full";
     _upiIndia.getAllUpiApps().then((value) {
       setState(() {
         apps = value;
@@ -121,24 +135,6 @@ class _CheckoutState extends State<Checkout> {
   final checkoutKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
-    String _selectedOption = "full";
-    List<DropdownMenuItem> paymentOptions = [
-      DropdownMenuItem(
-          value: "full",
-          child: Text(
-            "Full Payment(\u20B9 ${widget.order.amount})",
-          )),
-      DropdownMenuItem(
-          value: "partial",
-          child: Text(
-              "Partial COD(\u20B9 ${(100 - shopMap[widget.order.shopId].advance) * widget.order.amount / 100})"))
-    ];
-    if (_selectedOption == "full") {
-      codAmount = 0;
-    } else {
-      codAmount =
-          (100 - shopMap[widget.order.shopId].advance) * widget.order.amount;
-    }
     return WillPopScope(
       onWillPop: () async {
         bool rs = await genDialog(
@@ -206,7 +202,13 @@ class _CheckoutState extends State<Checkout> {
                   {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
                 if (_index == 1) {
                   return FlatButton(
-                    child: Text("Next"),
+                    color: base,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(border)),
+                    child: Text(
+                      "Next",
+                      style: TextStyle(color: white, fontSize: 16),
+                    ),
                     onPressed: () {
                       setState(() {
                         _index++;
@@ -264,77 +266,95 @@ class _CheckoutState extends State<Checkout> {
                         color: white,
                       )),
                   content: Container(
-                    height: MediaQuery.of(context).size.height / 2.8,
-                    child: Container(
-                      height: MediaQuery.of(context).size.height / 4,
-                      child: Column(children: [
-                        DropdownButton(
-                            value: _selectedOption,
-                            items: paymentOptions,
-                            onChanged: (val) {
-                              setState(() {
-                                _selectedOption = val;
-                              });
-                            }),
-                        Container(
-                          height: MediaQuery.of(context).size.height / 3.5,
-                          child: ListView.builder(
-                            itemCount: (apps ?? []).length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return Container(
-                                height: 50,
-                                margin: EdgeInsets.fromLTRB(
-                                    MediaQuery.of(context).size.width / 20,
-                                    MediaQuery.of(context).size.height / 40,
-                                    MediaQuery.of(context).size.width / 20,
-                                    0),
-                                child: FlatButton(
-                                  child: Text(
-                                    apps[index].name,
-                                    style: TextStyle(color: base),
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(border)),
-                                  color: white,
-                                  onPressed: () async {
-                                    _response = await initiateTransaction(
-                                        apps[index].app);
-
-                                    if (_response.error != null) {
-                                      showDialog(
-                                          context: context,
-                                          child: AlertDialog(
-                                            title: Text("Payment Failed!"),
-                                            content:
-                                                Text('Payment Fail Try Again'),
-                                            actions: [
-                                              FlatButton(
-                                                child: Text("OK"),
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                },
-                                              ),
-                                            ],
-                                          ));
-                                    } else {
-                                      if (_response.status ==
-                                          UpiPaymentStatus.SUCCESS) {
-                                        setState(() {
-                                          _index++;
-                                        });
-                                        DatabaseService().updateTransaction(
-                                            widget.order, _response, codAmount);
+                    height: MediaQuery.of(context).size.height * 0.35,
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                                border: Border.all(color: black),
+                                borderRadius: BorderRadius.circular(10.0)),
+                            padding: EdgeInsets.symmetric(horizontal: 5.0),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton(
+                                  value: _selectedOption,
+                                  items: paymentOptions,
+                                  onChanged: (val) {
+                                    setState(() {
+                                      _selectedOption = val;
+                                      if (_selectedOption == "full") {
+                                        codAmount = 0;
+                                      } else {
+                                        codAmount = (100 -
+                                                shopMap[widget.order.shopId]
+                                                    .advance) *
+                                            widget.order.amount;
                                       }
-                                    }
-                                  },
-                                ),
-                              );
-                            },
+                                    });
+                                    print(_selectedOption);
+                                  }),
+                            ),
                           ),
-                        ),
-                      ]),
-                    ),
+                          Expanded(
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: (apps ?? []).length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Container(
+                                  height: 50,
+                                  margin: EdgeInsets.fromLTRB(
+                                      MediaQuery.of(context).size.width / 20,
+                                      MediaQuery.of(context).size.height / 40,
+                                      MediaQuery.of(context).size.width / 20,
+                                      0),
+                                  child: FlatButton(
+                                    child: Text(
+                                      apps[index].name,
+                                      style: TextStyle(color: base),
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(border)),
+                                    color: white,
+                                    onPressed: () async {
+                                      _response = await initiateTransaction(
+                                          apps[index].app);
+
+                                      if (_response.error != null) {
+                                        showDialog(
+                                            context: context,
+                                            child: AlertDialog(
+                                              title: Text("Payment Failed!"),
+                                              content: Text(
+                                                  'Payment Fail Try Again'),
+                                              actions: [
+                                                FlatButton(
+                                                  child: Text("OK"),
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                ),
+                                              ],
+                                            ));
+                                      } else {
+                                        if (_response.status ==
+                                            UpiPaymentStatus.SUCCESS) {
+                                          setState(() {
+                                            _index++;
+                                          });
+                                          DatabaseService().updateTransaction(
+                                              widget.order,
+                                              _response,
+                                              codAmount);
+                                        }
+                                      }
+                                    },
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ]),
                   ),
                   isActive: _index == 2 ? true : false,
                 ),
