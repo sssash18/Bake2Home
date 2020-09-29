@@ -1,4 +1,5 @@
 import 'package:bake2home/widgets/Review.dart';
+import 'package:bake2home/widgets/emptyList.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/widgets/HistoryTile.dart';
 import 'package:bake2home/functions/order.dart';
@@ -21,9 +22,7 @@ class _OrdersListState extends State<OrdersList> {
     List<Order> orders = Provider.of<List<Order>>(context) ?? [];
     //return Review(shop: shopMap["emYlLuBFbRcw1hhlitvGuePI7Rh1"]);
     return orders.isEmpty
-        ? Center(
-            child: CircularProgressIndicator(),
-          )
+        ? EmptyList()
         : ListView.separated(
             separatorBuilder: (context, i) {
               return SizedBox(

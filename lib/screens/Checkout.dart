@@ -150,12 +150,10 @@ class _CheckoutState extends State<Checkout> {
   }
 
   final checkoutKey = GlobalKey<ScaffoldState>();
-  @override
-  Widget build(BuildContext context) {
+ 
   
 
   
-  final checkoutKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -414,4 +412,4 @@ class _CheckoutState extends State<Checkout> {
     );
   }
 }
-}
+

@@ -1,6 +1,7 @@
 import 'package:bake2home/functions/customisedItemModel.dart';
 import 'package:bake2home/functions/shop.dart';
 import 'package:bake2home/widgets/ItemTile.dart';
+import 'package:bake2home/widgets/emptyList.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -51,11 +52,11 @@ class _CustomisedItemState extends State<CustomisedItem> {
               });
             }
             
-            return ListView.builder(
+            return list.isNotEmpty ? ListView.builder(
                 itemCount: list.length,
                 itemBuilder: (BuildContext context, int i) {
                   return ItemTile(model: list[i],shopId:this.widget.shop.shopId);
-                });
+                }): EmptyList();
           } else {
             return Center(
               child: Text("Loading......"),

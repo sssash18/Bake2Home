@@ -8,6 +8,7 @@ import 'package:bake2home/screens/OrderPending.dart';
 import 'package:bake2home/services/PushNotification.dart';
 import 'package:bake2home/services/database.dart';
 import 'package:bake2home/widgets/CartTile.dart';
+import 'package:bake2home/widgets/emptyCart.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
@@ -348,9 +349,7 @@ class _CartState extends State<Cart> {
                               )
                             : NoOrders(),
                       )
-                    : Center(
-                        child: Text("No Data"),
-                      )
+                    : EmptyCart()
                 : NoInternet();
           } else {
             return Center(
