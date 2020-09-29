@@ -53,23 +53,6 @@ class _CheckoutState extends State<Checkout> {
     });
     createStream();
   }
-
-  Future<UpiResponse> initiateTransaction(double amount,String orderId,String app) {
-    return _upiIndia.startTransaction(
-      app: app,
-      receiverUpiId: 'bakemycake@ybl',
-      receiverName: "BakeMyCake",
-      transactionRefId: orderId,
-      transactionNote: '#bmc${orderId}',
-      amount: amount.ceilToDouble(),
-    );
-  }
-
-  ProgressDialog pr;
-  StreamSubscription subs;
-  final checkoutKey = GlobalKey<ScaffoldState>();
-  @override
-  Widget build(BuildContext context) {
   createStream() {
     if (count == 0) {
       subs = controller.stream.listen((event) async {
@@ -154,6 +137,22 @@ class _CheckoutState extends State<Checkout> {
           (100 - shopMap[widget.order.shopId].advance) * widget.order.amount;
     }
   }
+
+  Future<UpiResponse> initiateTransaction(double amount,String orderId,String app) {
+    return _upiIndia.startTransaction(
+      app: app,
+      receiverUpiId: 'bakemycake@ybl',
+      receiverName: "BakeMyCake",
+      transactionRefId: orderId,
+      transactionNote: '${orderId}',
+      amount: amount.ceilToDouble(),
+    );
+  }
+
+  final checkoutKey = GlobalKey<ScaffoldState>();
+  @override
+  Widget build(BuildContext context) {
+  
 
   
   final checkoutKey = GlobalKey<ScaffoldState>();
@@ -342,7 +341,7 @@ class _CheckoutState extends State<Checkout> {
                                             BorderRadius.circular(border)),
                                     color: white,
                                     onPressed: () async {
-                                      _response = await initiateTransaction(
+                                      _response = await initiateTransaction(widget.order.amount - codAmount,widget.order.orderId,
                                           apps[index].app);
 
                                       if (_response.error != null) {
@@ -414,4 +413,5 @@ class _CheckoutState extends State<Checkout> {
       ),
     );
   }
+}
 }
