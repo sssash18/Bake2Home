@@ -54,6 +54,10 @@ class _ProfileOrderState extends State<ProfileOrder> {
                     ))),
             body: StreamProvider<List<Order>>.value(
               value: DatabaseService().orders,
+              catchError: (context, e) {
+                print(
+                    '++++++++++++++++++++++++++++++++++++++++${e.toString()}');
+              },
               child: Container(
                 child: OrdersList(
                   historyKey: historyKey,

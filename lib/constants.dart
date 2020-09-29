@@ -1,8 +1,10 @@
 import 'package:bake2home/functions/category.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/functions/shop.dart';
 import 'package:bake2home/functions/user.dart' as LocalUser;
+import 'package:intl/intl.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -38,6 +40,24 @@ StreamController<bool> controller = StreamController<bool>.broadcast();
 FirebaseMessaging firebaseMessaging = FirebaseMessaging();
 String token = "";
 List<String> slidesUrl = [];
+
+String readTimestamp(Timestamp timestamp) {
+  DateTime date = timestamp.toDate();
+  String df = DateFormat('HH-mm').format(date);
+  String tp = DateFormat('MMM-dd-yyyy').format(date);
+  List<dynamic> ll = df.split('-');
+  if (int.parse(ll[0]) > 12) {
+    df = '$df PM';
+  } else {
+    df = '$df AM';
+  }
+  df = df.replaceAll('-', ':');
+  tp = tp.replaceAll('-', ', ');
+  String s = '$tp, $df';
+  print("s is f$s");
+  return s;
+}
+
 String createAvatarText() {
   String result = "";
   print('retsult is ${currentUser.name}');
