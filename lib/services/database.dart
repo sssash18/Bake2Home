@@ -223,7 +223,7 @@ class DatabaseService {
   Future<bool> cancelOrder(Order order) async {
     double refundAmount = getRefundAmount(order);
     double compensationAmount =
-        (order.amount - refundAmount) - 0.05 * order.amount;
+        max(0,(order.amount - refundAmount) - 0.05 * order.amount);
 
     order.refund = refundAmount;
     bool rs = false;
@@ -233,14 +233,15 @@ class DatabaseService {
       'compensation': compensationAmount,
     }).then((value) {
       rs = true;
-      PushNotification().pushMessage("Order ${order.orderId} cancelled",
-          "Compensation Amount: $compensationAmount", token);
+      PushNotification().pushMessagewithCancel("Order ${order.orderId} cancelled by ${currentUser.name}",
+          "Compensation Amount: $compensationAmount", shopMap[order.shopId].token);
     }).catchError((e) {
       print(e.toString());
       rs = false;
     });
     return rs;
   }
+
 
   Future<bool> missOrderUpdate(String orderId) async {
     bool rs;

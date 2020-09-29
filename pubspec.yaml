@@ -44,6 +44,8 @@ dependencies:
   progress_dialog: ^1.2.4
   in_app_review: ^0.2.0+4
   connectivity: ^0.4.9+3
+  flutter_local_notifications: ^1.4.4+4
+  lottie: ^0.6.0
 
 
 
@@ -71,6 +73,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - assets/anims/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

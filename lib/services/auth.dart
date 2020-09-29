@@ -134,6 +134,7 @@ class AuthService {
                           style: TextStyle(
                               color: black, fontWeight: FontWeight.bold),
                         ),
+                        
                         OTPTextField(
                           keyboardType: TextInputType.number,
                           length: 6,

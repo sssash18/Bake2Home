@@ -1,4 +1,6 @@
 import 'package:bake2home/functions/category.dart';
+import 'package:bake2home/services/PushNotification.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +10,8 @@ import 'package:intl/intl.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:intl/intl.dart';
+
 
 Color base = Color(0xff654ea3);
 Color white = Colors.white;
@@ -32,6 +36,7 @@ ValueNotifier<int> cartLengthNotifier = ValueNotifier<int>(0);
 String currentShopId = 'null';
 StopWatchTimer timer;
 bool activeTimer = false;
+PushNotification pushNotification = PushNotification();
 String timerVal;
 List<Category> categoryList = [];
 List<double> delChargesList = [];

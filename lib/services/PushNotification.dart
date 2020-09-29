@@ -4,6 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:bake2home/constants.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 
 class PushNotification{
@@ -22,16 +23,15 @@ class PushNotification{
       firebaseMessaging.requestNotificationPermissions();
       firebaseMessaging.configure();
       firebaseMessaging.onTokenRefresh.last.then((value){
-        token = value;
+        DatabaseService().updateToken(value);
       });
-     
-      String token1 = await firebaseMessaging.getToken();
       _initialized = true;
       
     }
+    
   }
 
-  Future<void> pushMessage(String title,String body,String token) async{
+  Future<void> pushMessagewithNewOrder(String title,String body,String token) async{
     final serverToken = 'AAAATnEOuVU:APA91bEv0ZjHErtQC1lN_-yVorEJrf0YMBpdZiPrShRWSvog7SdUQ_B72yhEfx55i9riKJElt7BnsOi_E88DgrpvCMqilwikJq3gdg9_euNvqi3n7bBs8SaGnJCEbSt4gJr_4dljSA56'; 
     await http.post(
     'https://fcm.googleapis.com/fcm/send',
@@ -44,8 +44,38 @@ class PushNotification{
        'notification': <String, dynamic>{
          'body': body,
          'title': title,
-         'sound' : "air.mp3",
-         'icon' : "logo.png"
+         'android_channel_id' : '1891',
+         'icon' : 'logo.png'
+       },
+       'priority': 'high',
+       'data': <String, dynamic>{
+         'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+         'id': '1',
+         'status': 'done'
+       },
+       'time_to_live' : 90,
+       'to': token
+     },
+    ),
+  );
+
+   }
+
+  Future<void> pushMessagewithCancel(String title,String body,String token) async{
+    final serverToken = 'AAAATnEOuVU:APA91bEv0ZjHErtQC1lN_-yVorEJrf0YMBpdZiPrShRWSvog7SdUQ_B72yhEfx55i9riKJElt7BnsOi_E88DgrpvCMqilwikJq3gdg9_euNvqi3n7bBs8SaGnJCEbSt4gJr_4dljSA56'; 
+    await http.post(
+    'https://fcm.googleapis.com/fcm/send',
+     headers: <String, String>{
+       'Content-Type': 'application/json',
+       'Authorization': 'key=$serverToken',
+     },
+     body: jsonEncode(
+     <String, dynamic>{
+       'notification': <String, dynamic>{
+         'body': body,
+         'title': title,
+         'android_channel_id' : '1890',
+         'icon' : 'logo.png'
        },
        'priority': 'high',
        'data': <String, dynamic>{
@@ -59,6 +89,36 @@ class PushNotification{
   );
 
    }
+
+   Future<void> pushMessage(String title,String body,String token) async{
+    final serverToken = 'AAAATnEOuVU:APA91bEv0ZjHErtQC1lN_-yVorEJrf0YMBpdZiPrShRWSvog7SdUQ_B72yhEfx55i9riKJElt7BnsOi_E88DgrpvCMqilwikJq3gdg9_euNvqi3n7bBs8SaGnJCEbSt4gJr_4dljSA56'; 
+    await http.post(
+    'https://fcm.googleapis.com/fcm/send',
+     headers: <String, String>{
+       'Content-Type': 'application/json',
+       'Authorization': 'key=$serverToken',
+     },
+     body: jsonEncode(
+     <String, dynamic>{
+       'notification': <String, dynamic>{
+         'body': body,
+         'title': title,
+         'icon' : 'logo.png'
+       },
+       'priority': 'high',
+       'data': <String, dynamic>{
+         'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+         'id': '1',
+         'status': 'done'
+       },
+       'to': token
+     },
+    ),
+  );
+
+   }
+
+  
 
 
 }

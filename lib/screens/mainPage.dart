@@ -117,7 +117,7 @@ class _MainPageState extends State<MainPage> {
                       autoPlay: true,
                       autoPlayInterval: Duration(seconds: 3),
                     ),
-                    items: [1, 2, 3, 4, 5].map((i) {
+                    items: slidesUrl.map((i) {
                       return Builder(
                         builder: (BuildContext context) {
                           return Container(
@@ -133,7 +133,7 @@ class _MainPageState extends State<MainPage> {
                                   ]),
                               borderRadius: BorderRadius.circular(border),
                               image: DecorationImage(
-                                  image: AssetImage('assets/images/cake.jpeg'),
+                                  image: CachedNetworkImageProvider(i),
                                   fit: BoxFit.fill),
                             ),
                           );
