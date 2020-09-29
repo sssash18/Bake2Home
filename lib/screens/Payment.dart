@@ -25,7 +25,7 @@ class _PaymentState extends State<Payment> {
   Future<UpiResponse> initiateTransaction() {
     return _upiIndia.startTransaction(
       app: apps[0].app,
-      receiverUpiId: 'pmcares@sbi',
+      receiverUpiId: 'bakemycake@ybl',
       receiverName: "BakeMyCake",
       transactionRefId: "1233434",
       transactionNote: '#bmc2323111',

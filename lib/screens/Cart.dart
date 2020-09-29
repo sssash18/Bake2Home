@@ -52,6 +52,9 @@ class _CartState extends State<Cart> {
     cakeQuantity = 0;
     subtotal = 0.0;
     internetStatus = true;
+    cartMap.forEach((key, value) {
+     
+     });
     _connectivity = Connectivity();
     currentUser.addresses.keys.forEach((element) {
       print(currentUser.addresses[element]['address']);
@@ -61,6 +64,7 @@ class _CartState extends State<Cart> {
           value: currentUser.addresses[element]['address'],
         ),
       );
+      _selectedAddress = _addresses.first.value.toString();
       subs = _connectivity.onConnectivityChanged
           .listen((ConnectivityResult event) {
         setState(() {
@@ -523,8 +527,8 @@ class _CartState extends State<Cart> {
                       status: "PENDING",
                       otp: _otp,
                       paymentType: "UPI",
-                      amount: subtotal + 50,
-                      delCharges: 50,
+                      amount: subtotal + delCharges,
+                      delCharges: delCharges,
                       pickUp: false,
                       orderTime: Timestamp.now(),
                       deliveryTime: Timestamp.fromDate(delTime),
@@ -534,7 +538,7 @@ class _CartState extends State<Cart> {
                   bool rs = await DatabaseService().createOrder(order);
                   await pr.hide();
                   if (rs) {
-                    await PushNotification().pushMessage('New Order Request',
+                    await PushNotification().pushMessagewithNewOrder('New Order Request',
                         'Request from ${currentUser.name}', shop.token);
                     await Navigator.push(context,
                         MaterialPageRoute(builder: (BuildContext context) {

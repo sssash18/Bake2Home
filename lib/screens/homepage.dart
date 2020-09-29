@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver{
 
   void initState(){
     super.initState();
-    PushNotification().init();
+    pushNotification.init();
     WidgetsBinding.instance.addObserver(this);
   }
 

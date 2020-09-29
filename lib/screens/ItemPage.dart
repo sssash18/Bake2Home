@@ -347,6 +347,7 @@ class _ItemPageState extends State<ItemPage> {
                                   size: tt,
                                   notes: [noteItem],
                                   price: price,
+                                  
                                   photoUrl: widget.model.photoUrl);
                               cartMap.putIfAbsent(
                                   vid,

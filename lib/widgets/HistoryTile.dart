@@ -174,7 +174,8 @@ class _HistoryTileState extends State<HistoryTile> {
                   child: Text(
                     itemList,
                   ),
-                ),
+
+                  
               ],
             ),
             Row(
@@ -185,6 +186,7 @@ class _HistoryTileState extends State<HistoryTile> {
                   child: Text(
                     "ORDERED ON",
                     style: TextStyle(color: Colors.grey[700]),
+
                   ),
                 ),
                 Container(
@@ -192,6 +194,11 @@ class _HistoryTileState extends State<HistoryTile> {
                   child: Text(
                     readTimestamp(widget.order.orderTime),
                   ),
+
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    child: Text(readTimestamp(widget.order.deliveryTime)),
+
                 ),
               ],
             ),
@@ -220,11 +227,12 @@ class _HistoryTileState extends State<HistoryTile> {
                     "AMOUNT",
                     style: TextStyle(color: Colors.grey[700]),
                   ),
-                ),
-                Container(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    '\u20B9 ${widget.order.amount + 50}',
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                    '\u20B9 ${widget.order.amount}' ,
+                    ),
+
                   ),
                 ),
               ],

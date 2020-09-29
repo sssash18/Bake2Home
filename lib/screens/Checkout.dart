@@ -54,6 +54,22 @@ class _CheckoutState extends State<Checkout> {
     createStream();
   }
 
+  Future<UpiResponse> initiateTransaction(double amount,String orderId,String app) {
+    return _upiIndia.startTransaction(
+      app: app,
+      receiverUpiId: 'bakemycake@ybl',
+      receiverName: "BakeMyCake",
+      transactionRefId: orderId,
+      transactionNote: '#bmc${orderId}',
+      amount: amount.ceilToDouble(),
+    );
+  }
+
+  ProgressDialog pr;
+  StreamSubscription subs;
+  final checkoutKey = GlobalKey<ScaffoldState>();
+  @override
+  Widget build(BuildContext context) {
   createStream() {
     if (count == 0) {
       subs = controller.stream.listen((event) async {
@@ -70,7 +86,7 @@ class _CheckoutState extends State<Checkout> {
                 return AlertDialog(
                     title: Text("Alert"),
                     content:
-                        Text('Sorry your order was missed... try again later'),
+                        Text('Sorry we were not able to contact ${shopMap[widget.order.shopId].shopName} . Please try again later'),
                     actions: [
                       RaisedButton(
                         onPressed: () {
@@ -119,19 +135,27 @@ class _CheckoutState extends State<Checkout> {
     } else {
       //subs.cancel();
     }
+    String _selectedOption = "full";
+    List<DropdownMenuItem> paymentOptions = [
+      DropdownMenuItem(
+          value: "full",
+          child: Text(
+            "Full Payment(\u20B9 ${widget.order.amount.toInt()})",
+          )),
+      DropdownMenuItem(
+          value: "partial",
+          child: Text(
+              "Partial COD(\u20B9 ${((100 - shopMap[widget.order.shopId].advance) * widget.order.amount / 100).toInt()})"))
+    ];
+    if (_selectedOption == "full") {
+      codAmount = 0;
+    } else {
+      codAmount =
+          (100 - shopMap[widget.order.shopId].advance) * widget.order.amount;
+    }
   }
 
-  Future<UpiResponse> initiateTransaction(String app) {
-    return _upiIndia.startTransaction(
-      app: app,
-      receiverUpiId: 'bakemycake@ybl',
-      receiverName: "BakeMyCake",
-      transactionRefId: "1233434",
-      transactionNote: '#bmc2323111',
-      amount: 1.0,
-    );
-  }
-
+  
   final checkoutKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
@@ -266,6 +290,7 @@ class _CheckoutState extends State<Checkout> {
                         color: white,
                       )),
                   content: Container(
+
                     height: MediaQuery.of(context).size.height * 0.35,
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
