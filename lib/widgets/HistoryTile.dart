@@ -19,40 +19,52 @@ class HistoryTile extends StatefulWidget {
 
 class _HistoryTileState extends State<HistoryTile> {
   ProgressDialog pr;
-  Widget _cancelButton() {
-    return FlatButton.icon(
-        onPressed: () async {
-          double refundAmount =
-              DatabaseService().getRefundAmount(this.widget.order);
-          bool rs = await genDialog(
-              context,
-              "Are you sure to cancel the order \n Amount to be refunded is $refundAmount",
-              "Yes",
-              "No");
-          if (rs) {
-            await pr.show();
-            await DatabaseService()
-                .cancelOrder(widget.order)
-                .then((value) async {
-              await pr.hide();
-              showSnackBar(this.widget.historyKey, "Order cancelled ..");
-            }).catchError((e) async {
-              await pr.hide();
-              showSnackBar(this.widget.historyKey, "Cannot cancel order ..");
-              print(e.toString());
-            });
-          }
-        },
-        color: Colors.red[700],
-        icon: Icon(Icons.cancel, color: white),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(border),
-        ),
-        label: Text("Cancel", style: TextStyle(color: white)));
+  Widget _cancelButton(width) {
+    return InkWell(
+      onTap: () async {
+        double refundAmount =
+            DatabaseService().getRefundAmount(this.widget.order);
+        bool rs = await genDialog(
+            context,
+            "Are you sure to cancel the order \n Amount to be refunded is $refundAmount",
+            "Yes",
+            "No");
+        if (rs) {
+          await pr.show();
+          await DatabaseService().cancelOrder(widget.order).then((value) async {
+            await pr.hide();
+            showSnackBar(this.widget.historyKey, "Order cancelled ..");
+          }).catchError((e) async {
+            await pr.hide();
+            showSnackBar(this.widget.historyKey, "Cannot cancel order ..");
+            print(e.toString());
+          });
+        }
+      },
+      child: Container(
+          height: width * 0.08,
+          width: width * 0.25,
+          padding: EdgeInsets.symmetric(horizontal: 2.0),
+          decoration: BoxDecoration(
+            color: Colors.red[700],
+            borderRadius: BorderRadius.circular(border),
+          ),
+          child: Row(
+            children: [
+              Icon(
+                Icons.clear,
+                color: white,
+              ),
+              Text("Cancel", style: TextStyle(color: white)),
+            ],
+          )),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width - 30;
+    double height = MediaQuery.of(context).size.height;
     pr = ProgressDialog(context,
         type: ProgressDialogType.Normal, isDismissible: true, showLogs: true);
     pr.style(
@@ -90,173 +102,219 @@ class _HistoryTileState extends State<HistoryTile> {
       case "COMPLETED":
         _decisionColor = Colors.green;
         break;
+      case "MISSED":
+        _decisionColor = Colors.teal;
+        break;
       case "CANCELLED":
         _decisionColor = Colors.red;
         break;
     }
-    return Stack(
-      children: [
-        Container(
-          height: 300.0,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20.0),
-              color: Colors.grey[300],
-              boxShadow: [
-                BoxShadow(
-                    color: Colors.grey,
-                    offset: Offset(0.0, 1.0),
-                    blurRadius: 6.0)
-              ]),
-          margin: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 0.0),
-          child: Column(children: <Widget>[
-            Container(
-              margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(border),
-                  gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [Color(0xffeaafc8), Color(0xff654ea3)])),
-              child: Stack(
-                children: <Widget>[
-                  Container(
-                    height: 70.0,
-                    width: 70.0,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(border),
-                      gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [Color(0xffeaafc8), Color(0xff654ea3)]),
-                      image: DecorationImage(
-                        image: CachedNetworkImageProvider(shop.profilePhoto),
-                        fit: BoxFit.fill,
-                      ),
-                    ),
+    return Container(
+      width: width,
+      height: width * 0.75,
+      padding: EdgeInsets.symmetric(horizontal: 15.0),
+      child: Column(
+        children: [
+          shopDetails(width, shop),
+          itemDetails(width, _decisionColor, itemList),
+        ],
+      ),
+    );
+  }
+
+  Container itemDetails(double width, Color _decisionColor, String itemList) {
+    return Container(
+        height: width * 0.55,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(
+              bottomRight: Radius.circular(border),
+              bottomLeft: Radius.circular(border)),
+          color: Colors.grey[300],
+        ),
+        padding: EdgeInsets.symmetric(horizontal: 5.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  height: width * 0.08,
+                  width: width * 0.25,
+                  padding: EdgeInsets.symmetric(horizontal: 2.0),
+                  decoration: BoxDecoration(
+                    color: _decisionColor,
+                    borderRadius: BorderRadius.circular(border),
                   ),
-                  Container(
-                    alignment: Alignment.center,
-                    height: 70.0,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(border),
-                        gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [Color(0xffeaafc8), Color(0xff654ea3)])),
-                    margin: EdgeInsets.fromLTRB(70.0, 0.0, 0.0, 0.0),
-                    child: Text(shop.shopName,
-                        style: TextStyle(
-                          fontSize: head,
-                          color: white,
-                        )),
-                  )
-                ],
-              ),
+                  alignment: Alignment.center,
+                  child: Text(widget.order.status ?? "",
+                      style: TextStyle(
+                          fontSize: 10.0,
+                          fontWeight: FontWeight.bold,
+                          color: white)),
+                ),
+                (widget.order.status == "PENDING" ||
+                        widget.order.status == "ACCEPTED")
+                    ? _cancelButton(width)
+                    : Text(""),
+              ],
             ),
-            SizedBox(height: 10.0),
-            Container(
-              height: 200.0,
-              alignment: Alignment.centerLeft,
-              margin: EdgeInsets.fromLTRB(10.0, 10.0, 0.0, 0.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "ITEMS",
-                      style: TextStyle(color: Colors.grey[700]),
-                    ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "ITEMS",
+                    style: TextStyle(color: Colors.grey[700]),
                   ),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      itemList,
-                    ),
+                ),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    itemList,
                   ),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "ORDERED ON",
-                      style: TextStyle(color: Colors.grey[700]),
-                    ),
+
+                  
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "ORDERED ON",
+                    style: TextStyle(color: Colors.grey[700]),
+
                   ),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      readTimestamp(widget.order.orderTime),
-                    ),
+                ),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    readTimestamp(widget.order.orderTime),
                   ),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "DELIVERY ON",
-                      style: TextStyle(color: Colors.grey[700]),
-                    ),
-                  ),
+
                   Container(
                     alignment: Alignment.centerLeft,
                     child: Text(readTimestamp(widget.order.deliveryTime)),
+
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "DELIVERY ON",
+                    style: TextStyle(color: Colors.grey[700]),
                   ),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "AMOUNT",
-                      style: TextStyle(color: Colors.grey[700]),
-                    ),
+                ),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: Text(readTimestamp(widget.order.deliveryTime)),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "AMOUNT",
+                    style: TextStyle(color: Colors.grey[700]),
                   ),
                   Container(
                     alignment: Alignment.centerLeft,
                     child: Text(
                     '\u20B9 ${widget.order.amount}' ,
                     ),
+
                   ),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "OTP",
-                      style: TextStyle(color: Colors.grey[700]),
-                    ),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "OTP",
+                    style: TextStyle(color: Colors.grey[700]),
                   ),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      '${widget.order.otp}',
-                    ),
+                ),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    '${widget.order.otp}',
                   ),
-                ],
-              ),
-            )
-          ]),
-        ),
-        Positioned(
-          right: MediaQuery.of(context).size.width / 10,
-          top: MediaQuery.of(context).size.height / 7,
-          child: Container(
-            height: MediaQuery.of(context).size.height / 35,
-            width: MediaQuery.of(context).size.width / 5,
+                ),
+              ],
+            ),
+          ],
+        ));
+  }
+
+  Container shopDetails(double width, Shop shop) {
+    return Container(
+      height: width * 0.2,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(
+              topRight: Radius.circular(border),
+              topLeft: Radius.circular(border)),
+          gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Color(0xffeaafc8), Color(0xff654ea3)])),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: width * 0.2,
+            height: width * 0.2,
             decoration: BoxDecoration(
-              color: _decisionColor,
               borderRadius: BorderRadius.circular(border),
             ),
-            alignment: Alignment.center,
-            child: Text(widget.order.status ?? "",
-                style: TextStyle(
-                    fontSize: 10.0, fontWeight: FontWeight.bold, color: white)),
+            child: ClipRRect(
+                borderRadius:
+                    BorderRadius.only(topLeft: Radius.circular(border)),
+                child: CachedNetworkImage(
+                    imageUrl: shop.profilePhoto,
+                    placeholder: (context, url) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    },
+                    fit: BoxFit.fill)),
           ),
-        ),
-        Positioned(
-          right: MediaQuery.of(context).size.width / 10,
-          bottom: MediaQuery.of(context).size.height / 70,
-          child: Container(
-            alignment: Alignment.center,
-            child: (widget.order.status == "PENDING" ||
-                    widget.order.status == "ACCEPTED")
-                ? _cancelButton()
-                : Text(""),
+          Container(
+            width: width * 0.8,
+            height: width * 0.2,
+            padding: EdgeInsets.only(right: 5.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(widget.order.orderId,
+                    style: TextStyle(
+                      fontSize: head,
+                      color: white,
+                    )),
+                Text(shop.shopName,
+                    style: TextStyle(
+                      fontSize: head,
+                      color: white,
+                    )),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

@@ -17,7 +17,7 @@ class Homeheading extends StatelessWidget {
             Text(this.heading,
                 style: TextStyle(
                     color: text, fontSize: head, fontWeight: FontWeight.bold)),
-            showAll ? _showAllitems(context) : Container()
+            showAll ? _showAllitems(context) : Container(),
           ]),
     );
   }

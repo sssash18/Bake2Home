@@ -292,6 +292,9 @@ class DatabaseService {
   }
 
   List<Order> _ordersFromSnapshot(QuerySnapshot snapshot) {
+    snapshot.docs.forEach((element) {
+      print(element.data()['orderId']);
+    });
     return snapshot.docs
         .map((e) => Order(
             userId: e.data()['userId'],

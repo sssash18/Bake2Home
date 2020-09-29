@@ -31,6 +31,14 @@ class _OrderPendingState extends State<OrderPending> {
     //   timer.onExecute.add(StopWatchExecute.start);
     //   activeTimer = true;
     // }
+    Order order;
+    if (orders.isNotEmpty) {
+      order = orders[0];
+      if (order.status != "PENDING") {
+        controller.sink.add(true);
+        // this.widget.callBackToOrderAccepted();
+      }
+    }
 
     return orders.isEmpty
         ? Center(
@@ -43,6 +51,7 @@ class _OrderPendingState extends State<OrderPending> {
               width: MediaQuery.of(context).size.width / 2,
               height: 200,
               duration: 90,
+
               fillColor: white,
               color: base,
               isTimerTextShown: true,
@@ -55,7 +64,7 @@ class _OrderPendingState extends State<OrderPending> {
                   order.status = 'MISSED';
                   controller.sink.add(false);
                 } else {
-                  controller.sink..add(true);
+                  controller.sink.add(true);
                 }
               },
             ));
