@@ -38,6 +38,7 @@ StopWatchTimer timer;
 bool activeTimer = false;
 PushNotification pushNotification = PushNotification();
 String timerVal;
+GlobalKey navigatorKey = GlobalKey<NavigatorState>();
 List<Category> categoryList = [];
 List<double> delChargesList = [];
 bool timerOver = false;

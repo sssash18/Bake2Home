@@ -188,12 +188,10 @@ class _HistoryTileState extends State<HistoryTile> {
                           fontWeight: FontWeight.bold,
                           color: white)),
                 ),
-                (widget.order.status == "PENDING" ||
-                        widget.order.status == "ACCEPTED")
+                (widget.order.status == "PAID" )
                     ? chatButton(width)
                     : SizedBox.shrink(),
-                (widget.order.status == "PENDING" ||
-                        widget.order.status == "ACCEPTED")
+                (widget.order.status == "PAID" )
                     ? _cancelButton(width)
                     : Text(""),
               ],
@@ -331,7 +329,7 @@ class _HistoryTileState extends State<HistoryTile> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(widget.order.orderId,
+                Text('#'+widget.order.orderId,
                     style: TextStyle(
                       fontSize: head,
                       color: white,

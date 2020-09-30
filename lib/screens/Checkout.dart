@@ -392,7 +392,7 @@ class _CheckoutState extends State<Checkout> {
 
                         Navigator.pop(context);
                         Navigator.pop(context);
-                        PushNotification().pushMessage(
+                          pushNotification.pushMessage(
                             "Order Placed Successfully",
                             'Order Id : ${widget.order.orderId}',
                             shopMap[widget.order.shopId].token);

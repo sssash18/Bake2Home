@@ -21,7 +21,11 @@ class PushNotification{
   Future<void> init() async{
     if(!_initialized){
       firebaseMessaging.requestNotificationPermissions();
-      firebaseMessaging.configure();
+      firebaseMessaging.configure(
+        onMessage: (data){
+          
+        }
+      );
       firebaseMessaging.onTokenRefresh.last.then((value){
         DatabaseService().updateToken(value);
       });

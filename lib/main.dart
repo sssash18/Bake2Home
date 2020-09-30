@@ -38,6 +38,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     return MaterialApp(
+      navigatorKey: navigatorKey,
       routes: {
         '/profile': (BuildContext context) => VendorProfile(),
       },

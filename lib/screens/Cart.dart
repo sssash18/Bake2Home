@@ -591,7 +591,7 @@ class _CartState extends State<Cart> {
                       bool rs = await DatabaseService().createOrder(order);
                       await pr.hide();
                       if (rs) {
-                        await PushNotification().pushMessagewithNewOrder(
+                        await pushNotification.pushMessagewithNewOrder(
                             'New Order Request',
                             'Request from ${currentUser.name}',
                             shop.token);
