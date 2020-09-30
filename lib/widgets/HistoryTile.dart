@@ -52,7 +52,7 @@ class _HistoryTileState extends State<HistoryTile> {
           child: Row(
             children: [
               Icon(
-                Icons.clear,
+                Icons.cancel,
                 color: white,
               ),
               Text("Cancel", style: TextStyle(color: white)),

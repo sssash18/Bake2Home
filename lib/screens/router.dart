@@ -18,7 +18,7 @@ class Router extends StatefulWidget {
   _RouterState createState() => _RouterState();
 }
 
-class _RouterState extends State<Router> with WidgetsBindingObserver{
+class _RouterState extends State<Router> with WidgetsBindingObserver {
   Connectivity _connectivity;
   StreamSubscription<ConnectivityResult> subs;
   bool internetStatus = true;
@@ -110,13 +110,15 @@ class _RouterState extends State<Router> with WidgetsBindingObserver{
     await getSlides();
     await getShops();
     await getTopPick();
-    await getUser();
+    bool done = false;
+    await getUser().then((value) => done = true).catchError((e) {
+      done = false;
+    });
     await getCategories();
-
     getDeliveryCharges();
     // await getCardDetails();
 
-    _auth.currentUser != null
+    (_auth.currentUser != null && done)
         ? Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (BuildContext context) => HomePage()))
         : Navigator.of(context).pushReplacement(
@@ -135,6 +137,9 @@ class _RouterState extends State<Router> with WidgetsBindingObserver{
           .catchError((e) {
         print(e.toString());
       });
+      if (user == null) {
+        return false;
+      }
       currentUserID = uid;
       currentUser = MyUser(
           uid: uid,
@@ -145,12 +150,13 @@ class _RouterState extends State<Router> with WidgetsBindingObserver{
           contact: user.data()['contact'],
           token: user.data()['token']);
       await getCartDetails(uid);
+      return true;
+    } else {
+      return false;
     }
-
-    return true;
   }
 
-  Future<bool> getSlides() async{
+  Future<bool> getSlides() async {
     bool rs = false;
     await slidesCollection.doc('slides').get().then((value) {
       value.data().forEach((key, value) {
@@ -266,7 +272,7 @@ class _RouterState extends State<Router> with WidgetsBindingObserver{
         // });
       }
     });
-  }  
+  }
 
   // Future<void> initDynamicLinks() async {
   //   final PendingDynamicLinkData link =

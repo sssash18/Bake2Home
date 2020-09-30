@@ -40,7 +40,8 @@ class _CartState extends State<Cart> {
   double cakeQuantity;
   int cakeCount;
   final cartKey = GlobalKey<ScaffoldState>();
-
+  bool pickupValue = false;
+  Shop shop;
   @override
   void initState() {
     // TODO: implement initState
@@ -53,9 +54,7 @@ class _CartState extends State<Cart> {
     cakeQuantity = 0;
     subtotal = 0.0;
     internetStatus = true;
-    cartMap.forEach((key, value) {
-     
-     });
+    cartMap.forEach((key, value) {});
     _connectivity = Connectivity();
     currentUser.addresses.keys.forEach((element) {
       print(currentUser.addresses[element]['address']);
@@ -91,7 +90,9 @@ class _CartState extends State<Cart> {
   }
 
   double calculateDeliveryCharges(double cakeQuantity) {
-    if (cakeQuantity <= 2) {
+    if (pickupValue) {
+      delCharges = 0;
+    } else if (cakeQuantity <= 2) {
       delCharges = delChargesList[0];
     } else {
       if (cakeQuantity > 2) {
@@ -115,7 +116,7 @@ class _CartState extends State<Cart> {
 
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width - 20;
-    Shop shop;
+
     return StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('Users')
@@ -130,6 +131,7 @@ class _CartState extends State<Cart> {
             cakeCount = 0;
             subtotal = 0.0;
             delCharges = delChargesList.first;
+            shop = shopMap[cartMap['shopId']];
             cartMap.keys
                 .where((element) => element != cartMap['shopId'])
                 .forEach((element) {
@@ -141,7 +143,7 @@ class _CartState extends State<Cart> {
                       cartMap[element]['quantity'] * cartMap[element]['size'];
                   cakeCount += cartMap[element]['quantity'];
                 }
-                print("XCCC" + '$cakeQuantity');
+                print('asdfasfasfasffas $cakeCount');
               }
             });
             calculateDeliveryCharges(cakeQuantity);
@@ -230,17 +232,18 @@ class _CartState extends State<Cart> {
                                                 itemBuilder:
                                                     (BuildContext context,
                                                         int index) {
-                                                  shop = shopMap[shopMap.keys
-                                                      .firstWhere((element) =>
-                                                          element ==
-                                                          cartMap['shopId'])];
+                                                  // shop = shopMap[shopMap.keys
+                                                  //     .firstWhere((element) =>
+                                                  //         element ==
+                                                  //         cartMap['shopId'])];
 
+                                                  print('mys hops uis $shop');
                                                   return CartTile(
                                                     item: cartMap[cartMap.keys
                                                         .where((element) =>
                                                             element != 'shopId')
                                                         .elementAt(index)],
-                                                    shopName: shop.shopName,
+                                                    shop: shop,
                                                     vid: cartMap.keys
                                                         .where((element) =>
                                                             element != 'shopId')
@@ -251,99 +254,8 @@ class _CartState extends State<Cart> {
                                         )
                                       : Expanded(child: Container()),
                                   (cartMap != null && cartMap.isNotEmpty)
-                                      ? Container(
-                                          height: height * 0.16,
-                                          width: width,
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 10.0, vertical: 5.0),
-                                          decoration: BoxDecoration(
-                                            gradient: LinearGradient(
-                                                begin: Alignment.topCenter,
-                                                end: Alignment.bottomCenter,
-                                                colors: [
-                                                  Color(0xffeaafc8),
-                                                  Color(0xff654ea3)
-                                                ]),
-                                            borderRadius:
-                                                BorderRadius.circular(border),
-                                          ),
-                                          child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: <Widget>[
-                                                Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: <Widget>[
-                                                      Text('SubTotal',
-                                                          style: TextStyle(
-                                                              color: white,
-                                                              fontSize: 18.0,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold)),
-                                                      Text('\u20B9 $subtotal',
-                                                          style: TextStyle(
-                                                              color: white,
-                                                              fontSize: 18.0,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold)),
-                                                    ]),
-                                                Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: <Widget>[
-                                                      Text(
-                                                        'Delivery charges',
-                                                        style: TextStyle(
-                                                          color: white,
-                                                          fontSize: 12.0,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                      Text(
-                                                        '$delCharges',
-                                                        style: TextStyle(
-                                                          color: white,
-                                                          fontSize: 12.0,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                    ]),
-                                                Container(
-                                                  child: ButtonTheme(
-                                                    minWidth: double.infinity,
-                                                    child: FlatButton(
-                                                      shape: RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      border)),
-                                                      color: Colors.white,
-                                                      textColor: base,
-                                                      child: Text(
-                                                          'Checkout (\u20B9 ${subtotal + delCharges})'),
-                                                      onPressed: () async {
-                                                        await showBottomSheet(
-                                                            context,
-                                                            delTime,
-                                                            _date,
-                                                            _time,
-                                                            _selectedAddress,
-                                                            _addresses,
-                                                            subtotal,
-                                                            shop);
-                                                      },
-                                                    ),
-                                                  ),
-                                                )
-                                              ]),
-                                        )
+                                      ? finalDetails(
+                                          height, width, context, shop)
                                       : SizedBox.shrink()
                                 ]),
                               )
@@ -359,6 +271,107 @@ class _CartState extends State<Cart> {
         });
   }
 
+  Container finalDetails(
+      double height, double width, BuildContext context, Shop shop) {
+    return Container(
+      height: height * 0.18,
+      width: width,
+      padding: EdgeInsets.symmetric(horizontal: 10.0),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xffeaafc8), Color(0xff654ea3)]),
+        borderRadius: BorderRadius.circular(border),
+      ),
+      child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10.0),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text('SubTotal',
+                        style: TextStyle(
+                            color: white,
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.bold)),
+                    Text('\u20B9 $subtotal',
+                        style: TextStyle(
+                            color: white,
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.bold)),
+                  ]),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 10.0),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text('Pickup',
+                        style: TextStyle(
+                            color: white,
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.bold)),
+                    Container(
+                      height: height * 0.02,
+                      child: Switch(
+                        value: pickupValue,
+                        activeColor: base,
+                        onChanged: (val) {
+                          setState(() {
+                            pickupValue = val;
+                          });
+                        },
+                      ),
+                    )
+                  ]),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10.0),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      'Delivery charges',
+                      style: TextStyle(
+                        color: white,
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      '\u20B9 $delCharges',
+                      style: TextStyle(
+                        color: white,
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ]),
+            ),
+            Container(
+              child: ButtonTheme(
+                minWidth: double.infinity,
+                child: FlatButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(border)),
+                  color: Colors.white,
+                  textColor: base,
+                  child: Text('Checkout (\u20B9 ${subtotal + delCharges})'),
+                  onPressed: () async {
+                    await showBottomSheet(context, delTime, _date, _time,
+                        _selectedAddress, _addresses, subtotal, shop);
+                  },
+                ),
+              ),
+            )
+          ]),
+    );
+  }
+
   showBottomSheet(
       BuildContext context,
       DateTime delTime,
@@ -369,10 +382,31 @@ class _CartState extends State<Cart> {
       double subtotal,
       Shop shop) async {
     print(_selectedAddress);
+    int makingTime = 0;
     showModalBottomSheet(
         context: context,
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(border)),
+        isDismissible: false,
         builder: (BuildContext context) {
           return StatefulBuilder(builder: (BuildContext context, setState) {
+            cartMap.forEach((key, value) {
+              if (key != 'shopId') {
+                Map<String, dynamic> items = cartMap[key];
+                if (items['itemCategory'] == "cake") {
+                  makingTime = max(makingTime, items['minTime']);
+                }
+              }
+            });
+            print(cakeCount);
+            if (cakeCount <= 2) {
+              makingTime = makingTime;
+            } else if (cakeCount > 2 && cakeCount < 5) {
+              makingTime = 2 * makingTime;
+            } else if (cakeCount >= 5) {
+              makingTime = 3 * makingTime;
+            }
+            print(makingTime);
             return Column(children: <Widget>[
               SizedBox(
                 height: MediaQuery.of(context).size.height / 20,
@@ -430,6 +464,9 @@ class _CartState extends State<Cart> {
                         int startInMinutes =
                             startTime.hour * 60 + startTime.minute;
                         int endInMinutes = endTime.hour * 60 + endTime.minute;
+                        int makingInMinutes = makingTime * 60;
+                        nowInMinutes += makingInMinutes;
+                        print('$nowInMinutes  $makingInMinutes');
                         if (timeInMinutes >= startInMinutes &&
                             timeInMinutes <= endInMinutes) {
                           if (delTime.day == DateTime.now().day &&
@@ -443,8 +480,8 @@ class _CartState extends State<Cart> {
                                 _time = time.format(context);
                               });
                             } else {
-                              showGenDialog(
-                                  context, "Please select valid time");
+                              showGenDialog(context,
+                                  "Please select valid time accordingly to baking the cake");
                             }
                           } else {
                             setState(() {
@@ -486,78 +523,99 @@ class _CartState extends State<Cart> {
               SizedBox(
                 height: MediaQuery.of(context).size.height / 40,
               ),
-              FlatButton.icon(
-                color: base,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(border),
-                ),
-                onPressed: () async {
-                  pr = ProgressDialog(context,
-                      type: ProgressDialogType.Normal,
-                      isDismissible: true,
-                      showLogs: true);
-                  pr.style(
-                      message: 'Preparing Your Order...',
-                      borderRadius: 10.0,
-                      backgroundColor: Colors.white,
-                      progressWidget:
-                          Center(child: CircularProgressIndicator()),
-                      elevation: 10.0,
-                      insetAnimCurve: Curves.easeInOut,
-                      progress: 0.0,
-                      maxProgress: 100.0,
-                      progressTextStyle: TextStyle(
-                          color: Colors.black,
-                          fontSize: 13.0,
-                          fontWeight: FontWeight.w400),
-                      messageTextStyle: TextStyle(
-                          color: Colors.black,
-                          fontSize: 19.0,
-                          fontWeight: FontWeight.w600));
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  FlatButton.icon(
+                    color: Colors.grey,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(border),
+                    ),
+                    onPressed: () async {
+                      Navigator.pop(context);
+                    },
+                    icon: Icon(
+                      Icons.cancel,
+                      color: white,
+                    ),
+                    label: Text('Cancel', style: TextStyle(color: white)),
+                  ),
+                  FlatButton.icon(
+                    color: base,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(border),
+                    ),
+                    onPressed: () async {
+                      pr = ProgressDialog(context,
+                          type: ProgressDialogType.Normal,
+                          isDismissible: true,
+                          showLogs: true);
+                      pr.style(
+                          message: 'Preparing Your Order...',
+                          borderRadius: 10.0,
+                          backgroundColor: Colors.white,
+                          progressWidget:
+                              Center(child: CircularProgressIndicator()),
+                          elevation: 10.0,
+                          insetAnimCurve: Curves.easeInOut,
+                          progress: 0.0,
+                          maxProgress: 100.0,
+                          progressTextStyle: TextStyle(
+                              color: Colors.black,
+                              fontSize: 13.0,
+                              fontWeight: FontWeight.w400),
+                          messageTextStyle: TextStyle(
+                              color: Colors.black,
+                              fontSize: 19.0,
+                              fontWeight: FontWeight.w600));
 
-                  // print(delTime);
-                  int _otp = Random().nextInt(9999);
-                  while (_otp < 1000) {
-                    _otp *= 10;
-                  }
-                  Order order = Order(
-                      userId: currentUserID,
-                      shopId: currentShopId,
-                      status: "PENDING",
-                      otp: _otp,
-                      paymentType: "UPI",
-                      amount: subtotal + delCharges,
-                      delCharges: delCharges,
-                      pickUp: false,
-                      orderTime: Timestamp.now(),
-                      deliveryTime: Timestamp.fromDate(delTime),
-                      deliveryAddress: _selectedAddress,
-                      items: cartMap);
-                  await pr.show();
-                  bool rs = await DatabaseService().createOrder(order);
-                  await pr.hide();
-                  if (rs) {
-                    await PushNotification().pushMessagewithNewOrder('New Order Request',
-                        'Request from ${currentUser.name}', shop.token);
-                    await Navigator.push(context,
-                        MaterialPageRoute(builder: (BuildContext context) {
-                      return Checkout(order: order);
-                    }));
-                    Navigator.pop(context);
-                  } else {
-                    Navigator.pop(context);
-                    showSnackBar(
-                        cartKey, "Cannot Prepare Order... try again later");
-                  }
-                  // } else {
-                  //   showGenDialog(context, "Please fill essential Details");
-                  // }
-                },
-                icon: Icon(
-                  Icons.done,
-                  color: white,
-                ),
-                label: Text('Confirm', style: TextStyle(color: white)),
+                      // print(delTime);
+                      int _otp = Random().nextInt(9999);
+                      while (_otp < 1000) {
+                        _otp *= 10;
+                      }
+                      Order order = Order(
+                          userId: currentUserID,
+                          shopId: currentShopId,
+                          status: "PENDING",
+                          otp: _otp,
+                          paymentType: "UPI",
+                          amount: subtotal + delCharges,
+                          delCharges: delCharges,
+                          pickUp: pickupValue,
+                          orderTime: Timestamp.now(),
+                          deliveryTime: Timestamp.fromDate(delTime),
+                          deliveryAddress: _selectedAddress,
+                          items: cartMap);
+                      await pr.show();
+                      bool rs = await DatabaseService().createOrder(order);
+                      await pr.hide();
+                      if (rs) {
+                        await PushNotification().pushMessagewithNewOrder(
+                            'New Order Request',
+                            'Request from ${currentUser.name}',
+                            shop.token);
+                        await Navigator.push(context,
+                            MaterialPageRoute(builder: (BuildContext context) {
+                          return Checkout(order: order);
+                        }));
+                        Navigator.pop(context);
+                      } else {
+                        Navigator.pop(context);
+                        showSnackBar(
+                            cartKey, "Cannot Prepare Order... try again later");
+                      }
+                      // } else {
+                      //   showGenDialog(context, "Please fill essential Details");
+                      // }
+                    },
+                    icon: Icon(
+                      Icons.done,
+                      color: white,
+                    ),
+                    label: Text('Confirm', style: TextStyle(color: white)),
+                  ),
+                ],
               )
             ]);
           });
