@@ -34,21 +34,32 @@ class ItemTile extends StatelessWidget {
                   color: white,
                 ),
                 child: Column(
+                  
                   children: <Widget>[
                     Container(
-                      margin: EdgeInsets.fromLTRB(0, 15.0, 0, 0),
-                      child: Text(model.itemName,
-                          textAlign: TextAlign.right,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 18.0)),
-                    ),
-                    Container(
+                        margin: EdgeInsets.fromLTRB(0, 15.0, 0, 0),
+                        child: Text(model.itemName,
+                            textAlign: TextAlign.right,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 18.0)),
+                        ),
+                    
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                        Container(
                       margin: EdgeInsets.fromLTRB(0, 10.0, 0, 0),
                       child: Text('\u20B9 ${model.variants[model.variants.keys.elementAt(0)]['price']}',
                           // textAlign: TextAlign.center,
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 16.0)),
                     ),
+                        Container(
+                        margin: EdgeInsets.fromLTRB(0, 15.0, 0, 0),
+                        child: Image.asset("assets/images/veg.png",height: 20,width: 20,),),
+                        ]
+                    ),
+                    
                   ],
                 ),
                 margin: EdgeInsets.fromLTRB(90.0, 15.0, 15.0, 15.0),

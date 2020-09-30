@@ -224,7 +224,7 @@ class _HistoryTileState extends State<HistoryTile> {
                 Container(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    '\u20B9 ${widget.order.amount + 50}',
+                    '\u20B9 ${widget.order.amount}',
                   ),
                 ),
               ],
