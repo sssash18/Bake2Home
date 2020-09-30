@@ -11,13 +11,12 @@ import 'package:bake2home/constants.dart';
 import 'package:bake2home/screens/Cart.dart';
 import 'package:provider/provider.dart';
 
-
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with WidgetsBindingObserver{
+class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   int _index = 0;
 
   void _incrementTab(index) {
@@ -27,7 +26,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver{
     });
   }
 
-  void initState(){
+  void initState() {
     super.initState();
     pushNotification.init();
     WidgetsBinding.instance.addObserver(this);
@@ -43,9 +42,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver{
   Widget build(BuildContext context) {
     return Scaffold(
         body: StreamProvider<bool>.value(
-          value: DatabaseService().status,
-          child: _children[_index]
-        ),
+            value: DatabaseService().status, child: _children[_index]),
         bottomNavigationBar: FloatingNavbar(
           onTap: (index) {
             _incrementTab(index);
@@ -72,43 +69,42 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver{
           ],
         ));
   }
+
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) async{
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
-      await initDynamicLinks();          
+      await initDynamicLinks();
       //do your stuff
     }
   }
-  Future<void> initDynamicLinks() async {
 
+  Future<void> initDynamicLinks() async {
     final PendingDynamicLinkData link =
         await FirebaseDynamicLinks.instance.getInitialLink();
     _handleDeepLink(link);
     final Uri deeplink = link?.link;
     print("LLLLL" + deeplink.toString());
     FirebaseDynamicLinks.instance.onLink(
-        onSuccess: (PendingDynamicLinkData link) async {      
+        onSuccess: (PendingDynamicLinkData link) async {
       _handleDeepLink(link);
     }, onError: (OnLinkErrorException e) async {
       print('onLinkError');
       print(e.message);
     });
-    
   }
 
-  void _handleDeepLink(PendingDynamicLinkData link){
+  void _handleDeepLink(PendingDynamicLinkData link) {
     print("link:  " + '${link?.link}');
     Uri deepLink = link?.link;
     if (deepLink != null) {
-        final String param = deepLink.queryParameters['Id'];
-        print(param);
-        Shop shop = shopMap[param];
-        Navigator.pushNamed(context, deepLink.path,arguments: shop);
-        print(shop.shopName);
-        print(deepLink.path);
-        print('cant Handle');
+      final String param = deepLink.queryParameters['Id'];
+      print(param);
+      Shop shop = shopMap[param];
+      Navigator.pushNamed(context, deepLink.path, arguments: shop);
+      print(shop.shopName);
+      print(deepLink.path);
+      print('cant Handle');
     }
   }
-
 }

@@ -202,6 +202,16 @@ class _RegisterAddressState extends State<RegisterAddress> {
     return locationPresent
         ? FlatButton.icon(
             onPressed: () async {
+              double startlat, startlong;
+              await Geolocator()
+                  .placemarkFromAddress("CNI Church Katju Nagar Ratlam")
+                  .then((value) {
+                startlat = value[0].position.latitude;
+                startlong = value[0].position.longitude;
+              });
+              // if (await Geolocator().distanceBetween(startlat, startlong,
+              //         _newaddress['lat'], _newaddress['long']) <=
+              //     2759.630859375) {
               setState(() {
                 _loading = true;
                 currentUser.addresses.clear();
@@ -209,6 +219,12 @@ class _RegisterAddressState extends State<RegisterAddress> {
                     Timestamp.now().microsecondsSinceEpoch.toString(),
                     () => newAddress);
               });
+
+              // else {
+              //   showSnackBar(
+              //       registerMapKey, "Service not available at this address");
+              // }
+              // await Future.delayed(Duration(seconds: 1));
               Navigator.pop(context);
             },
             icon: Icon(
