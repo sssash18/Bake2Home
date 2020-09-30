@@ -12,6 +12,7 @@ import 'package:bake2home/widgets/HomeHeading.dart';
 import 'package:bake2home/widgets/HomeTile.dart';
 import 'package:bake2home/widgets/PastryTile.dart';
 import 'package:bake2home/widgets/RecipeTile.dart';
+import 'package:bake2home/widgets/Review.dart';
 import 'package:bake2home/widgets/VendorList.dart';
 import 'package:bake2home/screens/VendorListPage.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -80,22 +81,29 @@ class _MainPageState extends State<MainPage> {
                 //     print(cartMap);
                 //   },
                 // ),
-                Container(
-                  margin: EdgeInsets.fromLTRB(
-                      MediaQuery.of(context).size.width / 100,
-                      0,
-                      MediaQuery.of(context).size.width / 80,
-                      0),
-                  child: IconButton(
-                    icon: icon,
-                    onPressed: () {
-                      showSearch(context: context, delegate: searchDelegate());
-                    },
+                IconButton(
+                  icon: icon,
+                  onPressed: () {
+                    showSearch(context: context, delegate: searchDelegate());
+                  },
+                ),
+                IconButton(
+                  icon: Icon(
+                    Icons.receipt,
+                    color: black,
                   ),
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return Review(
+                            shop: shopMap['emYlLuBFbRcw1hhlitvGuePI7Rh1'],
+                          );
+                        });
+                  },
                 )
               ],
             ),
-
             body: SingleChildScrollView(
               child: Column(
                 children: <Widget>[

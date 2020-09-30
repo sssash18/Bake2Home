@@ -18,25 +18,11 @@ class _OrderPendingState extends State<OrderPending> {
   @override
   Widget build(BuildContext context) {
     List<Order> orders = Provider.of<List<Order>>(context) ?? [];
-    // if(!activeTimer){
-    //   timer = StopWatchTimer(
-    //     onChangeRawSecond: (val){
-    //       if(val == 90){
-    //         timer.onExecute.add(StopWatchExecute.stop);
-    //         activeTimer = false;
-    //       }
-    //       print(val);
-    //     }
-    //   );
-    //   timer.onExecute.add(StopWatchExecute.start);
-    //   activeTimer = true;
-    // }
     Order order;
     if (orders.isNotEmpty) {
       order = orders[0];
       if (order.status != "PENDING") {
         controller.sink.add(true);
-        // this.widget.callBackToOrderAccepted();
       }
     }
 
@@ -58,8 +44,6 @@ class _OrderPendingState extends State<OrderPending> {
               isReverse: true,
               onComplete: () {
                 Order order = orders[0];
-                // showGenDialog(
-                //     context, "Sorry your order was missed... try again later");
                 if (order.status == 'PENDING') {
                   order.status = 'MISSED';
                   controller.sink.add(false);

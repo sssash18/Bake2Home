@@ -1,3 +1,4 @@
+import 'package:bake2home/chatApp/screens/chatwithfriend.dart';
 import 'package:bake2home/services/PushNotification.dart';
 import 'package:bake2home/services/database.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -19,6 +20,37 @@ class HistoryTile extends StatefulWidget {
 
 class _HistoryTileState extends State<HistoryTile> {
   ProgressDialog pr;
+
+  Widget chatButton(double width) {
+    return InkWell(
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return ChatWithFriend(
+            order: this.widget.order,
+          );
+        }));
+      },
+      child: Container(
+          height: width * 0.08,
+          width: width * 0.25,
+          padding: EdgeInsets.symmetric(horizontal: 2.0),
+          decoration: BoxDecoration(
+            color: base,
+            borderRadius: BorderRadius.circular(border),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Icon(
+                Icons.message,
+                color: white,
+              ),
+              Text("Chat", style: TextStyle(color: white)),
+            ],
+          )),
+    );
+  }
+
   Widget _cancelButton(width) {
     return InkWell(
       onTap: () async {
@@ -52,7 +84,7 @@ class _HistoryTileState extends State<HistoryTile> {
           child: Row(
             children: [
               Icon(
-                Icons.clear,
+                Icons.cancel,
                 color: white,
               ),
               Text("Cancel", style: TextStyle(color: white)),
@@ -108,6 +140,9 @@ class _HistoryTileState extends State<HistoryTile> {
       case "CANCELLED":
         _decisionColor = Colors.red;
         break;
+      case "REJECTED":
+        _decisionColor = Colors.teal;
+        break;
     }
     return Container(
       width: width,
@@ -153,6 +188,10 @@ class _HistoryTileState extends State<HistoryTile> {
                           fontWeight: FontWeight.bold,
                           color: white)),
                 ),
+                (widget.order.status == "PENDING" ||
+                        widget.order.status == "ACCEPTED")
+                    ? chatButton(width)
+                    : SizedBox.shrink(),
                 (widget.order.status == "PENDING" ||
                         widget.order.status == "ACCEPTED")
                     ? _cancelButton(width)

@@ -22,6 +22,7 @@ class AuthService {
     }).catchError((e) {
       // _user = null;
       // showSnackBar(loginKey, 'Invalid Credentials');
+      print('-------------------------------->');
       print(e);
     });
 
@@ -35,25 +36,27 @@ class AuthService {
     } else {
       user = null;
     }
+    print('<--------------------------> $user');
     currentUser = user;
     currentUserID = currentUser.uid;
-    bool rs = await DatabaseService().updateToken(currentUserID);
-    if (rs) {
-      if (_user.additionalUserInfo.isNewUser) {
-        await pr.hide();
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (BuildContext context) => Register(
-                uid: _user.user.uid, contact: _user.user.phoneNumber)));
-      } else {
-        await getUser(currentUserID);
-        await pr.hide();
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (BuildContext context) => HomePage()));
-      }
+    if (_user.additionalUserInfo.isNewUser) {
+      await pr.hide();
+      Navigator.of(context).popUntil((route) => route.isFirst);
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (BuildContext context) =>
+              Register(uid: _user.user.uid, contact: _user.user.phoneNumber)));
+    } else {
+      bool rs = await DatabaseService().updateToken(currentUserID);
+      await getUser(currentUserID);
+      await pr.hide();
+      Navigator.of(context).popUntil((route) => route.isFirst);
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (BuildContext context) => HomePage()));
     }
   }
 
   Future<bool> getUser(String userId) async {
+    print('------------->$userId');
     DocumentSnapshot user = await FirebaseFirestore.instance
         .collection("Users")
         .doc(userId)
@@ -134,7 +137,6 @@ class AuthService {
                           style: TextStyle(
                               color: black, fontWeight: FontWeight.bold),
                         ),
-                        
                         OTPTextField(
                           keyboardType: TextInputType.number,
                           length: 6,

@@ -1,3 +1,4 @@
+import 'package:bake2home/functions/shop.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -6,8 +7,9 @@ import 'package:progress_dialog/progress_dialog.dart';
 
 class CartTile extends StatefulWidget {
   Map item;
-  String shopName, vid;
-  CartTile({this.item, this.shopName, this.vid});
+  Shop shop;
+  String vid;
+  CartTile({this.item, this.shop, this.vid});
 
   @override
   _CartTileState createState() => _CartTileState();
@@ -22,6 +24,8 @@ class _CartTileState extends State<CartTile> {
     // TODO: implement initState
     super.initState();
     quantity = this.widget.item['quantity'];
+    print(this.widget.shop.cookTime);
+    print(this.widget.item);
   }
 
   @override
@@ -84,7 +88,7 @@ class _CartTileState extends State<CartTile> {
                       ),
                     ),
                     Text(
-                      'by ${widget.shopName}',
+                      'by ${widget.shop.shopName}',
                       style: TextStyle(fontSize: 10.0),
                     ),
                     Text(
