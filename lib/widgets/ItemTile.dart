@@ -56,7 +56,7 @@ class ItemTile extends StatelessWidget {
                     ),
                         Container(
                         margin: EdgeInsets.fromLTRB(0, 15.0, 0, 0),
-                        child: Image.asset("assets/images/veg.png",height: 20,width: 20,),),
+                        child: Image.asset(model.veg==true ? "assets/images/veg.png" : "assets/images/noon.png",height: 20,width: 20,),),
                         ]
                     ),
                     

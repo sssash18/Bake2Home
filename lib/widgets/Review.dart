@@ -67,6 +67,7 @@ class _ReviewState extends State<Review> with SingleTickerProviderStateMixin {
                         style: TextStyle(color: base, fontSize: 15.0),
                       ),
                       RatingBar(
+                        initialRating: 3.0,
                         itemBuilder: (BuildContext context, int index) {
                           return Icon(
                             Icons.star,
