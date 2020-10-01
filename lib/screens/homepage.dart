@@ -70,41 +70,5 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         ));
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) async {
-    super.didChangeAppLifecycleState(state);
-    if (state == AppLifecycleState.resumed) {
-      await initDynamicLinks();
-      //do your stuff
-    }
-  }
-
-  Future<void> initDynamicLinks() async {
-    final PendingDynamicLinkData link =
-        await FirebaseDynamicLinks.instance.getInitialLink();
-    _handleDeepLink(link);
-    final Uri deeplink = link?.link;
-    print("LLLLL" + deeplink.toString());
-    FirebaseDynamicLinks.instance.onLink(
-        onSuccess: (PendingDynamicLinkData link) async {
-      _handleDeepLink(link);
-    }, onError: (OnLinkErrorException e) async {
-      print('onLinkError');
-      print(e.message);
-    });
-  }
-
-  void _handleDeepLink(PendingDynamicLinkData link) {
-    print("link:  " + '${link?.link}');
-    Uri deepLink = link?.link;
-    if (deepLink != null) {
-      final String param = deepLink.queryParameters['Id'];
-      print(param);
-      Shop shop = shopMap[param];
-      Navigator.pushNamed(context, deepLink.path, arguments: shop);
-      print(shop.shopName);
-      print(deepLink.path);
-      print('cant Handle');
-    }
-  }
+  
 }

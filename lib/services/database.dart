@@ -233,10 +233,12 @@ class DatabaseService {
       'compensation': compensationAmount,
     }).then((value) {
       rs = true;
-      PushNotification().pushMessagewithCancel(
+      pushNotification.pushMessagewithCancel(
           "Order ${order.orderId} cancelled by ${currentUser.name}",
-          "Compensation Amount: $compensationAmount",
-          shopMap[order.shopId].token);
+          "Compensation Amount: ${compensationAmount.truncate()}",
+          shopMap[order.shopId].token,
+          order.orderId)
+          ;
     }).catchError((e) {
       print(e.toString());
       rs = false;

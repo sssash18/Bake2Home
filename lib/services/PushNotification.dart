@@ -21,7 +21,11 @@ class PushNotification{
   Future<void> init() async{
     if(!_initialized){
       firebaseMessaging.requestNotificationPermissions();
-      firebaseMessaging.configure();
+      firebaseMessaging.configure(
+        onMessage: (data){
+          
+        }
+      );
       firebaseMessaging.onTokenRefresh.last.then((value){
         DatabaseService().updateToken(value);
       });
@@ -31,7 +35,7 @@ class PushNotification{
     
   }
 
-  Future<void> pushMessagewithNewOrder(String title,String body,String token) async{
+  Future<void> pushMessagewithNewOrder(String title,String body,String token,String orderId) async{
     final serverToken = 'AAAATnEOuVU:APA91bEv0ZjHErtQC1lN_-yVorEJrf0YMBpdZiPrShRWSvog7SdUQ_B72yhEfx55i9riKJElt7BnsOi_E88DgrpvCMqilwikJq3gdg9_euNvqi3n7bBs8SaGnJCEbSt4gJr_4dljSA56'; 
     await http.post(
     'https://fcm.googleapis.com/fcm/send',
@@ -51,7 +55,9 @@ class PushNotification{
        'data': <String, dynamic>{
          'click_action': 'FLUTTER_NOTIFICATION_CLICK',
          'id': '1',
-         'status': 'done'
+         'status': 'done',
+         'route' : 'neworder',
+         'orderId' : orderId
        },
        'time_to_live' : 90,
        'to': token
@@ -61,7 +67,7 @@ class PushNotification{
 
    }
 
-  Future<void> pushMessagewithCancel(String title,String body,String token) async{
+  Future<void> pushMessagewithCancel(String title,String body,String token,String orderId) async{
     final serverToken = 'AAAATnEOuVU:APA91bEv0ZjHErtQC1lN_-yVorEJrf0YMBpdZiPrShRWSvog7SdUQ_B72yhEfx55i9riKJElt7BnsOi_E88DgrpvCMqilwikJq3gdg9_euNvqi3n7bBs8SaGnJCEbSt4gJr_4dljSA56'; 
     await http.post(
     'https://fcm.googleapis.com/fcm/send',
@@ -79,6 +85,8 @@ class PushNotification{
        },
        'priority': 'high',
        'data': <String, dynamic>{
+         'route' : 'cancel',
+         'orderId' : orderId,
          'click_action': 'FLUTTER_NOTIFICATION_CLICK',
          'id': '1',
          'status': 'done'

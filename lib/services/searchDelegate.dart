@@ -95,6 +95,7 @@ class searchDelegate extends SearchDelegate<Shop> {
               itemName: itemList[index - shopSearch.length]['itemName'],
               photoUrl: itemList[index - shopSearch.length]['photoUrl'],
               recipe: itemList[index - shopSearch.length]['recipe'],
+              veg: itemList[index - shopSearch.length]['recipe'],
               variants: itemList[index - shopSearch.length]['variants']);
           return ListTile(
             onTap: () {

@@ -226,18 +226,17 @@ class _MainPageState extends State<MainPage> {
                         }),
                   ),
                   Homeheading(
-                    heading: 'Top Picks For You',
+                    heading: "Top Picks for You",
                     showAll: true,
-                    showPage: () {
+                    showPage: (context) {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (BuildContext context) => VendorListPage(
-                                    title: 'Top Picks',
-                                    rated: true,
-                                  )));
+                              builder: (BuildContext context) =>
+                                  VendorListPage(title: "Top Rated",rated: true)));
                     },
                   ),
+                  
                   Container(
                       margin: EdgeInsets.fromLTRB(
                           MediaQuery.of(context).size.width / 30,

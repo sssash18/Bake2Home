@@ -79,19 +79,19 @@ class _RouterState extends State<Router> with WidgetsBindingObserver {
   Future<void> initDynamicLinks() async {
     final PendingDynamicLinkData link =
         await FirebaseDynamicLinks.instance.getInitialLink();
-    _handleDeepLink(link);
+    _handleDeepLink(link,navigatorKey.currentContext);
     final Uri deeplink = link?.link;
     print("LLLLL" + deeplink.toString());
     FirebaseDynamicLinks.instance.onLink(
         onSuccess: (PendingDynamicLinkData link) async {
-      _handleDeepLink(link);
+      _handleDeepLink(link,navigatorKey.currentContext);
     }, onError: (OnLinkErrorException e) async {
       print('onLinkError');
       print(e.message);
     });
   }
 
-  void _handleDeepLink(PendingDynamicLinkData link) {
+  void _handleDeepLink(PendingDynamicLinkData link,BuildContext context) {
     print("link:  " + '${link?.link}');
     Uri deepLink = link?.link;
     if (deepLink != null) {
@@ -302,4 +302,11 @@ class _RouterState extends State<Router> with WidgetsBindingObserver {
   //     print('cant Handle');
   //   }
   // }
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if(state == AppLifecycleState.resumed){
+      print('state: '+ state.toString());
+      initDynamicLinks();      
+    }
+  }
 }
