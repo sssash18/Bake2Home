@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:otp_text_field/otp_text_field.dart';
 import 'package:bake2home/functions/user.dart' as LocalUser;
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:sms_autofill/sms_autofill.dart';
+
 
 class AuthService {
   UserCredential _user;
@@ -113,6 +115,8 @@ class AuthService {
           print("EEEEE" + e.toString());
         },
         codeSent: (verificationId, resendToken) async {
+          String sign = await SmsAutoFill().getAppSignature;
+          await SmsAutoFill().listenForCode;
           print("Sent COde");
           await pr.hide();
           showModalBottomSheet(
@@ -137,13 +141,14 @@ class AuthService {
                           style: TextStyle(
                               color: black, fontWeight: FontWeight.bold),
                         ),
-                        OTPTextField(
-                          keyboardType: TextInputType.number,
-                          length: 6,
-                          width: MediaQuery.of(context).size.width / 1.3,
-                          onCompleted: (val) {
-                            otp = val;
-                          },
+                        Container(
+                            margin: EdgeInsets.symmetric(horizontal: 10),
+                            child: PinFieldAutoFill(
+                              currentCode: otp,
+                              onCodeSubmitted: (val){otp = val;},//code submitted callback
+                              onCodeChanged: (val){otp = val;},//code changed callback
+                              codeLength: 6//code length, default 6
+                            ),
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -158,6 +163,7 @@ class AuthService {
                                     color: white, fontWeight: FontWeight.bold),
                               ),
                               onPressed: () async {
+                                SmsAutoFill().unregisterListener();
                                 ProgressDialog pr = ProgressDialog(context,
                                     type: ProgressDialogType.Normal,
                                     isDismissible: true,

@@ -57,6 +57,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           iconSize: 25.0,
           items: [
             FloatingNavbarItem(
+              customWidget: Icon(Icons.link),
               icon: Icons.home,
               title: '',
             ),

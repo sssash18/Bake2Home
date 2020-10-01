@@ -261,12 +261,12 @@ class _HistoryTileState extends State<HistoryTile> {
                 Container(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    '\u20B9 ${widget.order.amount}',
+                    '\u20B9 ${widget.order.amount.toInt()}',
                   ),
                 ),
               ],
             ),
-            Row(
+            widget.order.status=="PAID" ? Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
@@ -283,7 +283,25 @@ class _HistoryTileState extends State<HistoryTile> {
                   ),
                 ),
               ],
-            ),
+            ):Container(),
+            widget.order.status=="PAID" ? Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "COD (To Pay)",
+                    style: TextStyle(color: Colors.grey[700]),
+                  ),
+                ),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    '\u20B9 ${widget.order.codAmount.toInt()}',
+                  ),
+                ),
+              ],
+            ) : Container(),
           ],
         ));
   }

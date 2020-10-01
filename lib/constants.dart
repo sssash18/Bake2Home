@@ -21,6 +21,7 @@ Color pastry = Colors.grey[200];
 Color grad1 = Color(0xffeaafc8);
 Color grad2 = Color(0xff654ea3);
 Color black = Colors.black;
+int badge1 = 0,badge2 = 0,badge = 3,badge4 = 0;
 double head = 20.0;
 double head2 = 30.0;
 double textSize = 18.0;

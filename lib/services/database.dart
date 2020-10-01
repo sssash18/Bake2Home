@@ -313,6 +313,7 @@ class DatabaseService {
             deliveryTime: e.data()['deliveryTime'],
             deliveryAddress: e.data()['deliveryAddress'],
             items: e.data()['items'],
+            codAmount: (e.data()['codAmount'] ?? 0).toDouble(),
             orderId: e.data()['orderId'],
             comments: e.data()['comments']))
         .toList();
