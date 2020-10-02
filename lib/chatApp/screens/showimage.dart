@@ -37,6 +37,17 @@ class _ShowImageState extends State<ShowImage> {
         child: PhotoView(
           backgroundDecoration: BoxDecoration(color: white),
           imageProvider: NetworkImage(url),
+          loadingBuilder: (context, event) {
+            return event != null
+                ? Center(
+                    child: CircularProgressIndicator(
+                      value: event.cumulativeBytesLoaded /
+                          event.expectedTotalBytes,
+                      valueColor: AlwaysStoppedAnimation<Color>(base),
+                    ),
+                  )
+                : Center(child: CircularProgressIndicator());
+          },
         ),
       ),
     );

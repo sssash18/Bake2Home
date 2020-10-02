@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:bake2home/functions/cartItem.dart';
 import 'package:bake2home/functions/customisedItemModel.dart';
+import 'package:bake2home/screens/addCustomProduct.dart';
 import 'package:bake2home/services/database.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -57,6 +58,19 @@ class _ItemPageState extends State<ItemPage> {
         child: Scaffold(
           key: _key,
           resizeToAvoidBottomInset: true,
+          floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.add, color: white),
+            backgroundColor: base,
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddProduct(
+                        shop: shopMap[widget.shopId],
+                        itemType: widget.model.itemCategory),
+                  ));
+            },
+          ),
           body: CustomScrollView(
             slivers: <Widget>[
               SliverToBoxAdapter(

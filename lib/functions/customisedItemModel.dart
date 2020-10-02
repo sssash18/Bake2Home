@@ -4,7 +4,7 @@ class CustomisedItemModel {
   String itemName;
   double ingPrice;
   String photoUrl;
-  int minTime;
+  double minTime;
   String itemCategory;
   String recipe;
   List<String> ingredients, flavours;
