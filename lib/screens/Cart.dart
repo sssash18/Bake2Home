@@ -122,10 +122,8 @@ class _CartState extends State<Cart> {
     print(cartMap.toString());
     bool status = Provider.of<bool>(context) ?? true;
     print(cartMap.toString());
-
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width - 20;
-
     return StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('Users')

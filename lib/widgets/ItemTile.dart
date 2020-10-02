@@ -7,14 +7,16 @@ import 'package:flutter/material.dart';
 class ItemTile extends StatelessWidget {
   CustomisedItemModel model;
   String shopId;
-  
-  ItemTile({this.model,this.shopId});
+
+  ItemTile({this.model, this.shopId});
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => ItemPage(shopId:shopId,model: model)));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ItemPage(shopId: shopId, model: model)));
       },
       child: Container(
         height: 120.0,
@@ -49,8 +51,8 @@ class ItemTile extends StatelessWidget {
                         children: [
                         Container(
                       margin: EdgeInsets.fromLTRB(0, 10.0, 0, 0),
-                      child: Text('\u20B9 ${model.variants[model.variants.keys.elementAt(0)]['price']}',
-                          // textAlign: TextAlign.center,
+                      child: Text(
+                          '\u20B9 ${model.variants[model.variants.keys.elementAt(0)]['price']}',
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 16.0)),
                     ),
@@ -68,8 +70,9 @@ class ItemTile extends StatelessWidget {
             Container(
               margin: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 15.0),
               child: CircleAvatar(
-                backgroundImage:
-                    model.photoUrl != null ? CachedNetworkImageProvider('${model.photoUrl}') : AssetImage("assets/images/cake.jpeg"),
+                backgroundImage: model.photoUrl != null
+                    ? CachedNetworkImageProvider('${model.photoUrl}')
+                    : AssetImage("assets/images/cake.jpeg"),
                 radius: 45.0,
               ),
             ),

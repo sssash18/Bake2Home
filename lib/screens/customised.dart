@@ -1,5 +1,6 @@
 import 'package:bake2home/functions/customisedItemModel.dart';
 import 'package:bake2home/functions/shop.dart';
+import 'package:bake2home/services/database.dart';
 import 'package:bake2home/widgets/ItemTile.dart';
 import 'package:bake2home/widgets/emptyList.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,45 +15,22 @@ class CustomisedItem extends StatefulWidget {
 }
 
 class _CustomisedItemState extends State<CustomisedItem> {
+  List<CustomisedItemModel> list;
   @override
   void initState() {
     super.initState();
+    list = new List();
   }
 
   @override
   Widget build(BuildContext context) {
-    print('************** ${widget.shop.shopId}');
     return StreamBuilder(
-        stream: FirebaseFirestore.instance
-            .collection('Shops')
-            .doc(widget.shop.shopId)
-            .snapshots(),
+        stream: DatabaseService()
+            .getItemList(widget.shop.shopId, widget.itemType, widget.category)
+            .stream,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            Map<String, dynamic> allItems = Map.from(snapshot.data
-                .data()['items'][widget.itemType][widget.category]);
-            List<CustomisedItemModel> list = List();
-            print(snapshot.data.data().toString());
-            if (allItems != null) {
-              allItems.forEach((key, value) {
-                CustomisedItemModel model = CustomisedItemModel(
-                    //availability: value['availability'],
-                    itemId: value['itemId'],
-                    // ingPrice: value['ingPrice'].toDouble(),
-                    ingredients: List<String>.from(value['ingredients']),
-                    itemName: value['itemName'],
-                    itemCategory: value['itemCategory'],
-                    photoUrl: value['photoUrl'],
-                    recipe: value['recipe'],
-
-                    minTime: value['minTime'],
-                    veg: value['veg'],
-                    variants: Map.from(value['variants']),
-                    flavours: List<String>.from(value['flavours']));
-                list.add(model);
-              });
-            }
-
+            list = List.from(snapshot.data);
             return list.isNotEmpty
                 ? ListView.builder(
                     itemCount: list.length,
@@ -63,7 +41,7 @@ class _CustomisedItemState extends State<CustomisedItem> {
                 : EmptyList();
           } else {
             return Center(
-              child: Text("Loading......"),
+              child: CircularProgressIndicator(),
             );
           }
         });

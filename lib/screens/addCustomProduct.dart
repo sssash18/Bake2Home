@@ -197,6 +197,7 @@ class _AddProductState extends State<AddProduct> {
                               'size': cartItemMap.size,
                               'price': cartItemMap.price,
                               'quantity': cartItemMap.quantity,
+                              'flavour': cartItemMap.flavour,
                               'notes': cartItemMap.notes,
                               'photoUrl': cartItemMap.photoUrl,
                               'minTime': cartItemMap.minTime,
