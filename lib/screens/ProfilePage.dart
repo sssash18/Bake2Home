@@ -126,7 +126,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           size: 30.0,
                         ),
                         title: Text(
-                          "Cart",
+                          "Terms and Conditions",
                         )),
                     ListTile(
                         leading: Icon(
@@ -135,7 +135,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           size: 30.0,
                         ),
                         title: Text(
-                          "Settings",
+                          "About",
                         )),
                     ListTile(
                         leading: Icon(

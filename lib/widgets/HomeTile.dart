@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class HomeTile extends StatefulWidget {
-  final double height,width,radius;
+  final double height,width,radius,rating;
   final String title,photo;
   final bool showRating;
-  HomeTile({this.height,this.width,this.radius,this.title,this.photo,this.showRating}) ;
+  HomeTile({this.height,this.width,this.radius,this.title,this.photo,this.showRating,this.rating}) ;
   @override
   _HomeTileState createState() => _HomeTileState();
 }
@@ -69,7 +69,7 @@ class _HomeTileState extends State<HomeTile> {
   Widget _showRatingBar(){
     return RatingBar(
       ignoreGestures: true,
-      initialRating: 3.2,
+      initialRating: 1.2,
       itemSize: 15.0,
       itemCount: 5,
       glow: true,
