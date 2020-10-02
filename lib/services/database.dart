@@ -25,6 +25,10 @@ class DatabaseService {
 
   DatabaseService({this.uid});
 
+  Future<void> getDeliveryToken(){
+    FirebaseFirestore.instance.collection("Delivery").doc('token').get().then((value) => deliveryToken = value.data()['token']);
+  }
+
   Future<bool> updateTransaction(
       Order order, UpiResponse response, double codAmount) async {
     bool rs = false;

@@ -27,6 +27,7 @@ double head2 = 30.0;
 double textSize = 18.0;
 double sideButton = 12.0;
 double border = 20.0;
+String deliveryToken = "";
 Map<String, Shop> shopMap = new Map<String, Shop>();
 Map<String, Shop> topPickMap = new Map<String, Shop>();
 LocalUser.MyUser currentUser;

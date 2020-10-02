@@ -390,7 +390,7 @@ class _CheckoutState extends State<Checkout> {
                     content: FlatButton.icon(
                       onPressed: () async {
                         DatabaseService(uid: currentUserID).emptyCart();
-
+                        pushNotification.pushMessagewithNewOrder("New Order", '', deliveryToken, '123');
                         Navigator.pop(context);
                         Navigator.pop(context);
                           pushNotification.pushMessage(

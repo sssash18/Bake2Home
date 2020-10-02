@@ -1,6 +1,8 @@
 import 'package:bake2home/services/database.dart';
+import 'package:bake2home/widgets/Review.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:bake2home/constants.dart';
@@ -19,12 +21,25 @@ class PushNotification{
   bool _initialized = false;
 
   Future<void> init() async{
+    DatabaseService().getDeliveryToken();
     if(!_initialized){
       firebaseMessaging.requestNotificationPermissions();
       firebaseMessaging.configure(
         onMessage: (data){
           
+        },
+        onResume: (payload){
+          if(payload['data']['route'] == 'delivered'){
+            showDialog(
+                        context: navigatorKey.currentContext,
+                        builder: (context) {
+                          return Review(
+                            shop: shopMap[payload['data']['shopId']],
+                          );
+                        });
+          }
         }
+        
       );
       firebaseMessaging.onTokenRefresh.last.then((value){
         DatabaseService().updateToken(value);
@@ -59,7 +74,7 @@ class PushNotification{
          'route' : 'neworder',
          'orderId' : orderId
        },
-       'time_to_live' : 90,
+       'time_to_live' : 120,
        'to': token
      },
     ),
