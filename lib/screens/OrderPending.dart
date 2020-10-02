@@ -36,7 +36,7 @@ class _OrderPendingState extends State<OrderPending> {
             child: CircularCountDownTimer(
               width: MediaQuery.of(context).size.width / 2,
               height: 200,
-              duration: 90,
+              duration: 120,
 
               fillColor: white,
               color: base,

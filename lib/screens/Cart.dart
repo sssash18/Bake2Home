@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:bake2home/functions/customisedItemModel.dart';
 import 'package:bake2home/functions/order.dart';
 import 'package:bake2home/screens/Checkout.dart';
+import 'package:bake2home/screens/ItemPage.dart';
 import 'package:bake2home/screens/NoInternet.dart';
 import 'package:bake2home/screens/Noorders.dart';
 import 'package:bake2home/screens/OrderPending.dart';
@@ -244,17 +246,25 @@ class _CartState extends State<Cart> {
                                                     (BuildContext context,
                                                         int index) {
                                                   print('mys hops uis $shop');
-                                                  return CartTile(
-                                                    length: cartMap.length - 1,
-                                                    item: cartMap[cartMap.keys
-                                                        .where((element) =>
-                                                            element != 'shopId')
-                                                        .elementAt(index)],
-                                                    shop: shop,
-                                                    vid: cartMap.keys
-                                                        .where((element) =>
-                                                            element != 'shopId')
-                                                        .elementAt(index),
+
+                                                  return InkWell(
+                                                      onTap: (){
+                                                        Map itemsMap = shopMap[cartMap['shopId']].items;
+                                                        //print(itemsMap);
+                                                        print('IIIIIII' + cartMap[cartMap.keys.elementAt(index)]);
+                                                        
+                                                      },
+                                                      child: CartTile(
+                                                      item: cartMap[cartMap.keys
+                                                          .where((element) =>
+                                                              element != 'shopId')
+                                                          .elementAt(index)],
+                                                      shop: shop,
+                                                      vid: cartMap.keys
+                                                          .where((element) =>
+                                                              element != 'shopId')
+                                                          .elementAt(index),
+                                                    ),
                                                   );
                                                 }),
                                           ),
@@ -598,10 +608,12 @@ class _CartState extends State<Cart> {
                       bool rs = await DatabaseService().createOrder(order);
                       await pr.hide();
                       if (rs) {
-                        await PushNotification().pushMessagewithNewOrder(
+                        await pushNotification.pushMessagewithNewOrder(
                             'New Order Request',
                             'Request from ${currentUser.name}',
-                            shop.token);
+                            shop.token,
+                            order.orderId
+                          );
                         await Navigator.push(context,
                             MaterialPageRoute(builder: (BuildContext context) {
                           return Checkout(order: order);

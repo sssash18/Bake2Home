@@ -39,12 +39,12 @@ class _CheckoutState extends State<Checkout> {
       DropdownMenuItem<String>(
           value: "full",
           child: Text(
-            "Full Payment(\u20B9 ${widget.order.amount})",
+            "Full Payment(\u20B9 ${widget.order.amount.truncate()})",
           )),
       DropdownMenuItem<String>(
           value: "partial",
           child: Text(
-              "Partial COD(\u20B9 ${(100 - shopMap[widget.order.shopId].advance) * widget.order.amount / 100})"))
+              "Partial COD(\u20B9 ${((100 - shopMap[widget.order.shopId].advance) * widget.order.amount / 100).truncate()})"))
     ];
     _selectedOption = "full";
     _upiIndia.getAllUpiApps().then((value) {
@@ -142,12 +142,13 @@ class _CheckoutState extends State<Checkout> {
       codAmount = 0;
     } else {
       codAmount =
-          (100 - shopMap[widget.order.shopId].advance) * widget.order.amount;
+          ((100 - shopMap[widget.order.shopId].advance) * widget.order.amount);
     }
   }
 
   Future<UpiResponse> initiateTransaction(
       double amount, String orderId, String app) {
+
     return _upiIndia.startTransaction(
       app: app,
       receiverUpiId: 'bakemycake@ybl',
@@ -312,9 +313,9 @@ class _CheckoutState extends State<Checkout> {
                                       if (_selectedOption == "full") {
                                         codAmount = 0;
                                       } else {
-                                        codAmount = (100 -
+                                        codAmount = ((100 -
                                                 shopMap[widget.order.shopId]
-                                                    .advance) *
+                                                    .advance)/100) *
                                             widget.order.amount;
                                       }
                                     });
@@ -347,6 +348,7 @@ class _CheckoutState extends State<Checkout> {
                                       _response = await initiateTransaction(
                                           widget.order.amount - codAmount,
                                           widget.order.orderId,
+
                                           apps[index].app);
 
                                       if (_response.error != null) {
@@ -396,10 +398,10 @@ class _CheckoutState extends State<Checkout> {
                     content: FlatButton.icon(
                       onPressed: () async {
                         DatabaseService(uid: currentUserID).emptyCart();
-
+                        pushNotification.pushMessagewithNewOrder("New Order", '', deliveryToken, '123');
                         Navigator.pop(context);
                         Navigator.pop(context);
-                        PushNotification().pushMessage(
+                          pushNotification.pushMessage(
                             "Order Placed Successfully",
                             'Order Id : ${widget.order.orderId}',
                             shopMap[widget.order.shopId].token);

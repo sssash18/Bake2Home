@@ -44,7 +44,9 @@ class _CustomisedItemState extends State<CustomisedItem> {
                     itemCategory: value['itemCategory'],
                     photoUrl: value['photoUrl'],
                     recipe: value['recipe'],
-                    minTime: value['minTime'].toDouble(),
+
+                    minTime: value['minTime'].toInt(),
+                    veg: value['veg'],
                     variants: Map.from(value['variants']),
                     flavours: List<String>.from(value['flavours']));
                 list.add(model);

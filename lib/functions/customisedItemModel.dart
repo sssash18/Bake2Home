@@ -1,5 +1,5 @@
 class CustomisedItemModel {
-  bool availability;
+  bool availability,veg;
   String itemId;
   String itemName;
   double ingPrice;
@@ -20,5 +20,6 @@ class CustomisedItemModel {
       this.recipe,
       this.flavours,
       this.itemCategory,
+      this.veg,
       this.variants});
 }

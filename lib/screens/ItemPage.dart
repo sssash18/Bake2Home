@@ -136,10 +136,23 @@ class _ItemPageState extends State<ItemPage> {
                       ),
                       height: MediaQuery.of(context).size.height / 8,
                       width: MediaQuery.of(context).size.width / 1.3,
-                      child: Text(
-                        widget.model.itemName,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 25.0),
+                      child: Row(
+                        //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Expanded(
+                            child: Center(
+                              child: Text(
+                                widget.model.itemName,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 25.0),
+                                ),
+                            ),
+                          ),
+                          Container(
+                            child: Image.asset(widget.model.veg==true ? "assets/images/veg.png" : "assets/images/noon.png",height: 20,),
+                            margin: EdgeInsets.only(right: 10),
+                          )
+                        ]
                       ),
                     ),
                   ),
