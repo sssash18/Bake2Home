@@ -322,6 +322,10 @@ class _CartState extends State<Cart> {
                             fontWeight: FontWeight.bold)),
                   ]),
             ),
+            Container(
+              margin: EdgeInsets.only(left:10),
+              child: Text('* Actual Prices may vary based on the customisations',style: TextStyle(color:white,fontSize:9),)
+            ),
             Padding(
               padding: EdgeInsets.only(left: 10.0),
               child: Row(

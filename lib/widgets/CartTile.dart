@@ -93,11 +93,11 @@ class _CartTileState extends State<CartTile> {
                       'by ${widget.shop.shopName}',
                       style: TextStyle(fontSize: 10.0),
                     ),
-                    Text(
+                    customItem ? Text(
                       '\u20B9 ${widget.item['price'] * widget.item['quantity']}',
                       style: TextStyle(
                           fontSize: 18.0, fontWeight: FontWeight.bold),
-                    )
+                    ):Text("Price Not included till yet",style: TextStyle(fontSize:10),)
                   ],
                 )),
             !customItem
