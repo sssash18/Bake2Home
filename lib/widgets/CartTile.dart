@@ -8,8 +8,9 @@ import 'package:progress_dialog/progress_dialog.dart';
 class CartTile extends StatefulWidget {
   Map item;
   Shop shop;
+  int length;
   String vid;
-  CartTile({this.item, this.shop, this.vid});
+  CartTile({this.length, this.item, this.shop, this.vid});
 
   @override
   _CartTileState createState() => _CartTileState();
@@ -18,7 +19,7 @@ class CartTile extends StatefulWidget {
 class _CartTileState extends State<CartTile> {
   int quantity;
   ProgressDialog pr;
-
+  bool customItem;
   @override
   void initState() {
     // TODO: implement initState
@@ -32,6 +33,7 @@ class _CartTileState extends State<CartTile> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width - 20;
     double height = MediaQuery.of(context).size.height;
+    customItem = widget.vid.startsWith(widget.shop.shopId) ? true : false;
     pr = ProgressDialog(context,
         type: ProgressDialogType.Normal, isDismissible: true, showLogs: true);
     pr.style(
@@ -98,38 +100,77 @@ class _CartTileState extends State<CartTile> {
                     )
                   ],
                 )),
-            Container(
-              width: width * 0.1,
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    InkWell(
-                      onTap: () {
-                        print(quantity);
-                        addToCartNewItem();
-                      },
-                      child: Icon(
-                        Icons.add_circle_outline,
-                        color: base,
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.fromLTRB(0, 5.0, 0, 5.0),
-                      child: Text('$quantity'),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        dropItem(context);
-                        print(this.widget.item);
-                        print(cartMap);
-                      },
-                      child: Icon(
-                        Icons.remove_circle_outline,
-                        color: base,
-                      ),
-                    ),
-                  ]),
-            )
+            !customItem
+                ? Container(
+                    width: width * 0.1,
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          InkWell(
+                            child: Icon(Icons.delete),
+                            onTap: () async {
+                              await pr.show();
+                              if (widget.length != 1) {
+                                await FirebaseFirestore.instance
+                                    .collection('Users')
+                                    .doc(currentUser.uid)
+                                    .update({
+                                  'cart.${widget.vid}': FieldValue.delete(),
+                                }).then((value) async {
+                                  await pr.hide();
+                                }).catchError((e) async {
+                                  await pr.hide();
+                                  print(e.toString());
+                                });
+                              } else {
+                                await FirebaseFirestore.instance
+                                    .collection('Users')
+                                    .doc(currentUser.uid)
+                                    .update({
+                                  'cart': {},
+                                }).then((value) async {
+                                  await pr.hide();
+                                }).catchError((e) async {
+                                  await pr.hide();
+                                  print(e.toString());
+                                });
+                              }
+                            },
+                          )
+                        ]),
+                  )
+                : Container(
+                    width: width * 0.1,
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          InkWell(
+                            onTap: () {
+                              print(quantity);
+                              addToCartNewItem();
+                            },
+                            child: Icon(
+                              Icons.add_circle_outline,
+                              color: base,
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.fromLTRB(0, 5.0, 0, 5.0),
+                            child: Text('$quantity'),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              dropItem(context);
+                              print(this.widget.item);
+                              print(cartMap);
+                            },
+                            child: Icon(
+                              Icons.remove_circle_outline,
+                              color: base,
+                            ),
+                          ),
+                        ]),
+                  )
           ]),
     );
   }
@@ -262,7 +303,7 @@ class _CartTileState extends State<CartTile> {
                               .collection('Users')
                               .doc(currentUser.uid)
                               .update({
-                            'cart': {},
+                            'cart.${widget.vid}': FieldValue.delete(),
                           }).then((value) async {
                             await pr.hide();
                           }).catchError((e) async {

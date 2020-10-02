@@ -88,7 +88,8 @@ class searchDelegate extends SearchDelegate<Shop> {
           CustomisedItemModel item = CustomisedItemModel(
               // availability: itemList[index - shopSearch.length]['availability'],
               itemId: itemList[index - shopSearch.length]['itemId'],
-              minTime: itemList[index - shopSearch.length]['minTime'].toInt(),
+              minTime:
+                  itemList[index - shopSearch.length]['minTime'].toDouble(),
               // ingPrice: itemList[index - shopSearch.length]['ingPrice'].toDouble(),
               ingredients:
                   List.from(itemList[index - shopSearch.length]['ingredients']),

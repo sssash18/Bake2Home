@@ -132,7 +132,10 @@ class _HistoryTileState extends State<HistoryTile> {
         _decisionColor = Colors.blue;
         break;
       case "COMPLETED":
-        _decisionColor = Colors.green;
+        _decisionColor = Colors.green[300];
+        break;
+      case "PAID":
+        _decisionColor = Colors.green[400];
         break;
       case "MISSED":
         _decisionColor = Colors.teal;

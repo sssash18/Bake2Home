@@ -31,6 +31,7 @@ class _CheckoutState extends State<Checkout> {
   ProgressDialog pr;
   StreamSubscription subs;
   UpiResponse _response;
+  double finalPrice = 0.0;
   @override
   void initState() {
     super.initState();
@@ -53,6 +54,13 @@ class _CheckoutState extends State<Checkout> {
     });
     createStream();
   }
+
+  callBackToPrice(double pr) {
+    setState(() {
+      finalPrice = pr;
+    });
+  }
+
   createStream() {
     if (count == 0) {
       subs = controller.stream.listen((event) async {
@@ -68,8 +76,8 @@ class _CheckoutState extends State<Checkout> {
               builder: (context) {
                 return AlertDialog(
                     title: Text("Alert"),
-                    content:
-                        Text('Sorry we were not able to contact ${shopMap[widget.order.shopId].shopName} . Please try again later'),
+                    content: Text(
+                        'Sorry we were not able to contact ${shopMap[widget.order.shopId].shopName} . Please try again later'),
                     actions: [
                       RaisedButton(
                         onPressed: () {
@@ -138,7 +146,8 @@ class _CheckoutState extends State<Checkout> {
     }
   }
 
-  Future<UpiResponse> initiateTransaction(double amount,String orderId,String app) {
+  Future<UpiResponse> initiateTransaction(
+      double amount, String orderId, String app) {
     return _upiIndia.startTransaction(
       app: app,
       receiverUpiId: 'bakemycake@ybl',
@@ -150,10 +159,7 @@ class _CheckoutState extends State<Checkout> {
   }
 
   final checkoutKey = GlobalKey<ScaffoldState>();
- 
-  
 
-  
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -271,7 +277,7 @@ class _CheckoutState extends State<Checkout> {
                         style: TextStyle(
                           color: white,
                         )),
-                    content: FinalAmount(),
+                    content: FinalAmount(callBackToPrice: callBackToPrice),
                     isActive: _index == 1 ? true : false,
                     state:
                         _index <= 1 ? StepState.indexed : StepState.complete),
@@ -287,7 +293,6 @@ class _CheckoutState extends State<Checkout> {
                         color: white,
                       )),
                   content: Container(
-
                     height: MediaQuery.of(context).size.height * 0.35,
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -339,7 +344,9 @@ class _CheckoutState extends State<Checkout> {
                                             BorderRadius.circular(border)),
                                     color: white,
                                     onPressed: () async {
-                                      _response = await initiateTransaction(widget.order.amount - codAmount,widget.order.orderId,
+                                      _response = await initiateTransaction(
+                                          widget.order.amount - codAmount,
+                                          widget.order.orderId,
                                           apps[index].app);
 
                                       if (_response.error != null) {
@@ -412,4 +419,3 @@ class _CheckoutState extends State<Checkout> {
     );
   }
 }
-

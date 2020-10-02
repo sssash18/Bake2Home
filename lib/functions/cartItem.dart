@@ -2,7 +2,7 @@ class CartItemMap {
   String itemName, photoUrl, itemCategory;
   int quantity;
   double size, price;
-  int minTime;
+  double minTime;
   String flavour, color;
   List<String> notes;
   CartItemMap(

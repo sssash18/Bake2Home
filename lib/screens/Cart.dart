@@ -108,6 +108,13 @@ class _CartState extends State<Cart> {
     return delCharges;
   }
 
+  emptyCart() async {
+    await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(currentUser.uid)
+        .update({'cart': {}});
+  }
+
   @override
   Widget build(BuildContext context) {
     print(cartMap.toString());
@@ -126,12 +133,16 @@ class _CartState extends State<Cart> {
           if (snapshot.connectionState == ConnectionState.active) {
             cartMap = Map.from(snapshot.data.data()['cart']);
             print(cartMap);
+            if (cartMap.length == 1) {
+              emptyCart();
+            }
             delCharges = 0.0;
             cakeQuantity = 0;
             cakeCount = 0;
             subtotal = 0.0;
             delCharges = delChargesList.first;
             shop = shopMap[cartMap['shopId']];
+
             cartMap.keys
                 .where((element) => element != cartMap['shopId'])
                 .forEach((element) {
@@ -232,13 +243,9 @@ class _CartState extends State<Cart> {
                                                 itemBuilder:
                                                     (BuildContext context,
                                                         int index) {
-                                                  // shop = shopMap[shopMap.keys
-                                                  //     .firstWhere((element) =>
-                                                  //         element ==
-                                                  //         cartMap['shopId'])];
-
                                                   print('mys hops uis $shop');
                                                   return CartTile(
+                                                    length: cartMap.length - 1,
                                                     item: cartMap[cartMap.keys
                                                         .where((element) =>
                                                             element != 'shopId')
