@@ -63,7 +63,7 @@ class _ReviewState extends State<Review> with SingleTickerProviderStateMixin {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Text(
-                        'Rate the service of ',
+                        'Rate the service of ${widget.shop.shopName}',
                         style: TextStyle(color: base, fontSize: 15.0),
                       ),
                       RatingBar(

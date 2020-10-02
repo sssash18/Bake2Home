@@ -25,6 +25,10 @@ class DatabaseService {
 
   DatabaseService({this.uid});
 
+  Future<void> getDeliveryToken(){
+    FirebaseFirestore.instance.collection("Delivery").doc('token').get().then((value) => deliveryToken = value.data()['token']);
+  }
+
   Future<bool> updateTransaction(
       Order order, UpiResponse response, double codAmount) async {
     bool rs = false;
@@ -203,19 +207,11 @@ class DatabaseService {
 
   getRefundAmount(Order order) {
     double refundAmount = 0;
-    if (DateTime.now().isBefore(order.orderTime
-            .toDate()
-            .add(Duration(hours: 1))
-            .add(Duration(minutes: 30))) ==
-        true) {
-      refundAmount = order.amount;
+    if ((DateTime.now().day < order.orderTime.toDate().day )&& DateTime.now().month == order.orderTime.toDate().month && DateTime.now().year == order.orderTime.toDate().year) 
+    {
+      refundAmount = order.amount - order.codAmount;
     } else {
-      if (order.codAmount == 0) {
-        refundAmount = 0;
-      } else {
-        refundAmount =
-            (100 - shopMap[order.shopId].advance) / 100 * order.amount;
-      }
+      refundAmount = 0;
     }
     return refundAmount;
   }
@@ -306,13 +302,14 @@ class DatabaseService {
             status: e.data()['status'],
             otp: e.data()['otp'],
             paymentType: e.data()['paymentType'],
-            amount: e.data()['amount'],
-            delCharges: e.data()['deliveryCharges'],
+            amount: e.data()['amount'].toDouble(),
+            delCharges: e.data()['deliveryCharges'].toDouble(),
             pickUp: e.data()['pickUp'],
             orderTime: e.data()['orderTime'],
             deliveryTime: e.data()['deliveryTime'],
             deliveryAddress: e.data()['deliveryAddress'],
             items: e.data()['items'],
+            codAmount: (e.data()['codAmount'] ?? 0).toDouble(),
             orderId: e.data()['orderId'],
             comments: e.data()['comments']))
         .toList();

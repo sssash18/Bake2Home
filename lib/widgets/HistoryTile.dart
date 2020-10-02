@@ -56,22 +56,27 @@ class _HistoryTileState extends State<HistoryTile> {
       onTap: () async {
         double refundAmount =
             DatabaseService().getRefundAmount(this.widget.order);
-        bool rs = await genDialog(
+        if(DateTime.now().hour < 10 || DateTime.now().hour > 21){
+          showGenDialog(context, "Cancellation of Orders is allowed only between 10 AM and 10 PM");
+        }else{
+          bool rs = await genDialog(
             context,
             "Are you sure to cancel the order \n Amount to be refunded is $refundAmount",
             "Yes",
             "No");
-        if (rs) {
-          await pr.show();
-          await DatabaseService().cancelOrder(widget.order).then((value) async {
-            await pr.hide();
-            showSnackBar(this.widget.historyKey, "Order cancelled ..");
-          }).catchError((e) async {
-            await pr.hide();
-            showSnackBar(this.widget.historyKey, "Cannot cancel order ..");
-            print(e.toString());
-          });
+            if (rs) {
+              await pr.show();
+              await DatabaseService().cancelOrder(widget.order).then((value) async {
+                await pr.hide();
+                showSnackBar(this.widget.historyKey, "Order cancelled ..");
+              }).catchError((e) async {
+                await pr.hide();
+                showSnackBar(this.widget.historyKey, "Cannot cancel order ..");
+                print(e.toString());
+              });
+            }
         }
+
       },
       child: Container(
           height: width * 0.08,
@@ -261,12 +266,12 @@ class _HistoryTileState extends State<HistoryTile> {
                 Container(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    '\u20B9 ${widget.order.amount}',
+                    '\u20B9 ${widget.order.amount.toInt()}',
                   ),
                 ),
               ],
             ),
-            Row(
+            widget.order.status=="PAID" ? Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
@@ -283,7 +288,25 @@ class _HistoryTileState extends State<HistoryTile> {
                   ),
                 ),
               ],
-            ),
+            ):Container(),
+            widget.order.status=="PAID" ? Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "COD (To Pay)",
+                    style: TextStyle(color: Colors.grey[700]),
+                  ),
+                ),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    '\u20B9 ${widget.order.codAmount.toInt()}',
+                  ),
+                ),
+              ],
+            ) : Container(),
           ],
         ));
   }
