@@ -103,9 +103,7 @@ class TrendingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Trends in town "),
-      ),
+      
       // backgroundColor: Colors.green,
       // body: Container(
       //   child: Text("Hello", style: TextStyle(color: white)),

@@ -8,6 +8,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/constants.dart';
 import 'package:bake2home/screens/UserDetails.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import 'about.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -120,8 +123,12 @@ class _ProfilePageState extends State<ProfilePage> {
                       },
                     ),
                     ListTile(
+                        onTap: (){
+                          String url = "https://docs.google.com/document/d/19TXTMGwaYIXGeLs02YWazS4qBd1WlLtSx5xLxEsEzOQ/edit?usp=sharing";
+                          launch(url);
+                        },
                         leading: Icon(
-                          Icons.shopping_cart,
+                          Icons.list,
                           color: base,
                           size: 30.0,
                         ),
@@ -129,8 +136,11 @@ class _ProfilePageState extends State<ProfilePage> {
                           "Terms and Conditions",
                         )),
                     ListTile(
+                        onTap: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => About()));
+                        },
                         leading: Icon(
-                          Icons.settings,
+                          Icons.description,
                           color: base,
                           size: 30.0,
                         ),
@@ -143,6 +153,13 @@ class _ProfilePageState extends State<ProfilePage> {
                           color: base,
                           size: 30.0,
                         ),
+                        onTap: (){
+                          final Uri emailUri = Uri(
+                            scheme: 'mailto',
+                            path: 'bakemycake1308@gmail.com',
+                          );
+                          launch(emailUri.toString());
+                        },
                         title: Text(
                           "Help and Support",
                         )),
