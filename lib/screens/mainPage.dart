@@ -87,21 +87,21 @@ class _MainPageState extends State<MainPage> {
                     showSearch(context: context, delegate: searchDelegate());
                   },
                 ),
-                IconButton(
-                  icon: Icon(
-                    Icons.receipt,
-                    color: black,
-                  ),
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return Review(
-                            shop: shopMap['emYlLuBFbRcw1hhlitvGuePI7Rh1'],
-                          );
-                        });
-                  },
-                )
+                // IconButton(
+                //   icon: Icon(
+                //     Icons.receipt,
+                //     color: black,
+                //   ),
+                //   onPressed: () {
+                //     showDialog(
+                //         context: context,
+                //         builder: (context) {
+                //           return Review(
+                //             shop: shopMap['emYlLuBFbRcw1hhlitvGuePI7Rh1'],
+                //           );
+                //         });
+                //   },
+                // )
               ],
             ),
             body: SingleChildScrollView(
@@ -269,7 +269,7 @@ class _MainPageState extends State<MainPage> {
                                             VendorProfile(
                                               shop: shopMap[shopMap.keys
                                                   .elementAt(index)],
-                                            )));
+                              )));
                               },
                             );
                           })),

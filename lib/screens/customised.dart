@@ -45,7 +45,7 @@ class _CustomisedItemState extends State<CustomisedItem> {
                     photoUrl: value['photoUrl'],
                     recipe: value['recipe'],
 
-                    minTime: value['minTime'].toInt(),
+                    minTime: value['minTime'],
                     veg: value['veg'],
                     variants: Map.from(value['variants']),
                     flavours: List<String>.from(value['flavours']));
