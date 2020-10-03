@@ -42,7 +42,7 @@ class AuthService {
     currentUser = user;
     currentUserID = currentUser.uid;
     DocumentSnapshot ds = await FirebaseFirestore.instance
-        .collection('User')
+        .collection('Users')
         .doc(currentUser.uid)
         .get()
         .catchError((e) {
@@ -127,8 +127,8 @@ class AuthService {
               duration: Duration(seconds: 20), content: Text("Invalid Otp")));
         },
         codeSent: (verificationId, resendToken) async {
-          String sign = await SmsAutoFill().getAppSignature;
-          await SmsAutoFill().listenForCode;
+          // String sign = await SmsAutoFill().getAppSignature;
+          // await SmsAutoFill().listenForCode;
           print("Sent COde");
           await pr.hide();
           showModalBottomSheet(

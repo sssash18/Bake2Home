@@ -13,7 +13,7 @@ class FinalAmount extends StatelessWidget {
     Order order;
     if (orderList.isNotEmpty) {
       order = orderList[0];
-      callBackToPrice(order.amount);
+      // callBackToPrice(order.amount);
       print(order.amount);
       print(order.codAmount);
     }

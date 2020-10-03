@@ -246,21 +246,27 @@ class _CartState extends State<Cart> {
                                                   print('mys hops uis $shop');
 
                                                   return InkWell(
-                                                      onTap: (){
-                                                        Map itemsMap = shopMap[cartMap['shopId']].items;
-                                                        //print(itemsMap);
-                                                        print('IIIIIII' + cartMap[cartMap.keys.elementAt(index)]);
-                                                        
-                                                      },
-                                                      child: CartTile(
+                                                    onTap: () {
+                                                      Map itemsMap = shopMap[
+                                                              cartMap['shopId']]
+                                                          .items;
+                                                      //print(itemsMap);
+                                                      print('IIIIIII' +
+                                                          cartMap[cartMap.keys
+                                                              .elementAt(
+                                                                  index)]);
+                                                    },
+                                                    child: CartTile(
                                                       item: cartMap[cartMap.keys
                                                           .where((element) =>
-                                                              element != 'shopId')
+                                                              element !=
+                                                              'shopId')
                                                           .elementAt(index)],
                                                       shop: shop,
                                                       vid: cartMap.keys
                                                           .where((element) =>
-                                                              element != 'shopId')
+                                                              element !=
+                                                              'shopId')
                                                           .elementAt(index),
                                                     ),
                                                   );
@@ -321,9 +327,11 @@ class _CartState extends State<Cart> {
                   ]),
             ),
             Container(
-              margin: EdgeInsets.only(left:10),
-              child: Text('* Actual Prices may vary based on the customisations',style: TextStyle(color:white,fontSize:9),)
-            ),
+                margin: EdgeInsets.only(left: 10),
+                child: Text(
+                  '* Actual Prices may vary based on the customisations',
+                  style: TextStyle(color: white, fontSize: 9),
+                )),
             Padding(
               padding: EdgeInsets.only(left: 10.0),
               child: Row(
@@ -608,20 +616,21 @@ class _CartState extends State<Cart> {
                           items: cartMap);
                       await pr.show();
                       bool rs = await DatabaseService().createOrder(order);
-                      await pr.hide();
                       if (rs) {
                         await pushNotification.pushMessagewithNewOrder(
                             'New Order Request',
                             'Request from ${currentUser.name}',
                             shop.token,
-                            order.orderId
-                          );
+                            order.orderId);
+                        await pr.hide();
+
                         await Navigator.push(context,
                             MaterialPageRoute(builder: (BuildContext context) {
                           return Checkout(order: order);
                         }));
                         Navigator.pop(context);
                       } else {
+                        await pr.hide();
                         Navigator.pop(context);
                         showSnackBar(
                             cartKey, "Cannot Prepare Order... try again later");
