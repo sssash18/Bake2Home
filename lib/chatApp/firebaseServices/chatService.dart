@@ -1,3 +1,5 @@
+import 'package:bake2home/constants.dart';
+import 'package:bake2home/services/PushNotification.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ChatService {
@@ -11,7 +13,7 @@ class ChatService {
   sendMessage(String msg, String uid, String fid, Timestamp time, String tms,
       bool seen) async {
     try {
-      return await _collectionReference
+      await _collectionReference
           .doc(uniqueid)
           .collection('messages')
           .doc(tms)
@@ -24,6 +26,8 @@ class ChatService {
         'tms': tms,
         'seen': false,
       });
+      await PushNotification()
+          .pushMessage(shopMap[fid].shopName, msg, shopMap[fid].token);
     } catch (e) {
       print(e.toString());
     }
@@ -46,7 +50,7 @@ class ChatService {
   startUpload(String uid, String fid, Timestamp time, String tms,
       String filename, String path) async {
     try {
-      return await _collectionReference
+      await _collectionReference
           .doc(uniqueid)
           .collection('messages')
           .doc(tms)
@@ -61,6 +65,8 @@ class ChatService {
         'filename': filename,
         'path': path
       });
+      await PushNotification()
+          .pushMessage(shopMap[fid].shopName, "Photo", shopMap[fid].token);
     } catch (e) {
       print(e.toString());
     }

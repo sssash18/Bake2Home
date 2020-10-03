@@ -332,30 +332,32 @@ class _CartState extends State<Cart> {
                   '* Actual Prices may vary based on the customisations',
                   style: TextStyle(color: white, fontSize: 9),
                 )),
-            shopMap[cartMap['shopId']].pickup==true ? Padding(
-              padding: EdgeInsets.only(left: 10.0),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text('Pickup',
-                        style: TextStyle(
-                            color: white,
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.bold)),
-                    Container(
-                      height: height * 0.02,
-                      child: Switch(
-                        value: pickupValue,
-                        activeColor: base,
-                        onChanged: (val) {
-                          setState(() {
-                            pickupValue = val;
-                          });
-                        },
-                      ),
-                    )
-                  ]),
-            ) : Container(),
+            shopMap[cartMap['shopId']].pickup == true
+                ? Padding(
+                    padding: EdgeInsets.only(left: 10.0),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text('Pickup',
+                              style: TextStyle(
+                                  color: white,
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.bold)),
+                          Container(
+                            height: height * 0.02,
+                            child: Switch(
+                              value: pickupValue,
+                              activeColor: base,
+                              onChanged: (val) {
+                                setState(() {
+                                  pickupValue = val;
+                                });
+                              },
+                            ),
+                          )
+                        ]),
+                  )
+                : Container(),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 10.0),
               child: Row(
@@ -409,29 +411,35 @@ class _CartState extends State<Cart> {
       double subtotal,
       Shop shop) async {
     print(_selectedAddress);
-    int makingTime = 0;
+    double makingTime = 0;
+    int minTime = 0;
+    int itemCount = 0;
     showModalBottomSheet(
         context: context,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(border)),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(border),
+                topRight: Radius.circular(border))),
         isDismissible: false,
         builder: (BuildContext context) {
           return StatefulBuilder(builder: (BuildContext context, setState) {
             cartMap.forEach((key, value) {
               if (key != 'shopId') {
                 Map<String, dynamic> items = cartMap[key];
-                if (items['itemCategory'] == "cake") {
-                  makingTime = max(makingTime, items['minTime']);
-                }
+                itemCount += items['quantity'];
+                makingTime = max(makingTime, items['minTime'].toDouble());
               }
             });
             print(cakeCount);
-            if (cakeCount <= 2) {
+            if (itemCount <= 2) {
               makingTime = makingTime;
-            } else if (cakeCount > 2 && cakeCount < 5) {
-              makingTime = 2 * makingTime;
-            } else if (cakeCount >= 5) {
+              minTime = (makingTime * 60).toInt();
+            } else if (itemCount > 2 && itemCount < 5) {
+              makingTime = 1.5 * makingTime;
+              minTime = (makingTime * 60).toInt();
+            } else if (itemCount >= 5) {
               makingTime = 3 * makingTime;
+              minTime = (makingTime * 60).toInt();
             }
             print(makingTime);
             return Column(children: <Widget>[
@@ -491,7 +499,7 @@ class _CartState extends State<Cart> {
                         int startInMinutes =
                             startTime.hour * 60 + startTime.minute;
                         int endInMinutes = endTime.hour * 60 + endTime.minute;
-                        int makingInMinutes = makingTime * 60;
+                        int makingInMinutes = minTime;
                         nowInMinutes += makingInMinutes;
                         print('$nowInMinutes  $makingInMinutes');
                         if (timeInMinutes >= startInMinutes &&
