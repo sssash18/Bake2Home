@@ -113,18 +113,19 @@ class AuthService {
   }
 
   Future<void> verifyPhone(String contact, BuildContext context,
-      ProgressDialog pr, GlobalKey<ScaffoldState> loginKey) {
+      ProgressDialog pr, GlobalKey<ScaffoldState> loginKey) async{
     String otp;
-    _auth.verifyPhoneNumber(
+    await _auth.verifyPhoneNumber(
+        timeout: Duration(seconds:0),
         phoneNumber: contact,
-        verificationCompleted: (crd) {
-          signIn(crd.verificationId, crd.smsCode, context, pr, loginKey);
+        verificationCompleted: (crd) async{
+          await signIn(crd.verificationId, crd.smsCode, context, pr, loginKey);
         },
         verificationFailed: (e) async {
           print("EEEEE" + e.toString());
           await pr.hide();
           loginKey.currentState.showSnackBar(SnackBar(
-              duration: Duration(seconds: 20), content: Text("Invalid Otp")));
+              duration: Duration(seconds: 20), content: Text("${e.message}")));
         },
         codeSent: (verificationId, resendToken) async {
 
@@ -180,7 +181,7 @@ class AuthService {
                                     color: white, fontWeight: FontWeight.bold),
                               ),
                               onPressed: () async {
-                                SmsAutoFill().unregisterListener();
+                                //SmsAutoFill().unregisterListener();
                                 ProgressDialog pr = ProgressDialog(context,
                                     type: ProgressDialogType.Normal,
                                     isDismissible: true,
@@ -227,7 +228,6 @@ class AuthService {
                 );
               });
         },
-        timeout: Duration(seconds: 90),
         codeAutoRetrievalTimeout: (id) {});
   }
 }
