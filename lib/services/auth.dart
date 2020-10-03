@@ -127,6 +127,7 @@ class AuthService {
               duration: Duration(seconds: 20), content: Text("Invalid Otp")));
         },
         codeSent: (verificationId, resendToken) async {
+
           // String sign = await SmsAutoFill().getAppSignature;
           // await SmsAutoFill().listenForCode;
           print("Sent COde");
