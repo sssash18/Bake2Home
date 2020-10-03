@@ -55,11 +55,11 @@ class _CheckoutState extends State<Checkout> {
     createStream();
   }
 
-  callBackToPrice(double pr) {
-    setState(() {
-      finalPrice = pr;
-    });
-  }
+  // callBackToPrice(double pr) {
+  //   setState(() {
+  //     finalPrice = pr;
+  //   });
+  // }
 
   createStream() {
     if (count == 0) {
@@ -148,7 +148,6 @@ class _CheckoutState extends State<Checkout> {
 
   Future<UpiResponse> initiateTransaction(
       double amount, String orderId, String app) {
-
     return _upiIndia.startTransaction(
       app: app,
       receiverUpiId: 'bakemycake@ybl',
@@ -278,7 +277,7 @@ class _CheckoutState extends State<Checkout> {
                         style: TextStyle(
                           color: white,
                         )),
-                    content: FinalAmount(callBackToPrice: callBackToPrice),
+                    content: FinalAmount(),
                     isActive: _index == 1 ? true : false,
                     state:
                         _index <= 1 ? StepState.indexed : StepState.complete),
@@ -314,8 +313,9 @@ class _CheckoutState extends State<Checkout> {
                                         codAmount = 0;
                                       } else {
                                         codAmount = ((100 -
-                                                shopMap[widget.order.shopId]
-                                                    .advance)/100) *
+                                                    shopMap[widget.order.shopId]
+                                                        .advance) /
+                                                100) *
                                             widget.order.amount;
                                       }
                                     });
@@ -348,7 +348,6 @@ class _CheckoutState extends State<Checkout> {
                                       _response = await initiateTransaction(
                                           widget.order.amount - codAmount,
                                           widget.order.orderId,
-
                                           apps[index].app);
 
                                       if (_response.error != null) {
@@ -398,10 +397,11 @@ class _CheckoutState extends State<Checkout> {
                     content: FlatButton.icon(
                       onPressed: () async {
                         DatabaseService(uid: currentUserID).emptyCart();
-                        pushNotification.pushMessagewithNewOrder("New Order", '', deliveryToken, '123');
+                        pushNotification.pushMessagewithNewOrder(
+                            "New Order", '', deliveryToken, '123');
                         Navigator.pop(context);
                         Navigator.pop(context);
-                          pushNotification.pushMessage(
+                        pushNotification.pushMessage(
                             "Order Placed Successfully",
                             'Order Id : ${widget.order.orderId}',
                             shopMap[widget.order.shopId].token);
