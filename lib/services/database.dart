@@ -240,6 +240,10 @@ class DatabaseService {
         max(0, (order.amount - refundAmount) - 0.05 * order.amount);
 
     order.refund = refundAmount;
+    if(order.status!="PAID"){
+      compensationAmount = 0;
+      refundAmount = 0;
+    }
     bool rs = false;
     await orderCollection.doc(order.orderId).update({
       'status': "CANCELLED",

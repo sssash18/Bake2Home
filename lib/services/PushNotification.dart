@@ -64,7 +64,8 @@ class PushNotification{
          'body': body,
          'title': title,
          'android_channel_id' : '1891',
-         'icon' : 'logo.png'
+         'icon' : 'logo.png',
+         'sound' : 'cancel.mp3'
        },
        'priority': 'high',
        'data': <String, dynamic>{
@@ -96,7 +97,8 @@ class PushNotification{
          'body': body,
          'title': title,
          'android_channel_id' : '1890',
-         'icon' : 'logo.png'
+         'icon' : 'logo.png',
+         'sound' : 'cancel.mp3'
        },
        'priority': 'high',
        'data': <String, dynamic>{
