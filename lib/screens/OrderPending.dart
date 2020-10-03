@@ -37,7 +37,6 @@ class _OrderPendingState extends State<OrderPending> {
               width: MediaQuery.of(context).size.width / 2,
               height: 200,
               duration: 120,
-
               fillColor: white,
               color: base,
               isTimerTextShown: true,

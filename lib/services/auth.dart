@@ -113,12 +113,12 @@ class AuthService {
   }
 
   Future<void> verifyPhone(String contact, BuildContext context,
-      ProgressDialog pr, GlobalKey<ScaffoldState> loginKey) async{
+      ProgressDialog pr, GlobalKey<ScaffoldState> loginKey) async {
     String otp;
     await _auth.verifyPhoneNumber(
-        timeout: Duration(seconds:0),
+        timeout: Duration(seconds: 0),
         phoneNumber: contact,
-        verificationCompleted: (crd) async{
+        verificationCompleted: (crd) async {
           await signIn(crd.verificationId, crd.smsCode, context, pr, loginKey);
         },
         verificationFailed: (e) async {
@@ -128,7 +128,6 @@ class AuthService {
               duration: Duration(seconds: 20), content: Text("${e.message}")));
         },
         codeSent: (verificationId, resendToken) async {
-
           // String sign = await SmsAutoFill().getAppSignature;
           // await SmsAutoFill().listenForCode;
           print("Sent COde");
