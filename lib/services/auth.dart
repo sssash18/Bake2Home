@@ -116,7 +116,7 @@ class AuthService {
         },
         codeSent: (verificationId, resendToken) async {
           String sign = await SmsAutoFill().getAppSignature;
-          await SmsAutoFill().listenForCode;
+          //await SmsAutoFill().listenForCode;
           print("Sent COde");
           await pr.hide();
           showModalBottomSheet(

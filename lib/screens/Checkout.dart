@@ -400,11 +400,11 @@ class _CheckoutState extends State<Checkout> {
                         DatabaseService(uid: currentUserID).emptyCart();
                         pushNotification.pushMessagewithNewOrder("New Order", '', deliveryToken, '123');
                         Navigator.pop(context);
-                        Navigator.pop(context);
                           pushNotification.pushMessage(
                             "Order Placed Successfully",
                             'Order Id : ${widget.order.orderId}',
-                            shopMap[widget.order.shopId].token);
+                            shopMap[widget.order.shopId].token
+                          );
                       },
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(border)),
