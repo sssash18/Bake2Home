@@ -96,7 +96,7 @@ class _RegisterAddressState extends State<RegisterAddress> {
                                     typed = true;
                                   });
                                   await Geolocator()
-                                      .placemarkFromAddress(addTyped)
+                                      .placemarkFromAddress('$addTyped ratlam')
                                       .then((position) {
                                     setState(() {
                                       locationPresent = true;

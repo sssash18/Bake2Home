@@ -1,23 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-class UserModel{
+
+class UserModel {
   final String email;
   UserModel({this.email});
 }
-class DatabaseService{
+
+class DatabaseService {
   final String uid;
   DatabaseService({this.uid});
-  final CollectionReference _collectionReference
-  =Firestore.instance.collection('myUsers');
+  final CollectionReference _collectionReference =
+      FirebaseFirestore.instance.collection('myUsers');
 
-  Future addMyUser(String uid,String email) async {
+  Future addMyUser(String uid, String email) async {
     try {
-      return await _collectionReference.document(uid).setData({
+      return await _collectionReference.doc(uid).set({
         'uid': uid,
         'email': email,
       });
-    }
-    catch(e){
+    } catch (e) {
       print(e.toString());
     }
   }

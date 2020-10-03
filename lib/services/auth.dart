@@ -11,23 +11,24 @@ import 'package:bake2home/functions/user.dart' as LocalUser;
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 
-
 class AuthService {
   UserCredential _user;
   FirebaseAuth _auth = FirebaseAuth.instance;
   Future<void> signIn(String verificationId, String otp, BuildContext context,
       ProgressDialog pr, GlobalKey<ScaffoldState> loginKey) async {
+    print(
+        '_______________________________________________________))) $verificationId');
     AuthCredential credential = PhoneAuthProvider.credential(
         verificationId: verificationId, smsCode: otp);
     await _auth.signInWithCredential(credential).then((val) {
       _user = val;
-    }).catchError((e) {
-      // _user = null;
-      // showSnackBar(loginKey, 'Invalid Credentials');
+    }).catchError((e) async {
       print('-------------------------------->');
       print(e);
+      Navigator.pop(context);
+      await pr.hide();
+      showSnackBar(loginKey, 'Invalid Otp');
     });
-
     LocalUser.MyUser user;
     if (_user != null) {
       user = LocalUser.MyUser(
@@ -38,16 +39,24 @@ class AuthService {
     } else {
       user = null;
     }
-    print('<--------------------------> $user');
     currentUser = user;
     currentUserID = currentUser.uid;
-    if (_user.additionalUserInfo.isNewUser) {
+    DocumentSnapshot ds = await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(currentUser.uid)
+        .get()
+        .catchError((e) {
+      print('********************************* ${e.toString()}');
+    });
+    if (!ds.exists) {
+      print('------------------null');
       await pr.hide();
       Navigator.of(context).popUntil((route) => route.isFirst);
       Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (BuildContext context) =>
               Register(uid: _user.user.uid, contact: _user.user.phoneNumber)));
     } else {
+      print('------------------------------------not nill');
       bool rs = await DatabaseService().updateToken(currentUserID);
       await getUser(currentUserID);
       await pr.hide();
@@ -111,12 +120,15 @@ class AuthService {
         verificationCompleted: (crd) {
           signIn(crd.verificationId, crd.smsCode, context, pr, loginKey);
         },
-        verificationFailed: (e) {
+        verificationFailed: (e) async {
           print("EEEEE" + e.toString());
+          await pr.hide();
+          loginKey.currentState.showSnackBar(SnackBar(
+              duration: Duration(seconds: 20), content: Text("Invalid Otp")));
         },
         codeSent: (verificationId, resendToken) async {
-          String sign = await SmsAutoFill().getAppSignature;
-          await SmsAutoFill().listenForCode;
+          // String sign = await SmsAutoFill().getAppSignature;
+          // await SmsAutoFill().listenForCode;
           print("Sent COde");
           await pr.hide();
           showModalBottomSheet(
@@ -142,13 +154,17 @@ class AuthService {
                               color: black, fontWeight: FontWeight.bold),
                         ),
                         Container(
-                            margin: EdgeInsets.symmetric(horizontal: 10),
-                            child: PinFieldAutoFill(
+                          margin: EdgeInsets.symmetric(horizontal: 10),
+                          child: PinFieldAutoFill(
                               currentCode: otp,
-                              onCodeSubmitted: (val){otp = val;},//code submitted callback
-                              onCodeChanged: (val){otp = val;},//code changed callback
-                              codeLength: 6//code length, default 6
-                            ),
+                              onCodeSubmitted: (val) {
+                                otp = val;
+                              }, //code submitted callback
+                              onCodeChanged: (val) {
+                                otp = val;
+                              }, //code changed callback
+                              codeLength: 6 //code length, default 6
+                              ),
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
