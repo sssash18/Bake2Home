@@ -99,6 +99,7 @@ class AuthService {
         if (event.data()['cart'] != null) {
           someMap = Map<String, dynamic>.from(event.data()['cart']);
         }
+        // setState(() {
         print('fetched shopId is $currentShopId');
         if (someMap.isNotEmpty) {
           cartMap = Map<String, dynamic>.from(someMap);
@@ -106,6 +107,7 @@ class AuthService {
         cartLengthNotifier.value = cartMap.length;
         currentShopId = someMap['shopId'].toString();
         print('cartMap is $cartMap');
+        // });
       }
     });
   }
@@ -114,26 +116,30 @@ class AuthService {
       ProgressDialog pr, GlobalKey<ScaffoldState> loginKey) async {
     String otp;
     await _auth.verifyPhoneNumber(
+        timeout: Duration(seconds: 0),
         phoneNumber: contact,
         verificationCompleted: (crd) async {
-          print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
           await signIn(crd.verificationId, crd.smsCode, context, pr, loginKey);
         },
         verificationFailed: (e) async {
           print("EEEEE" + e.toString());
           await pr.hide();
           loginKey.currentState.showSnackBar(SnackBar(
-              duration: Duration(seconds: 20), content: Text("Invalid Otp")));
+              duration: Duration(seconds: 20), content: Text("${e.message}")));
         },
         codeSent: (verificationId, resendToken) async {
+          // String sign = await SmsAutoFill().getAppSignature;
+          // await SmsAutoFill().listenForCode;
           print("Sent COde");
           await pr.hide();
           showModalBottomSheet(
               context: context,
+              // isScrollControlled: true,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(20.0),
                       topRight: Radius.circular(20.0))),
+              // isScrollControlled: true,
               isDismissible: false,
               builder: (context) {
                 return Padding(
@@ -174,7 +180,7 @@ class AuthService {
                                     color: white, fontWeight: FontWeight.bold),
                               ),
                               onPressed: () async {
-                                // SmsAutoFill().unregisterListener();
+                                //SmsAutoFill().unregisterListener();
                                 ProgressDialog pr = ProgressDialog(context,
                                     type: ProgressDialogType.Normal,
                                     isDismissible: true,
@@ -221,7 +227,6 @@ class AuthService {
                 );
               });
         },
-        timeout: Duration(seconds: 90),
         codeAutoRetrievalTimeout: (id) {});
   }
 }

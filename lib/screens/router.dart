@@ -216,6 +216,7 @@ class _RouterState extends State<Router> with WidgetsBindingObserver {
       token: document.data()['token'],
       advance: document.data()['advance'].toDouble(),
       cod: document.data()['cod'],
+      pickup: document.data()['pickUp'],
       reviews: List<String>.from(document.data()['reviews']),
     );
   }

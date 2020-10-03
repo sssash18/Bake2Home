@@ -89,14 +89,14 @@ class searchDelegate extends SearchDelegate<Shop> {
               // availability: itemList[index - shopSearch.length]['availability'],
               itemId: itemList[index - shopSearch.length]['itemId'],
               minTime:
-                  itemList[index - shopSearch.length]['minTime'].toDouble(),
+              itemList[index - shopSearch.length]['minTime'].toDouble(),
               // ingPrice: itemList[index - shopSearch.length]['ingPrice'].toDouble(),
               ingredients:
                   List.from(itemList[index - shopSearch.length]['ingredients']),
               itemName: itemList[index - shopSearch.length]['itemName'],
               photoUrl: itemList[index - shopSearch.length]['photoUrl'],
               recipe: itemList[index - shopSearch.length]['recipe'],
-              veg: itemList[index - shopSearch.length]['recipe'],
+              veg: itemList[index - shopSearch.length]['veg'],
               variants: itemList[index - shopSearch.length]['variants']);
           return ListTile(
             onTap: () {
