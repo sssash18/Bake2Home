@@ -332,7 +332,7 @@ class _CartState extends State<Cart> {
                   '* Actual Prices may vary based on the customisations',
                   style: TextStyle(color: white, fontSize: 9),
                 )),
-            Padding(
+            shopMap[cartMap['shopId']].pickup==true ? Padding(
               padding: EdgeInsets.only(left: 10.0),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -355,7 +355,7 @@ class _CartState extends State<Cart> {
                       ),
                     )
                   ]),
-            ),
+            ) : Container(),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 10.0),
               child: Row(

@@ -11,7 +11,7 @@ class Shop {
       contact,token;
   int numOrders, ingPrice;
   double rating,advance;
-  bool cod;
+  bool cod,pickup;
   List<String> reviews;
   Map<String, dynamic> cookTime, items;
 
@@ -27,6 +27,7 @@ class Shop {
     this.coverPhoto,
     this.cookTime,
     this.experience,
+    this.pickup,
     this.numOrders,
     this.items,
     this.rating,
