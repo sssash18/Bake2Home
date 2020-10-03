@@ -31,7 +31,6 @@ class _ItemPageState extends State<ItemPage> {
     vidMap.clear();
     priceMap.clear();
     dropDownList.clear();
-
     this.widget.model.variants.forEach((key, value) {
       print("VVVVVVV" + value.toString());
       String vid = value['vid'];
@@ -324,31 +323,39 @@ class _ItemPageState extends State<ItemPage> {
   }
 
   Future<void> addToCartNewItem() async {
+    List<DropdownMenuItem<String>> flavourDrop = new List();
+    this.widget.model.flavours.forEach((element) {
+      print(element);
+      flavourDrop
+          .add(DropdownMenuItem<String>(child: Text(element), value: element));
+    });
     bool note = true;
     String noteItem = "";
     String shopId;
+    String flavourSelected = flavourDrop[0].value;
     if (cartMap['shopId'] == null) {
       shopId = 'null';
     } else {
       shopId = cartMap['shopId'];
     }
+    flavourDrop.forEach((element) {
+      print('++++++++++++++${element.value}');
+    });
     if (shopId == 'null' || this.widget.shopId == shopId) {
       if (note) {
         showModalBottomSheet(
             context: context,
+            isScrollControlled: true,
             builder: (builder) {
-              return Container(
+              return Padding(
+                padding: MediaQuery.of(context).viewInsets,
                 child: Form(
-                  child: Column(children: <Widget>[
+                  child:
+                      Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
                     SizedBox(height: MediaQuery.of(context).size.height / 30),
                     Container(
-                      margin: EdgeInsets.fromLTRB(
-                          MediaQuery.of(context).size.height / 30,
-                          0,
-                          MediaQuery.of(context).size.height / 30,
-                          0),
+                      padding: EdgeInsets.symmetric(horizontal: 15.0),
                       child: TextFormField(
-                        autofocus: true,
                         decoration: InputDecoration(
                             labelText: "Special Note",
                             helperText: "* will be printed on the product",
@@ -358,6 +365,24 @@ class _ItemPageState extends State<ItemPage> {
                         },
                       ),
                     ),
+                    SizedBox(height: MediaQuery.of(context).size.height / 100),
+                    Container(
+                        padding: EdgeInsets.symmetric(horizontal: 15.0),
+                        width: MediaQuery.of(context).size.width - 30,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0),
+                            border: Border.all(color: black)),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton(
+                            items: flavourDrop,
+                            value: flavourSelected,
+                            onChanged: (value) {
+                              setState(() {
+                                flavourSelected = value;
+                              });
+                            },
+                          ),
+                        )),
                     SizedBox(height: MediaQuery.of(context).size.height / 100),
                     FlatButton.icon(
                         color: base,
@@ -375,7 +400,8 @@ class _ItemPageState extends State<ItemPage> {
                                   notes: [noteItem],
                                   price: price,
                                   minTime: widget.model.minTime,
-                                  photoUrl: widget.model.photoUrl);
+                                  photoUrl: widget.model.photoUrl,
+                                  flavour: flavourSelected);
                               cartMap.putIfAbsent(
                                   vid,
                                   () => {
@@ -386,6 +412,7 @@ class _ItemPageState extends State<ItemPage> {
                                         'notes': cartItem.notes,
                                         'photoUrl': cartItem.photoUrl,
                                         'minTime': cartItem.minTime,
+                                        'flavour': cartItem.flavour,
                                       });
                               cartMap.putIfAbsent(
                                   'shopId', () => widget.shopId);
@@ -405,7 +432,8 @@ class _ItemPageState extends State<ItemPage> {
                         label: Text(
                           'Done',
                           style: TextStyle(color: white),
-                        ))
+                        )),
+                    SizedBox(height: MediaQuery.of(context).size.height / 100),
                   ]),
                 ),
               );

@@ -61,8 +61,16 @@ class _ItemListState extends State<ItemList>
         body: TabBarView(
           controller: tabController,
           children: <Widget>[
-            CustomisedItem(itemType: widget.itemType, shop: widget.shop,category : 'customised'),
-            CustomisedItem(itemType: widget.itemType, shop: widget.shop,category: 'standard'),
+            CustomisedItem(
+              itemType: widget.itemType,
+              shop: widget.shop,
+              category: 'customised',
+            ),
+            CustomisedItem(
+              itemType: widget.itemType,
+              shop: widget.shop,
+              category: 'standard',
+            ),
           ],
         ));
   }

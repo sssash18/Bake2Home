@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:bake2home/constants.dart';
+import 'package:bake2home/functions/customisedItemModel.dart';
 import 'package:bake2home/screens/Address.dart';
+import 'package:bake2home/screens/customised.dart';
 import 'package:bake2home/services/PushNotification.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -99,6 +101,22 @@ class DatabaseService {
     await userCollection
         .doc(id)
         .update({
+          'token': token,
+        })
+        .then((value) => rs = true)
+        .catchError((e) {
+          print(e.toString());
+          rs = false;
+        });
+    return rs;
+  }
+
+  Future<bool> createToken(String id) async {
+    bool rs = false;
+    String token = await firebaseMessaging.getToken();
+    await userCollection
+        .doc(id)
+        .set({
           'token': token,
         })
         .then((value) => rs = true)
@@ -313,5 +331,52 @@ class DatabaseService {
             orderId: e.data()['orderId'],
             comments: e.data()['comments']))
         .toList();
+  }
+
+  StreamController getItemList(
+      String shopId, String itemType, String category) {
+    StreamController il = new StreamController();
+    List<CustomisedItemModel> list = new List();
+    FirebaseFirestore.instance
+        .collection('Shops')
+        .doc(shopId)
+        .snapshots()
+        .listen((event) {
+      list.clear();
+      Map<String, dynamic> allItems =
+          Map.from(event.data()['items'][itemType][category]);
+      allItems.forEach((key, value) {
+        Map<String, dynamic> dup = value['variants'];
+        Map<String, dynamic> variants = Map();
+        Map<String, dynamic> idtoprice = Map();
+        dup.forEach((key, value) {
+          idtoprice.putIfAbsent(key, () => value['price']);
+        });
+        List<dynamic> prices = idtoprice.values.toList();
+        prices.sort((a, b) {
+          return a.compareTo(b);
+        });
+        prices.forEach((element) {
+          idtoprice.forEach((key, value) {
+            if (value == element) {
+              variants.putIfAbsent(key, () => dup[key]);
+            }
+          });
+        });
+        CustomisedItemModel model = CustomisedItemModel(
+            itemId: value['itemId'],
+            ingredients: List<String>.from(value['ingredients']),
+            itemName: value['itemName'],
+            itemCategory: value['itemCategory'],
+            photoUrl: value['photoUrl'],
+            recipe: value['recipe'],
+            minTime: value['minTime'].toDouble(),
+            variants: variants,
+            flavours: List<String>.from(value['flavours']));
+        list.add(model);
+      });
+      il.sink.add(list);
+    });
+    return il;
   }
 }
