@@ -222,7 +222,7 @@ class VendorProfile extends StatelessWidget {
                             decoration: BoxDecoration(
                                 image: DecorationImage(
                                   image:
-                                      AssetImage("assets/images/cookie.jpeg"),
+                                      AssetImage("assets/images/cake.jpeg"),
                                   fit: BoxFit.fill,
                                 ),
                                 borderRadius: BorderRadius.circular(border)),

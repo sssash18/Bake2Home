@@ -7,7 +7,9 @@ import 'package:bake2home/constants.dart';
 import 'package:bake2home/functions/order.dart';
 import 'package:bake2home/functions/shop.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HistoryTile extends StatefulWidget {
   final Order order;
@@ -20,6 +22,57 @@ class HistoryTile extends StatefulWidget {
 
 class _HistoryTileState extends State<HistoryTile> {
   ProgressDialog pr;
+
+   Widget routeButton(double width,String address) {
+    return InkWell(
+      onTap: () async{
+        double lat,longi;
+        pr = ProgressDialog(context,
+        type: ProgressDialogType.Normal, isDismissible: true, showLogs: true);
+        pr.style(
+        message: 'Locating on Map...',
+        borderRadius: 10.0,
+        backgroundColor: Colors.white,
+        progressWidget: Center(child: CircularProgressIndicator()),
+        elevation: 10.0,
+        insetAnimCurve: Curves.easeInOut,
+        progress: 0.0,
+        maxProgress: 100.0,
+        progressTextStyle: TextStyle(
+            color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+        messageTextStyle: TextStyle(
+            color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600));
+        await pr.show();
+        await Geolocator().placemarkFromAddress(address).then((value){
+          lat = value.first.position.latitude;
+          longi = value.first.position.longitude;
+          String url = "https://maps.google.com/?q=${lat},${longi}";
+          launch(url).then((value)  => pr.hide()).catchError((e) async{
+            await pr.hide();
+          });
+        }).catchError((e)async{ await pr.hide();});
+      },
+      child: Container(
+          height: width * 0.08,
+          width: width * 0.25,
+          padding: EdgeInsets.symmetric(horizontal: 2.0),
+          decoration: BoxDecoration(
+            color: base,
+            borderRadius: BorderRadius.circular(border),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Icon(
+                Icons.location_on,
+                color: white,
+              ),
+              Text("Route", style: TextStyle(color: white)),
+            ],
+          )),
+    );
+  }
+
 
   Widget chatButton(double width) {
     return InkWell(
@@ -154,7 +207,7 @@ class _HistoryTileState extends State<HistoryTile> {
     }
     return Container(
       width: width,
-      height: width * 0.75,
+      height: width* (widget.order.pickUp==true ? 1.1 : 0.8 ),
       padding: EdgeInsets.symmetric(horizontal: 15.0),
       child: Column(
         children: [
@@ -167,7 +220,7 @@ class _HistoryTileState extends State<HistoryTile> {
 
   Container itemDetails(double width, Color _decisionColor, String itemList) {
     return Container(
-        height: width * 0.55,
+        height: width * (widget.order.pickUp==true ?0.85 : 0.55),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
               bottomRight: Radius.circular(border),
@@ -202,6 +255,7 @@ class _HistoryTileState extends State<HistoryTile> {
                 (widget.order.status == "PAID" )
                     ? _cancelButton(width)
                     : Text(""),
+                
               ],
             ),
             Row(
@@ -310,6 +364,28 @@ class _HistoryTileState extends State<HistoryTile> {
                 ),
               ],
             ) : Container(),
+            (widget.order.pickUp==true && widget.order.status=="PAID") ? Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "PickUp Address",
+                    style: TextStyle(color: Colors.grey[700]),
+                  ),
+                ),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    '${shopMap[widget.order.shopId].shopAddress}',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                ),
+              ],
+            ) : Container(),
+            (widget.order.status=="PAID" && (widget.order.pickUp==true)) ?
+              routeButton(width, shopMap[widget.order.shopId].shopAddress):
+              Text("")
           ],
         ));
   }

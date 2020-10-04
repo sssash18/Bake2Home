@@ -281,7 +281,7 @@ class _ItemPageState extends State<ItemPage> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 Icon(Icons.add_shopping_cart),
-                Text("Add to cart"),
+                Text("Add to cart", style: TextStyle(color: white),),
               ],
             ),
           ),

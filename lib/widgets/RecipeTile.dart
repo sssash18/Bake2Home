@@ -12,7 +12,7 @@ class RecipeTile extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(70.0),
         image: DecorationImage(
-          image: AssetImage("assets/images/cookie.jpeg"),
+          image: AssetImage("assets/images/cake.jpeg"),
         ) 
       ),
       child: Text(

@@ -22,7 +22,7 @@ class PastryTile extends StatelessWidget {
             borderRadius: BorderRadius.circular(border),
             image: DecorationImage(
               fit: BoxFit.cover,
-              image: AssetImage("assets/images/cookie.jpeg")
+              image: AssetImage("assets/images/cake.jpeg")
             ),
             )
           ),
