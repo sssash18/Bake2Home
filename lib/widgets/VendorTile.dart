@@ -78,10 +78,10 @@ class VendorTile extends StatelessWidget {
           Container(
               margin: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 15.0),
               child: CircleAvatar(
-              backgroundImage: CachedNetworkImageProvider(
+              backgroundImage: shop.profilePhoto!=null ? CachedNetworkImageProvider(
                 shop.profilePhoto,
                 
-              ),
+              ) : AssetImage("assets/images/cake.jpeg"),
               radius: 60.0,
             ),
           ),

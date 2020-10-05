@@ -94,7 +94,7 @@ class VendorProfile extends StatelessWidget {
                                   child: Container(
                                     alignment: Alignment.center,
                                     child: Text(
-                                      '29+',
+                                      shop.variety.toString(),
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                           color: white,
@@ -222,7 +222,7 @@ class VendorProfile extends StatelessWidget {
                             decoration: BoxDecoration(
                                 image: DecorationImage(
                                   image:
-                                      AssetImage("assets/images/cookie.jpeg"),
+                                      AssetImage("assets/images/cake.jpeg"),
                                   fit: BoxFit.fill,
                                 ),
                                 borderRadius: BorderRadius.circular(border)),

@@ -9,7 +9,7 @@ class Shop {
       coverPhoto,
       experience,
       contact,token;
-  int numOrders, ingPrice;
+  int numOrders, ingPrice,variety;
   double rating,advance;
   bool cod,pickup;
   List<String> reviews;
@@ -35,6 +35,7 @@ class Shop {
     this.token,
     this.advance,
     this.cod,
-    this.reviews
+    this.reviews,
+    this.variety
   });
 }

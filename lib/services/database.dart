@@ -376,6 +376,7 @@ class DatabaseService {
             recipe: value['recipe'],
             minTime: value['minTime'].toDouble(),
             variants: variants,
+            veg: value['veg'],
             flavours: List<String>.from(value['flavours']));
         list.add(model);
       });

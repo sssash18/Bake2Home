@@ -210,6 +210,7 @@ class _RouterState extends State<Router> with WidgetsBindingObserver {
       cookTime: document.data()['cookTime'],
       experience: document.data()['experience'],
       numOrders: document.data()['numOrders'],
+      variety: document.data()['variety'],
       items: document.data()['items'],
       rating: (document.data()['rating'] ?? 0).toDouble(),
       ingPrice: document.data()['ingPrice'],
@@ -236,7 +237,7 @@ class _RouterState extends State<Router> with WidgetsBindingObserver {
             NavigationInfoParameters(forcedRedirectEnabled: true),
         uriPrefix: 'https://bakemycakevendor.page.link',
         link: Uri.parse(
-            'https://bakemycakevendor/profile?Id=emYlLuBFbRcw1hhlitvGuePI7Rh1'),
+            'https://bakemycakevendor/profile?Id=mDjoKJMdRZT7x3NN5bj9bJiUBFZ2'),
         androidParameters:
             AndroidParameters(packageName: 'com.example.bake2home'),
         socialMetaTagParameters: SocialMetaTagParameters(
