@@ -94,7 +94,7 @@ class VendorProfile extends StatelessWidget {
                                   child: Container(
                                     alignment: Alignment.center,
                                     child: Text(
-                                      '29+',
+                                      shop.variety.toString(),
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                           color: white,
