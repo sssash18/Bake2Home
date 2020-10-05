@@ -398,6 +398,7 @@ class _ItemPageState extends State<ItemPage> {
                                   quantity: quantity,
                                   size: tt,
                                   notes: [noteItem],
+                                  itemCategory: widget.model.itemCategory,
                                   price: price,
                                   minTime: widget.model.minTime,
                                   photoUrl: widget.model.photoUrl,
@@ -413,6 +414,7 @@ class _ItemPageState extends State<ItemPage> {
                                         'photoUrl': cartItem.photoUrl,
                                         'minTime': cartItem.minTime,
                                         'flavour': cartItem.flavour,
+                                        'itemCategory' : cartItem.itemCategory,
                                       });
                               cartMap.putIfAbsent(
                                   'shopId', () => widget.shopId);
