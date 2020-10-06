@@ -208,12 +208,17 @@ class DatabaseService {
           'paymentType': order.paymentType,
           'deliveryAddress': order.deliveryAddress,
           'amount': order.amount,
+          'instructions' : order.instructions,
           'deliveryCharges': order.delCharges,
           'pickUp': order.pickUp,
           'orderTime': order.orderTime,
           'deliveryTime': order.deliveryTime,
           'items': order.items,
           'codAmount': 0,
+          'refund' : 0,
+          'compensation' : 0,
+          'penalty' : 0
+        
         })
         .then((value) => {rs = true, print("Order Placed")})
         .catchError((e) {
@@ -333,6 +338,7 @@ class DatabaseService {
             items: e.data()['items'],
             codAmount: (e.data()['codAmount'] ?? 0).toDouble(),
             orderId: e.data()['orderId'],
+            refund: e.data()['refund'].toDouble(),
             comments: e.data()['comments']))
         .toList();
   }

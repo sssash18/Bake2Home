@@ -57,19 +57,7 @@ class _ItemPageState extends State<ItemPage> {
         child: Scaffold(
           key: _key,
           resizeToAvoidBottomInset: true,
-          floatingActionButton: FloatingActionButton(
-            child: Icon(Icons.add, color: white),
-            backgroundColor: base,
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AddProduct(
-                        shop: shopMap[widget.shopId],
-                        itemType: widget.model.itemCategory),
-                  ));
-            },
-          ),
+          
           body: CustomScrollView(
             slivers: <Widget>[
               SliverToBoxAdapter(
@@ -280,7 +268,7 @@ class _ItemPageState extends State<ItemPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                Icon(Icons.add_shopping_cart),
+                Icon(Icons.add_shopping_cart,color: white,),
                 Text("Add to cart", style: TextStyle(color: white),),
               ],
             ),

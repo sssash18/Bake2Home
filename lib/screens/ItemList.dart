@@ -3,6 +3,8 @@ import 'package:bake2home/screens/customised.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/constants.dart';
 
+import 'addCustomProduct.dart';
+
 class ItemList extends StatefulWidget {
   final String itemType;
   final Shop shop;
@@ -58,6 +60,19 @@ class _ItemListState extends State<ItemList>
             controller: tabController,
           ),
         ),
+        floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.add, color: white),
+            backgroundColor: base,
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddProduct(
+                        shop: shopMap[widget.shop.shopId],
+                        itemType: widget.itemType),
+                  ));
+            },
+          ),
         body: TabBarView(
           controller: tabController,
           children: <Widget>[
