@@ -132,7 +132,7 @@ class _CartState extends State<Cart> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.active) {
             cartMap = Map.from(snapshot.data.data()['cart']);
-            print(cartMap);
+            print('cart Map is ------------------> $cartMap');
             if (cartMap.length == 1) {
               emptyCart();
             }
@@ -240,22 +240,12 @@ class _CartState extends State<Cart> {
                                             color: white,
                                             child: ListView.builder(
                                                 itemCount: cartMap.length - 1,
-                                                itemBuilder:
-                                                    (BuildContext context,
-                                                        int index) {
-                                                  print('mys hops uis $shop');
-
+                                                itemBuilder: (
+                                                  BuildContext context,
+                                                  int index,
+                                                ) {
                                                   return InkWell(
-                                                    onTap: () {
-                                                      Map itemsMap = shopMap[
-                                                              cartMap['shopId']]
-                                                          .items;
-                                                      //print(itemsMap);
-                                                      print('IIIIIII' +
-                                                          cartMap[cartMap.keys
-                                                              .elementAt(
-                                                                  index)]);
-                                                    },
+                                                    onTap: () {},
                                                     child: CartTile(
                                                       item: cartMap[cartMap.keys
                                                           .where((element) =>
@@ -295,7 +285,7 @@ class _CartState extends State<Cart> {
   Container finalDetails(
       double height, double width, BuildContext context, Shop shop) {
     return Container(
-      height: height * 0.18,
+      height: height * 0.185,
       width: width,
       padding: EdgeInsets.symmetric(horizontal: 10.0),
       decoration: BoxDecoration(

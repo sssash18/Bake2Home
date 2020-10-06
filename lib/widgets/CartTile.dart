@@ -24,13 +24,13 @@ class _CartTileState extends State<CartTile> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    quantity = this.widget.item['quantity'];
-    print(this.widget.shop.cookTime);
-    print(this.widget.item);
+
+    print(quantity);
   }
 
   @override
   Widget build(BuildContext context) {
+    quantity = this.widget.item['quantity'];
     double width = MediaQuery.of(context).size.width - 20;
     double height = MediaQuery.of(context).size.height;
     customItem = widget.vid.startsWith(widget.shop.shopId) ? true : false;
@@ -180,7 +180,7 @@ class _CartTileState extends State<CartTile> {
     );
   }
 
-  void addToCartNewItem() {
+  Future<void> addToCartNewItem() async {
     bool note = true;
     String noteItem = "";
     if (note) {
@@ -271,7 +271,7 @@ class _CartTileState extends State<CartTile> {
     }
   }
 
-  void dropItem(BuildContext context) {
+  Future<void> dropItem(BuildContext context) async {
     List<String> notes = List.from(this.widget.item['notes']);
     showModalBottomSheet(
         context: context,
@@ -284,6 +284,7 @@ class _CartTileState extends State<CartTile> {
                   colors: [Color(0xffeaafc8), Color(0xff654ea3)]),
             ),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: List.generate(notes.length, (index) {
                 return ListTile(
                   title: Text(
@@ -299,6 +300,7 @@ class _CartTileState extends State<CartTile> {
                       bool rs = await genDialog(context,
                           "Are you sure to remove the item", "Yes", "No");
                       if (rs) {
+                        print('------------> ${widget.item}');
                         setState(() {
                           --quantity;
                         });
@@ -322,13 +324,13 @@ class _CartTileState extends State<CartTile> {
                           notes.removeAt(index);
                           item.update('quantity', (value) => quantity);
                           item.update('notes', (value) => notes);
-                          cartMap.update(this.widget.vid, (value) => item);
+                          // cartMap.update(this.widget.vid, (value) => item);
                           await pr.show();
                           await FirebaseFirestore.instance
                               .collection('Users')
                               .doc(currentUser.uid)
                               .update({
-                            'cart': cartMap,
+                            'cart.${widget.vid}': item,
                           }).then((value) async {
                             await pr.hide();
                           }).catchError((e) async {
