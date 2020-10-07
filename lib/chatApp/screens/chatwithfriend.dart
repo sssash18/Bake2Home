@@ -10,7 +10,6 @@ import 'package:bake2home/functions/order.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 // import 'package:image_picker_modern/image_picker_modern.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:bubble/bubble.dart';
 import 'package:path/path.dart';
 import 'package:image_picker/image_picker.dart';
@@ -35,7 +34,6 @@ class _ChatWithFriendState extends State<ChatWithFriend> {
   int seenmsg;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     seen = true;
     sc = new ScrollController();

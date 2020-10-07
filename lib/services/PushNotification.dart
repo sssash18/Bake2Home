@@ -1,3 +1,4 @@
+import 'package:bake2home/chatApp/screens/chatwithfriend.dart';
 import 'package:bake2home/services/database.dart';
 import 'package:bake2home/widgets/Review.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -22,11 +23,11 @@ class PushNotification{
 
   Future<void> init() async{
     DatabaseService().getDeliveryToken();
+    
     if(!_initialized){
       firebaseMessaging.requestNotificationPermissions();
       firebaseMessaging.configure(
-        onMessage: (data){
-          
+        onMessage: (payload)async{
         },
         onResume: (payload){
           if(payload['data']['route'] == 'delivered'){
@@ -37,6 +38,10 @@ class PushNotification{
                             shop: shopMap[payload['data']['shopId']],
                           );
                         });
+          }
+          if(payload['data']['route'] == 'chat'){
+            print(payload.toString());
+            //Navigator.push(navigatorKey.currentContext, MaterialPageRoute(builder: (BuildContext context) => ChatWithFriend(order: payload['data']['chatId'])));
           }
         }
         
@@ -128,13 +133,45 @@ class PushNotification{
        'notification': <String, dynamic>{
          'body': body,
          'title': title,
-         'icon' : 'logo.png'
+         'icon' : 'logo.png',
        },
        'priority': 'high',
        'data': <String, dynamic>{
          'click_action': 'FLUTTER_NOTIFICATION_CLICK',
          'id': '1',
-         'status': 'done'
+         'status': 'done',
+       },
+       'to': token
+     },
+    ),
+  );
+
+   }
+
+  
+   Future<void> pushMessageChat(String title,String body,String token,String chatId) async{
+    final serverToken = 'AAAATnEOuVU:APA91bEv0ZjHErtQC1lN_-yVorEJrf0YMBpdZiPrShRWSvog7SdUQ_B72yhEfx55i9riKJElt7BnsOi_E88DgrpvCMqilwikJq3gdg9_euNvqi3n7bBs8SaGnJCEbSt4gJr_4dljSA56'; 
+    await http.post(
+    'https://fcm.googleapis.com/fcm/send',
+     headers: <String, String>{
+       'Content-Type': 'application/json',
+       'Authorization': 'key=$serverToken',
+     },
+     body: jsonEncode(
+     <String, dynamic>{
+       'notification': <String, dynamic>{
+         'body': body,
+         'title': title,
+         'icon' : 'logo.png',
+
+       },
+       'priority': 'high',
+       'data': <String, dynamic>{
+         'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+         'id': '1',
+         'status': 'done',
+         'route' : 'chat',
+         'chatId' : chatId,
        },
        'to': token
      },

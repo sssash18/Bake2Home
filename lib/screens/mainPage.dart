@@ -101,25 +101,29 @@ class _MainPageState extends State<MainPage> {
                       enableInfiniteScroll: true,
                       autoPlay: true,
                       autoPlayInterval: Duration(seconds: 3),
+                      enlargeCenterPage: true
                     ),
                     items: slidesUrl.map((i) {
                       return Builder(
                         builder: (BuildContext context) {
-                          return Container(
-                            width: MediaQuery.of(context).size.width,
-                            margin: EdgeInsets.symmetric(horizontal: 5.0),
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: [
-                                    Color(0xffeaafc8),
-                                    Color(0xff654ea3)
-                                  ]),
-                              borderRadius: BorderRadius.circular(border),
-                              image: DecorationImage(
-                                  image: CachedNetworkImageProvider(i),
-                                  fit: BoxFit.fill),
+                          return Material(
+                              elevation: 0,
+                                                      child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              margin: EdgeInsets.symmetric(horizontal: 5.0),
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                      Color(0xffeaafc8),
+                                      Color(0xff654ea3)
+                                    ]),
+                                borderRadius: BorderRadius.circular(border),
+                                image: DecorationImage(
+                                    image: CachedNetworkImageProvider(i),
+                                    fit: BoxFit.fill),
+                              ),
                             ),
                           );
                         },

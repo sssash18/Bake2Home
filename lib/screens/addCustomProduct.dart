@@ -181,11 +181,12 @@ class _AddProductState extends State<AddProduct> {
                       itemName: name.text,
                       size: double.parse(weight.text),
                       flavour: flavour.text,
-                      minTime: 0.0,
+                      minTime: 24,
                       photoUrl: photoUrl == '' ? null : photoUrl,
                       notes: [desc.text],
                       color: null,
                       price: 0,
+                      
                       quantity: 1,
                     );
                     String timestamp =
@@ -202,6 +203,7 @@ class _AddProductState extends State<AddProduct> {
                               'photoUrl': cartItemMap.photoUrl,
                               'minTime': cartItemMap.minTime,
                               'veg': veg,
+                              'itemCategory' : cartItemMap.itemCategory,
                             });
                     cartMap.putIfAbsent('shopId', () => widget.shop.shopId);
                     await FirebaseFirestore.instance
@@ -294,7 +296,8 @@ class _AddProductState extends State<AddProduct> {
                     maxLines: null,
                     decoration: InputDecoration(
                       counterText: '',
-                      labelText: "pubg theme,Friends theme",
+                      labelText: "Theme",
+                      hintText: "Ex- Pubg,Coding",
                       prefixIcon: Icon(Icons.description, color: base),
                       border: OutlineInputBorder(),
                     ),
@@ -315,7 +318,8 @@ class _AddProductState extends State<AddProduct> {
                     maxLines: null,
                     decoration: InputDecoration(
                       counterText: '',
-                      labelText: "chocochips,cheesefrostings",
+                      hintText: "Chocochips,Cheesefrosting",
+                      labelText: "Toppings",
                       prefixIcon: Icon(Icons.description, color: base),
                       border: OutlineInputBorder(),
                     ),
@@ -329,14 +333,15 @@ class _AddProductState extends State<AddProduct> {
                   padding: EdgeInsets.symmetric(horizontal: 15.0),
                   child: TextFormField(
                     validator: (val) {
-                      return val.isEmpty ? "Weight cannot be empty" : null;
+                      return val.isEmpty ? "Size cannot be empty" : null;
                     },
                     cursorColor: base,
                     maxLines: null,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       counterText: '',
-                      labelText: "1 pounds",
+                      labelText: "Size & Tier",
+                      hintText: '3 pounds - 2 tier',
                       prefixIcon: Icon(Icons.description, color: base),
                       border: OutlineInputBorder(),
                     ),
@@ -356,7 +361,8 @@ class _AddProductState extends State<AddProduct> {
                     maxLines: null,
                     decoration: InputDecoration(
                       counterText: '',
-                      labelText: "flavours",
+                      labelText: "Flavour",
+                      hintText: 'Ex - Chocolate,Butterscotch',
                       prefixIcon: Icon(Icons.description, color: base),
                       border: OutlineInputBorder(),
                     ),

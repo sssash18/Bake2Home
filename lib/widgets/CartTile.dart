@@ -22,7 +22,6 @@ class _CartTileState extends State<CartTile> {
   bool customItem;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     print(quantity);
@@ -336,14 +335,49 @@ class _CartTileState extends State<CartTile> {
                           }).catchError((e) async {
                             await pr.hide();
                             print(e.toString());
+
                           });
-                          Navigator.pop(context);
+                          if (quantity == 0) {
+                            await pr.show();
+                            await FirebaseFirestore.instance
+                                .collection('Users')
+                                .doc(currentUser.uid)
+                                .update({
+                              'cart.${widget.vid}': FieldValue.delete(),
+                            }).then((value) async {
+                              await pr.hide();
+                            }).catchError((e) async {
+                              await pr.hide();
+                              print(e.toString());
+                            });
+                            Navigator.pop(context);
+                          } else {
+                            Map<String, dynamic> item =
+                                Map.from(this.widget.item);
+                            notes.removeAt(index);
+                            item.update('quantity', (value) => quantity);
+                            item.update('notes', (value) => notes);
+                            cartMap.update(this.widget.vid, (value) => item);
+                            await pr.show();
+                            await FirebaseFirestore.instance
+                                .collection('Users')
+                                .doc(currentUser.uid)
+                                .update({
+                              'cart': cartMap,
+                            }).then((value) async {
+                              await pr.hide();
+                            }).catchError((e) async {
+                              await pr.hide();
+                              print(e.toString());
+                            });
+                            Navigator.pop(context);
+                          }
                         }
-                      }
-                    },
-                  ),
-                );
-              }),
+                      },
+                    ),
+                  );
+                }),
+              ),]
             ),
           );
         });

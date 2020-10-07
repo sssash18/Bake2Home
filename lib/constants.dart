@@ -2,7 +2,6 @@ import 'package:bake2home/functions/category.dart';
 import 'package:bake2home/services/PushNotification.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/functions/shop.dart';
 import 'package:bake2home/functions/user.dart' as LocalUser;
@@ -10,7 +9,6 @@ import 'package:intl/intl.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:intl/intl.dart';
 
 
 Color base = Color(0xff654ea3);
@@ -89,6 +87,7 @@ String createAvatarText() {
 Future<bool> genDialog(
     BuildContext context, String msg, String yes, String no) async {
   bool rs = await showDialog(
+      barrierDismissible: false,
       context: context,
       builder: (context) {
         return AlertDialog(

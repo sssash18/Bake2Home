@@ -26,8 +26,9 @@ class ChatService {
         'tms': tms,
         'seen': false,
       });
+      print(shopMap[fid].token);
       await PushNotification()
-          .pushMessage(shopMap[fid].shopName, msg, shopMap[fid].token);
+          .pushMessage('New Message', msg, shopMap[fid].token);
     } catch (e) {
       print(e.toString());
     }
@@ -65,6 +66,7 @@ class ChatService {
         'filename': filename,
         'path': path
       });
+      print('cCCCCCC');
       await PushNotification()
           .pushMessage(shopMap[fid].shopName, "Photo", shopMap[fid].token);
     } catch (e) {

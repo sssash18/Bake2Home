@@ -44,7 +44,7 @@ class _CheckoutState extends State<Checkout> {
       DropdownMenuItem<String>(
           value: "partial",
           child: Text(
-              "Partial COD(\u20B9 ${((shopMap[widget.order.shopId].advance) * widget.order.amount / 100).truncate()})"))
+              "Partial COD(Now \u20B9 ${((shopMap[widget.order.shopId].advance) * widget.order.amount / 100).truncate()})"))
     ];
     _selectedOption = "full";
     _upiIndia.getAllUpiApps().then((value) {

@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:bake2home/chatApp/firebaseServices/usermodel.dart';
 import 'package:bake2home/chatApp/loadingScreen.dart';
-import 'package:bake2home/chatApp/screens/chatwithfriend.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:bake2home/chatApp/firebaseServices/authservice.dart';
@@ -15,21 +14,18 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   int mystate = 1;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    // TODO: implement didChangeAppLifecycleState
     super.didChangeAppLifecycleState(state);
     switch (state) {
       case AppLifecycleState.resumed:
@@ -90,7 +86,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
           ],
         ),
         body: StreamBuilder(
-            stream: Firestore.instance.collection('myUsers').snapshots(),
+            stream: FirebaseFirestore.instance.collection('myUsers').snapshots(),
             builder: (context, ss) {
               return ss.hasData
                   ? (ListView.builder(
