@@ -22,7 +22,6 @@ class _CartTileState extends State<CartTile> {
   bool customItem;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     quantity = this.widget.item['quantity'];
     print(this.widget.shop.cookTime);

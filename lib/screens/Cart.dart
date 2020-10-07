@@ -248,14 +248,15 @@ class _CartState extends State<Cart> {
 
                                                   return InkWell(
                                                     onTap: () {
+                                                      String itemId = "";
+                                                      //itemId = cartMap.keys.elementAt(index).split('-').first + 
                                                       Map itemsMap = shopMap[
                                                               cartMap['shopId']]
                                                           .items;
-                                                      //print(itemsMap);
+                                                      print(itemsMap);
+                                                      
                                                       print('IIIIIII' +
-                                                          cartMap[cartMap.keys
-                                                              .elementAt(
-                                                                  index)]);
+                                                          cartMap.toString());
                                                     },
                                                     child: CartTile(
                                                       item: cartMap[cartMap.keys
@@ -432,6 +433,7 @@ class _CartState extends State<Cart> {
                 makingTime = max(makingTime, items['minTime'].toDouble());
               }
             });
+            print('MMMMMM' + makingTime.toString());
             print(cakeCount);
             if (itemCount <= 2) {
               makingTime = makingTime;
@@ -443,7 +445,7 @@ class _CartState extends State<Cart> {
               makingTime = 3 * makingTime;
               minTime = (makingTime * 60).toInt();
             }
-            print(makingTime);
+            print(minTime);
             return Container(
                 height: MediaQuery.of(context).size.height/1.5,
                           child: Column(children: <Widget>[
