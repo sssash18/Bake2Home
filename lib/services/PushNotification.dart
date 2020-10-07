@@ -1,4 +1,5 @@
 import 'package:bake2home/chatApp/screens/chatwithfriend.dart';
+import 'package:bake2home/functions/order.dart';
 import 'package:bake2home/services/database.dart';
 import 'package:bake2home/widgets/Review.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -39,9 +40,29 @@ class PushNotification{
                           );
                         });
           }
-          if(payload['data']['route'] == 'chat'){
-            print(payload.toString());
-            //Navigator.push(navigatorKey.currentContext, MaterialPageRoute(builder: (BuildContext context) => ChatWithFriend(order: payload['data']['chatId'])));
+          if(payload['data']['route']=='chat'){
+            String orderId = payload['data']['chatId'];
+            FirebaseFirestore.instance.collection("Orders").doc(orderId).get().then((e){
+              Order order = Order(
+                userId: e.data()['userId'],
+                shopId: e.data()['shopId'],
+                status: e.data()['status'],
+                otp: e.data()['otp'],
+                paymentType: e.data()['paymentType'],
+                amount: e.data()['amount'].toDouble(),
+                delCharges: e.data()['deliveryCharges'].toDouble(),
+                pickUp: e.data()['pickUp'],
+                orderTime: e.data()['orderTime'],
+                deliveryTime: e.data()['deliveryTime'],
+                deliveryAddress: e.data()['deliveryAddress'],
+                items: e.data()['items'],
+                codAmount: e.data()['codAmount'].toDouble(),
+                //reason: e.data()['reason'],
+                //compensation: e.data()['compensation'].toDouble(),
+                orderId: e.data()['orderId']);
+              Navigator.push(navigatorKey.currentContext,MaterialPageRoute(builder: (BuildContext context) => ChatWithFriend(order : order)));
+            });
+
           }
         }
         
