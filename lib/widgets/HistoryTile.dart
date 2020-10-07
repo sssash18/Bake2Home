@@ -328,7 +328,7 @@ class _HistoryTileState extends State<HistoryTile> {
                 ),
               ],
             ),
-            Row(
+            widget.order.status=="CANCELLED" ? Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
@@ -345,7 +345,7 @@ class _HistoryTileState extends State<HistoryTile> {
                   ),
                 ),
               ],
-            ),
+            ):Container(),
 
             widget.order.status=="PAID" ? Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
