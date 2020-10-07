@@ -284,64 +284,71 @@ class _CartTileState extends State<CartTile> {
                   colors: [Color(0xffeaafc8), Color(0xff654ea3)]),
             ),
             child: Column(
-              children: List.generate(notes.length, (index) {
-                return ListTile(
-                  title: Text(
-                    notes[index],
-                    style: TextStyle(color: white, fontSize: 16),
-                  ),
-                  trailing: IconButton(
-                    icon: Icon(
-                      Icons.clear,
-                      color: white,
+                children: [
+                Container(
+                  child: Text('Remove Item',style: TextStyle(color: white,fontWeight: FontWeight.bold,fontSize: 18))
+                ),
+                Column(
+                children: 
+                  List.generate(notes.length, (index) {
+                  return ListTile(
+                    title: Text(
+                      notes[index],
+                      style: TextStyle(color: white, fontSize: 16),
                     ),
-                    onPressed: () async {
-                      bool rs = await genDialog(context,
-                          "Are you sure to remove the item", "Yes", "No");
-                      if (rs) {
-                        setState(() {
-                          --quantity;
-                        });
-                        if (quantity == 0) {
-                          await pr.show();
-                          await FirebaseFirestore.instance
-                              .collection('Users')
-                              .doc(currentUser.uid)
-                              .update({
-                            'cart.${widget.vid}': FieldValue.delete(),
-                          }).then((value) async {
-                            await pr.hide();
-                          }).catchError((e) async {
-                            await pr.hide();
-                            print(e.toString());
+                    trailing: IconButton(
+                      icon: Icon(
+                        Icons.delete,
+                        color: white,
+                      ),
+                      onPressed: () async {
+                        bool rs = await genDialog(context,
+                            "Are you sure to remove the item", "Yes", "No");
+                        if (rs) {
+                          setState(() {
+                            --quantity;
                           });
-                          Navigator.pop(context);
-                        } else {
-                          Map<String, dynamic> item =
-                              Map.from(this.widget.item);
-                          notes.removeAt(index);
-                          item.update('quantity', (value) => quantity);
-                          item.update('notes', (value) => notes);
-                          cartMap.update(this.widget.vid, (value) => item);
-                          await pr.show();
-                          await FirebaseFirestore.instance
-                              .collection('Users')
-                              .doc(currentUser.uid)
-                              .update({
-                            'cart': cartMap,
-                          }).then((value) async {
-                            await pr.hide();
-                          }).catchError((e) async {
-                            await pr.hide();
-                            print(e.toString());
-                          });
-                          Navigator.pop(context);
+                          if (quantity == 0) {
+                            await pr.show();
+                            await FirebaseFirestore.instance
+                                .collection('Users')
+                                .doc(currentUser.uid)
+                                .update({
+                              'cart.${widget.vid}': FieldValue.delete(),
+                            }).then((value) async {
+                              await pr.hide();
+                            }).catchError((e) async {
+                              await pr.hide();
+                              print(e.toString());
+                            });
+                            Navigator.pop(context);
+                          } else {
+                            Map<String, dynamic> item =
+                                Map.from(this.widget.item);
+                            notes.removeAt(index);
+                            item.update('quantity', (value) => quantity);
+                            item.update('notes', (value) => notes);
+                            cartMap.update(this.widget.vid, (value) => item);
+                            await pr.show();
+                            await FirebaseFirestore.instance
+                                .collection('Users')
+                                .doc(currentUser.uid)
+                                .update({
+                              'cart': cartMap,
+                            }).then((value) async {
+                              await pr.hide();
+                            }).catchError((e) async {
+                              await pr.hide();
+                              print(e.toString());
+                            });
+                            Navigator.pop(context);
+                          }
                         }
-                      }
-                    },
-                  ),
-                );
-              }),
+                      },
+                    ),
+                  );
+                }),
+              ),]
             ),
           );
         });

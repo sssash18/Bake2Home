@@ -22,11 +22,11 @@ class PushNotification{
 
   Future<void> init() async{
     DatabaseService().getDeliveryToken();
+    
     if(!_initialized){
       firebaseMessaging.requestNotificationPermissions();
       firebaseMessaging.configure(
-        onMessage: (data){
-          
+        onMessage: (payload)async{
         },
         onResume: (payload){
           if(payload['data']['route'] == 'delivered'){

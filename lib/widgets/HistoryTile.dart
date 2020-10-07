@@ -328,6 +328,25 @@ class _HistoryTileState extends State<HistoryTile> {
                 ),
               ],
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "REFUND AMOUNT",
+                    style: TextStyle(color: Colors.grey[700]),
+                  ),
+                ),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    '\u20B9 ${widget.order.refund.toInt()}',
+                  ),
+                ),
+              ],
+            ),
+
             widget.order.status=="PAID" ? Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

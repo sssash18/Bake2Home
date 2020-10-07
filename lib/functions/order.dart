@@ -7,6 +7,7 @@ class Order {
       status,
       paymentType,
       comments,
+      instructions,
       deliveryAddress;
 
   double amount, refund = 0, delCharges;
@@ -26,6 +27,7 @@ class Order {
     this.status,
     this.otp,
     this.paymentType,
+    this.instructions,
     this.amount,
     this.delCharges,
     this.pickUp,
@@ -34,6 +36,7 @@ class Order {
     this.deliveryAddress,
     this.items,
     this.comments,
+    this.refund,
     this.codAmount,
   });
 }

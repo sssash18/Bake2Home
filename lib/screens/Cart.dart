@@ -30,6 +30,7 @@ class _CartState extends State<Cart> {
   TimeOfDay startTime;
   TimeOfDay endTime;
   String _date, _time;
+  String instructions = "";
   List<DropdownMenuItem<String>> _addresses;
   DateTime delTime;
   String _selectedAddress;
@@ -415,6 +416,7 @@ class _CartState extends State<Cart> {
     int minTime = 0;
     int itemCount = 0;
     showModalBottomSheet(
+      isScrollControlled: true,
         context: context,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
@@ -442,220 +444,233 @@ class _CartState extends State<Cart> {
               minTime = (makingTime * 60).toInt();
             }
             print(makingTime);
-            return Column(children: <Widget>[
-              SizedBox(
-                height: MediaQuery.of(context).size.height / 20,
-              ),
-              Container(
-                alignment: Alignment.topCenter,
-                margin: EdgeInsets.symmetric(
-                    horizontal: MediaQuery.of(context).size.width / 40),
-                child: Text(
-                  "Choose the Delivery Date\n and Time",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: head),
+            return Container(
+                height: MediaQuery.of(context).size.height/1.5,
+                          child: Column(children: <Widget>[
+                SizedBox(
+                  height: MediaQuery.of(context).size.height / 20,
                 ),
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height / 40,
-              ),
-              FlatButton.icon(
-                  onPressed: () async {
-                    DateTime date = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime.now(),
-                        lastDate: DateTime.now().add(Duration(days: 12)));
-                    if (date != null) {
-                      setState(() {
-                        delTime = date;
-                        _date = DateFormat.yMMMd().format(date);
-                        print(delTime);
-                        print(_date);
-                      });
-                    }
-                  },
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(border),
+                Container(
+                  alignment: Alignment.topCenter,
+                  margin: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.of(context).size.width / 40),
+                  child: Text(
+                    "Choose the Delivery Date\n and Time",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: head),
                   ),
-                  color: base,
-                  icon: Icon(Icons.date_range, color: white),
-                  label: Text(
-                    _date ?? "Choose the date",
-                    style: TextStyle(color: white),
-                  )),
-              SizedBox(
-                height: MediaQuery.of(context).size.height / 40,
-              ),
-              FlatButton.icon(
-                  onPressed: () async {
-                    TimeOfDay nowTime = TimeOfDay.now();
-                    if (_date != null) {
-                      TimeOfDay time = await showTimePicker(
-                          context: context, initialTime: nowTime);
-                      if (time != null) {
-                        int timeInMinutes = time.hour * 60 + time.minute;
-                        int nowInMinutes = nowTime.hour * 60 + nowTime.minute;
-                        int startInMinutes =
-                            startTime.hour * 60 + startTime.minute;
-                        int endInMinutes = endTime.hour * 60 + endTime.minute;
-                        int makingInMinutes = minTime;
-                        nowInMinutes += makingInMinutes;
-                        print('$nowInMinutes  $makingInMinutes');
-                        if (timeInMinutes >= startInMinutes &&
-                            timeInMinutes <= endInMinutes) {
-                          if (delTime.day == DateTime.now().day &&
-                              delTime.month == DateTime.now().month) {
-                            if (timeInMinutes >= nowInMinutes) {
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height / 40,
+                ),
+                FlatButton.icon(
+                    onPressed: () async {
+                      DateTime date = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime.now(),
+                          lastDate: DateTime.now().add(Duration(days: 12)));
+                      if (date != null) {
+                        setState(() {
+                          delTime = date;
+                          _date = DateFormat.yMMMd().format(date);
+                          print(delTime);
+                          print(_date);
+                        });
+                      }
+                    },
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(border),
+                    ),
+                    color: base,
+                    icon: Icon(Icons.date_range, color: white),
+                    label: Text(
+                      _date ?? "Choose the date",
+                      style: TextStyle(color: white),
+                    )),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height / 40,
+                ),
+                FlatButton.icon(
+                    onPressed: () async {
+                      TimeOfDay nowTime = TimeOfDay.now();
+                      if (_date != null) {
+                        TimeOfDay time = await showTimePicker(
+                            context: context, initialTime: nowTime);
+                        if (time != null) {
+                          int timeInMinutes = time.hour * 60 + time.minute;
+                          int nowInMinutes = nowTime.hour * 60 + nowTime.minute;
+                          int startInMinutes =
+                              startTime.hour * 60 + startTime.minute;
+                          int endInMinutes = endTime.hour * 60 + endTime.minute;
+                          int makingInMinutes = minTime;
+                          nowInMinutes += makingInMinutes;
+                          print('$nowInMinutes  $makingInMinutes');
+                          if (timeInMinutes >= startInMinutes &&
+                              timeInMinutes <= endInMinutes) {
+                            if (delTime.day == DateTime.now().day &&
+                                delTime.month == DateTime.now().month) {
+                              if (timeInMinutes >= nowInMinutes) {
+                                setState(() {
+                                  delTime =
+                                      delTime.add(Duration(hours: time.hour));
+                                  delTime =
+                                      delTime.add(Duration(minutes: time.minute));
+                                  _time = time.format(context);
+                                });
+                              } else {
+                                showGenDialog(context,
+                                    "Please select valid time accordingly to baking the cake");
+                              }
+                            } else {
                               setState(() {
-                                delTime =
-                                    delTime.add(Duration(hours: time.hour));
+                                delTime = delTime.add(Duration(hours: time.hour));
                                 delTime =
                                     delTime.add(Duration(minutes: time.minute));
                                 _time = time.format(context);
                               });
-                            } else {
-                              showGenDialog(context,
-                                  "Please select valid time accordingly to baking the cake");
                             }
                           } else {
-                            setState(() {
-                              delTime = delTime.add(Duration(hours: time.hour));
-                              delTime =
-                                  delTime.add(Duration(minutes: time.minute));
-                              _time = time.format(context);
-                            });
+                            showGenDialog(context,
+                                "We provide service only from 10am to 10 pm only!");
                           }
-                        } else {
-                          showGenDialog(context,
-                              "We provide service only from 10am to 10 pm only!");
                         }
-                      }
-                    } else {
-                      showGenDialog(context, "Please select date first");
-                    }
-                  },
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(border),
-                  ),
-                  color: base,
-                  icon: Icon(Icons.date_range, color: white),
-                  label: Text(
-                    _time ?? "Choose the time",
-                    style: TextStyle(color: white),
-                  )),
-              SizedBox(
-                height: MediaQuery.of(context).size.height / 40,
-              ),
-              DropdownButton(
-                  value: _selectedAddress,
-                  items: _addresses,
-                  onChanged: (val) {
-                    setState(() {
-                      _selectedAddress = val;
-                    });
-                  }),
-              SizedBox(
-                height: MediaQuery.of(context).size.height / 40,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  FlatButton.icon(
-                    color: Colors.grey,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(border),
-                    ),
-                    onPressed: () async {
-                      Navigator.pop(context);
-                    },
-                    icon: Icon(
-                      Icons.cancel,
-                      color: white,
-                    ),
-                    label: Text('Cancel', style: TextStyle(color: white)),
-                  ),
-                  FlatButton.icon(
-                    color: base,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(border),
-                    ),
-                    onPressed: () async {
-                      pr = ProgressDialog(context,
-                          type: ProgressDialogType.Normal,
-                          isDismissible: true,
-                          showLogs: true);
-                      pr.style(
-                          message: 'Preparing Your Order...',
-                          borderRadius: 10.0,
-                          backgroundColor: Colors.white,
-                          progressWidget:
-                              Center(child: CircularProgressIndicator()),
-                          elevation: 10.0,
-                          insetAnimCurve: Curves.easeInOut,
-                          progress: 0.0,
-                          maxProgress: 100.0,
-                          progressTextStyle: TextStyle(
-                              color: Colors.black,
-                              fontSize: 13.0,
-                              fontWeight: FontWeight.w400),
-                          messageTextStyle: TextStyle(
-                              color: Colors.black,
-                              fontSize: 19.0,
-                              fontWeight: FontWeight.w600));
-
-                      // print(delTime);
-                      int _otp = Random().nextInt(9999);
-                      while (_otp < 1000) {
-                        _otp *= 10;
-                      }
-                      Order order = Order(
-                          userId: currentUserID,
-                          shopId: currentShopId,
-                          status: "PENDING",
-                          otp: _otp,
-                          paymentType: "UPI",
-                          amount: subtotal + delCharges,
-                          delCharges: delCharges,
-                          pickUp: pickupValue,
-                          orderTime: Timestamp.now(),
-                          deliveryTime: Timestamp.fromDate(delTime),
-                          deliveryAddress: _selectedAddress,
-                          items: cartMap);
-                      await pr.show();
-                      bool rs = await DatabaseService().createOrder(order);
-                      if (rs) {
-                        await pushNotification.pushMessagewithNewOrder(
-                            'New Order Request',
-                            'Request from ${currentUser.name}',
-                            shop.token,
-                            order.orderId);
-                        await pr.hide();
-
-                        await Navigator.push(context,
-                            MaterialPageRoute(builder: (BuildContext context) {
-                          return Checkout(order: order);
-                        }));
-                        Navigator.pop(context);
                       } else {
-                        await pr.hide();
-                        Navigator.pop(context);
-                        showSnackBar(
-                            cartKey, "Cannot Prepare Order... try again later");
+                        showGenDialog(context, "Please select date first");
                       }
-                      // } else {
-                      //   showGenDialog(context, "Please fill essential Details");
-                      // }
                     },
-                    icon: Icon(
-                      Icons.done,
-                      color: white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(border),
                     ),
-                    label: Text('Confirm', style: TextStyle(color: white)),
-                  ),
-                ],
-              )
-            ]);
+                    color: base,
+                    icon: Icon(Icons.date_range, color: white),
+                    label: Text(
+                      _time ?? "Choose the time",
+                      style: TextStyle(color: white),
+                    )),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height / 40,
+                ),
+                DropdownButton(
+                    value: _selectedAddress,
+                    items: _addresses,
+                    onChanged: (val) {
+                      setState(() {
+                        _selectedAddress = val;
+                      });
+                    }),
+               Container(
+                  margin: EdgeInsets.all(10),
+                                child: TextFormField(
+                  decoration:
+                      InputDecoration(labelText: 'Special Baking Instructions', border: OutlineInputBorder()),
+                  onChanged: (val) {
+                    instructions = val;
+                  },),
+               ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height / 40,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    FlatButton.icon(
+                      color: Colors.grey,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(border),
+                      ),
+                      onPressed: () async {
+                        Navigator.pop(context);
+                      },
+                      icon: Icon(
+                        Icons.cancel,
+                        color: white,
+                      ),
+                      label: Text('Cancel', style: TextStyle(color: white)),
+                    ),
+                    FlatButton.icon(
+                      color: base,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(border),
+                      ),
+                      onPressed: () async {
+                        pr = ProgressDialog(context,
+                            type: ProgressDialogType.Normal,
+                            isDismissible: true,
+                            showLogs: true);
+                        pr.style(
+                            message: 'Preparing Your Order...',
+                            borderRadius: 10.0,
+                            backgroundColor: Colors.white,
+                            progressWidget:
+                                Center(child: CircularProgressIndicator()),
+                            elevation: 10.0,
+                            insetAnimCurve: Curves.easeInOut,
+                            progress: 0.0,
+                            maxProgress: 100.0,
+                            progressTextStyle: TextStyle(
+                                color: Colors.black,
+                                fontSize: 13.0,
+                                fontWeight: FontWeight.w400),
+                            messageTextStyle: TextStyle(
+                                color: Colors.black,
+                                fontSize: 19.0,
+                                fontWeight: FontWeight.w600));
+
+                        // print(delTime);
+                        int _otp = Random().nextInt(9999);
+                        while (_otp < 1000) {
+                          _otp *= 10;
+                        }
+                        Order order = Order(
+                            userId: currentUserID,
+                            shopId: currentShopId,
+                            status: "PENDING",
+                            otp: _otp,
+                            paymentType: "UPI",
+                            instructions: instructions,
+                            amount: subtotal + delCharges,
+                            delCharges: delCharges,
+                            pickUp: pickupValue,
+                            orderTime: Timestamp.now(),
+                            deliveryTime: Timestamp.fromDate(delTime),
+                            deliveryAddress: _selectedAddress,
+                            items: cartMap);
+                        await pr.show();
+                        bool rs = await DatabaseService().createOrder(order);
+                        if (rs) {
+                          await pushNotification.pushMessagewithNewOrder(
+                              'New Order Request',
+                              'Request from ${currentUser.name}',
+                              shop.token,
+                              order.orderId);
+                          await pr.hide();
+
+                          await Navigator.push(context,
+                              MaterialPageRoute(builder: (BuildContext context) {
+                            return Checkout(order: order);
+                          }));
+                          Navigator.pop(context);
+                        } else {
+                          await pr.hide();
+                          Navigator.pop(context);
+                          showSnackBar(
+                              cartKey, "Cannot Prepare Order... try again later");
+                        }
+                        // } else {
+                        //   showGenDialog(context, "Please fill essential Details");
+                        // }
+                      },
+                      icon: Icon(
+                        Icons.done,
+                        color: white,
+                      ),
+                      label: Text('Confirm', style: TextStyle(color: white)),
+                    ),
+                  ],
+                )
+              ]),
+            );
           });
         });
   }

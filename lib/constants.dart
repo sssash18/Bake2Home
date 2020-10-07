@@ -89,6 +89,7 @@ String createAvatarText() {
 Future<bool> genDialog(
     BuildContext context, String msg, String yes, String no) async {
   bool rs = await showDialog(
+      barrierDismissible: false,
       context: context,
       builder: (context) {
         return AlertDialog(
