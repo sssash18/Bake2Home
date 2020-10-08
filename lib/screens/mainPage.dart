@@ -200,10 +200,10 @@ class _MainPageState extends State<MainPage> {
                         MediaQuery.of(context).size.width / 30, 0, 0, 0),
                     child: ListView.builder(
                         scrollDirection: Axis.horizontal,
-                        itemCount: 5,
+                        itemCount: trendingList.length,
                         itemBuilder: (BuildContext context, int index) {
                           return GestureDetector(
-                            child: PastryTile(),
+                            child: PastryTile(itemName: trendingList.elementAt(index).model.itemName, photoUrl: ((trendingList.elementAt(index).model.photoUrl) !=null ? trendingList.elementAt(index).model.photoUrl : 'https://firebasestorage.googleapis.com/v0/b/bakemycake-1d1dc.appspot.com/o/Artboard%20%E2%80%93%201%20(5).png?alt=media&token=e48e0063-6727-47c7-82e8-df2d02c07b57'),),
                             onTap: () {
                               Navigator.push(
                                   context,

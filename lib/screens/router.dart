@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:bake2home/functions/category.dart';
+import 'package:bake2home/functions/customisedItemModel.dart';
+import 'package:bake2home/functions/trending.dart';
 import 'package:bake2home/functions/user.dart';
 import 'package:bake2home/screens/VendorProfile.dart';
 import 'package:bake2home/screens/homepage.dart';
@@ -32,6 +34,8 @@ class _RouterState extends State<Router> with WidgetsBindingObserver {
       FirebaseFirestore.instance.collection("DeliveryCharges");
   CollectionReference slidesCollection =
       FirebaseFirestore.instance.collection("Slides");
+  CollectionReference trendCollection =
+      FirebaseFirestore.instance.collection("Trending");
   FirebaseAuth _auth = FirebaseAuth.instance;
   @override
   void initState() {
@@ -115,6 +119,7 @@ class _RouterState extends State<Router> with WidgetsBindingObserver {
       done = false;
     });
     await getCategories();
+    await getTrending();
     getDeliveryCharges();
     // await getCardDetails();
 
@@ -192,6 +197,34 @@ class _RouterState extends State<Router> with WidgetsBindingObserver {
       value.docs.forEach((element) {
         Shop shop = shopMap[element.data()['shopId']];
         topPickMap.putIfAbsent(shop.shopId, () => shop);
+      });
+    });
+  }
+
+  Future<void> getTrending() async{
+    await trendCollection.get().then((value){
+      CustomisedItemModel model = CustomisedItemModel();
+      value.docs.forEach((element) { 
+        print(element.toString());
+        Map item = shopMap[element.data()['shopId']].items[element.data()['itemCategory']][element.data()['itemType']][element.id];
+        print(item.toString());
+        model.itemName = item['itemName'];
+        model.ingredients = List<String>.from(item['ingredients']);
+        model.itemCategory = item['itemCategory'];
+        model.itemId = item['itemId'];
+        model.minTime = item['minTime'];
+        model.photoUrl = item['photoUrl'];
+        model.recipe = item['bio'];
+        model.variants = item['variants'];
+        model.veg = item['veg'];
+        model.flavours = List<String>.from(item['flavours']);
+        
+        Trending trend = Trending(
+          shopId: element.data()['shopId'],
+          model: model
+        );
+        trendingList.add(trend);
+        print(trendingList.toString());
       });
     });
   }

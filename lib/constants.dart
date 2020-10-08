@@ -1,4 +1,5 @@
 import 'package:bake2home/functions/category.dart';
+import 'package:bake2home/functions/trending.dart';
 import 'package:bake2home/services/PushNotification.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -40,6 +41,7 @@ PushNotification pushNotification = PushNotification();
 String timerVal;
 GlobalKey navigatorKey = GlobalKey<NavigatorState>();
 List<Category> categoryList = [];
+List<Trending> trendingList = [];
 List<double> delChargesList = [];
 bool timerOver = false;
 StreamController<bool> controller = StreamController<bool>.broadcast();
