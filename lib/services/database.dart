@@ -258,7 +258,7 @@ class DatabaseService {
       rs = true;
       pushNotification.pushMessagewithCancel(
           "Order ${order.orderId} cancelled by ${currentUser.name}",
-          "Compensation Amount: ${compensationAmount.truncate()}",
+          "Compensation Amount: \u20B9 ${compensationAmount.toInt()}",
           shopMap[order.shopId].token,
           order.orderId)
           ;

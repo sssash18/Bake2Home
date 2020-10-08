@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/constants.dart';
 import 'package:bake2home/widgets/MySliverAppBar.dart';
@@ -180,7 +181,7 @@ class VendorProfile extends StatelessWidget {
                   height: 180,
                   decoration: BoxDecoration(
                       image: DecorationImage(
-                          image: AssetImage("assets/images/cake.jpeg"),
+                          image: categoryList.where((element) => element.name == categories[i]).first.photoUrl!=null ? CachedNetworkImageProvider(categoryList.where((element) => element.name == categories[i]).first.photoUrl) : AssetImage("assets/images/cake.jpeg"),
                           fit: BoxFit.fill),
                       borderRadius: BorderRadius.circular(border)),
                   alignment: Alignment.center,

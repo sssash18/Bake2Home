@@ -1,8 +1,17 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/constants.dart';
 
 
-class PastryTile extends StatelessWidget {
+class PastryTile extends StatefulWidget {
+  String itemName,photoUrl;
+  PastryTile({this.itemName,this.photoUrl});
+
+  @override
+  _PastryTileState createState() => _PastryTileState();
+}
+
+class _PastryTileState extends State<PastryTile> {
   @override
   Widget build(BuildContext context) {
     return  Container(
@@ -22,7 +31,7 @@ class PastryTile extends StatelessWidget {
             borderRadius: BorderRadius.circular(border),
             image: DecorationImage(
               fit: BoxFit.cover,
-              image: AssetImage("assets/images/cake.jpeg")
+              image: widget.photoUrl!=null ? CachedNetworkImageProvider(widget.photoUrl) : AssetImage("assets/images/cake.jpeg")
             ),
             )
           ),
@@ -33,18 +42,18 @@ class PastryTile extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children:<Widget>[ 
               Text(
-                'Bournville',
+                '${widget.itemName}',
                 style: TextStyle(
                 color: base,
                 fontWeight: FontWeight.bold,
                 )
               ),
-              Text(
-                'Rs. 60',
-                style: TextStyle(
-                color: text,
-                )
-              ),
+              // Text(
+              //   '\u20B9 ${widget.itemPrice}',
+              //   style: TextStyle(
+              //   color: text,
+              //   )
+              // ),
               ]
             ),
           )
