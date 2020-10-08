@@ -335,7 +335,6 @@ class _CartTileState extends State<CartTile> {
                           }).catchError((e) async {
                             await pr.hide();
                             print(e.toString());
-
                           });
                           if (quantity == 0) {
                             await pr.show();
@@ -373,11 +372,11 @@ class _CartTileState extends State<CartTile> {
                             Navigator.pop(context);
                           }
                         }
-                      },
-                    ),
-                  );
-                }),
-              ),]
+                      }
+                    },
+                  ),
+                );
+              }),
             ),
           );
         });

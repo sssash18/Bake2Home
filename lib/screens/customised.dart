@@ -36,7 +36,10 @@ class _CustomisedItemState extends State<CustomisedItem> {
                     itemCount: list.length,
                     itemBuilder: (BuildContext context, int i) {
                       return ItemTile(
-                          model: list[i], shopId: this.widget.shop.shopId);
+                          itemType: widget.itemType,
+                          category: widget.category,
+                          model: list[i],
+                          shopId: this.widget.shop.shopId);
                     })
                 : EmptyList();
           } else {
