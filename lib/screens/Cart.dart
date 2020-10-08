@@ -531,6 +531,12 @@ class _CartState extends State<Cart> {
                                     delTime.add(Duration(minutes: time.minute));
                                 _time = time.format(context);
                               });
+<<<<<<< Updated upstream
+=======
+                            } else {
+                              showGenDialog(context,
+                                  "Please select valid time accordingly to baking the cake \n Baking Time is $makingTime hrs");
+>>>>>>> Stashed changes
                             }
                           } else {
                             showGenDialog(context,
