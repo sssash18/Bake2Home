@@ -230,7 +230,7 @@ class DatabaseService {
 
   getRefundAmount(Order order) {
     double refundAmount = 0;
-    if ((DateTime.now().day < order.orderTime.toDate().day )&& DateTime.now().month == order.orderTime.toDate().month && DateTime.now().year == order.orderTime.toDate().year) 
+    if ((DateTime.now().day < order.deliveryTime.toDate().day )&& DateTime.now().month == order.deliveryTime.toDate().month && DateTime.now().year == order.deliveryTime.toDate().year) 
     {
       refundAmount = order.amount - order.codAmount;
     } else {
