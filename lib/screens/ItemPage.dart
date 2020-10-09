@@ -59,9 +59,6 @@ class _ItemPageState extends State<ItemPage> {
         child: Scaffold(
           key: _key,
           resizeToAvoidBottomInset: true,
-<<<<<<< Updated upstream
-          
-=======
           floatingActionButton:
               (widget.itemType == 'cake' && widget.category == 'customised')
                   ? FloatingActionButton(
@@ -78,7 +75,6 @@ class _ItemPageState extends State<ItemPage> {
                       },
                     )
                   : SizedBox.shrink(),
->>>>>>> Stashed changes
           body: CustomScrollView(
             slivers: <Widget>[
               SliverToBoxAdapter(
@@ -294,16 +290,11 @@ class _ItemPageState extends State<ItemPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-<<<<<<< Updated upstream
-                Icon(Icons.add_shopping_cart,color: white,),
-                Text("Add to cart", style: TextStyle(color: white),),
-=======
                 Icon(Icons.add_shopping_cart),
                 Text(
                   "Add to cart",
                   style: TextStyle(color: white),
                 ),
->>>>>>> Stashed changes
               ],
             ),
           ),

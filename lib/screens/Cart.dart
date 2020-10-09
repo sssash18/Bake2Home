@@ -246,15 +246,14 @@ class _CartState extends State<Cart> {
                                                   int index,
                                                 ) {
                                                   return InkWell(
-
                                                     onTap: () {
                                                       String itemId = "";
-                                                      //itemId = cartMap.keys.elementAt(index).split('-').first + 
+                                                      //itemId = cartMap.keys.elementAt(index).split('-').first +
                                                       Map itemsMap = shopMap[
                                                               cartMap['shopId']]
                                                           .items;
                                                       print(itemsMap);
-                                                      
+
                                                       print('IIIIIII' +
                                                           cartMap.toString());
                                                     },
@@ -417,7 +416,7 @@ class _CartState extends State<Cart> {
     int minTime = 0;
     int itemCount = 0;
     showModalBottomSheet(
-      isScrollControlled: true,
+        isScrollControlled: true,
         context: context,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
@@ -447,8 +446,8 @@ class _CartState extends State<Cart> {
             }
             print(minTime);
             return Container(
-                height: MediaQuery.of(context).size.height/1.5,
-                          child: Column(children: <Widget>[
+              height: MediaQuery.of(context).size.height / 1.5,
+              child: Column(children: <Widget>[
                 SizedBox(
                   height: MediaQuery.of(context).size.height / 20,
                 ),
@@ -516,8 +515,8 @@ class _CartState extends State<Cart> {
                                 setState(() {
                                   delTime =
                                       delTime.add(Duration(hours: time.hour));
-                                  delTime =
-                                      delTime.add(Duration(minutes: time.minute));
+                                  delTime = delTime
+                                      .add(Duration(minutes: time.minute));
                                   _time = time.format(context);
                                 });
                               } else {
@@ -526,22 +525,20 @@ class _CartState extends State<Cart> {
                               }
                             } else {
                               setState(() {
-                                delTime = delTime.add(Duration(hours: time.hour));
+                                delTime =
+                                    delTime.add(Duration(hours: time.hour));
                                 delTime =
                                     delTime.add(Duration(minutes: time.minute));
                                 _time = time.format(context);
                               });
-<<<<<<< Updated upstream
-=======
-                            } else {
-                              showGenDialog(context,
-                                  "Please select valid time accordingly to baking the cake \n Baking Time is $makingTime hrs");
->>>>>>> Stashed changes
                             }
                           } else {
                             showGenDialog(context,
-                                "We provide service only from 10am to 10 pm only!");
+                                "Please select valid time accordingly to baking the cake \n Baking Time is $makingTime hrs");
                           }
+                        } else {
+                          showGenDialog(context,
+                              "We provide service only from 10am to 10 pm only!");
                         }
                       } else {
                         showGenDialog(context, "Please select date first");
@@ -567,15 +564,17 @@ class _CartState extends State<Cart> {
                         _selectedAddress = val;
                       });
                     }),
-               Container(
+                Container(
                   margin: EdgeInsets.all(10),
-                                child: TextFormField(
-                  decoration:
-                      InputDecoration(labelText: 'Special Baking Instructions', border: OutlineInputBorder()),
-                  onChanged: (val) {
-                    instructions = val;
-                  },),
-               ),
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                        labelText: 'Special Baking Instructions',
+                        border: OutlineInputBorder()),
+                    onChanged: (val) {
+                      instructions = val;
+                    },
+                  ),
+                ),
                 SizedBox(
                   height: MediaQuery.of(context).size.height / 40,
                 ),
@@ -654,16 +653,16 @@ class _CartState extends State<Cart> {
                               order.orderId);
                           await pr.hide();
 
-                          await Navigator.push(context,
-                              MaterialPageRoute(builder: (BuildContext context) {
+                          await Navigator.push(context, MaterialPageRoute(
+                              builder: (BuildContext context) {
                             return Checkout(order: order);
                           }));
                           Navigator.pop(context);
                         } else {
                           await pr.hide();
                           Navigator.pop(context);
-                          showSnackBar(
-                              cartKey, "Cannot Prepare Order... try again later");
+                          showSnackBar(cartKey,
+                              "Cannot Prepare Order... try again later");
                         }
                         // } else {
                         //   showGenDialog(context, "Please fill essential Details");
