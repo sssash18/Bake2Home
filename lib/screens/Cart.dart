@@ -425,6 +425,9 @@ class _CartState extends State<Cart> {
         isDismissible: false,
         builder: (BuildContext context) {
           return StatefulBuilder(builder: (BuildContext context, setState) {
+            makingTime = 0;
+            itemCount = 0;
+            minTime = 0;
             cartMap.forEach((key, value) {
               if (key != 'shopId') {
                 Map<String, dynamic> items = cartMap[key];
@@ -434,6 +437,7 @@ class _CartState extends State<Cart> {
             });
             print('MMMMMM' + makingTime.toString());
             print(cakeCount);
+
             if (itemCount <= 2) {
               makingTime = makingTime;
               minTime = (makingTime * 60).toInt();
@@ -500,30 +504,34 @@ class _CartState extends State<Cart> {
                             context: context, initialTime: nowTime);
                         if (time != null) {
                           int timeInMinutes = time.hour * 60 + time.minute;
-                          int nowInMinutes = nowTime.hour * 60 + nowTime.minute;
+                          // int nowInMinutes = nowTime.hour * 60 + nowTime.minute;
                           int startInMinutes =
                               startTime.hour * 60 + startTime.minute;
                           int endInMinutes = endTime.hour * 60 + endTime.minute;
                           int makingInMinutes = minTime;
-                          nowInMinutes += makingInMinutes;
-                          print('$nowInMinutes  $makingInMinutes');
+                          // nowInMinutes += makingInMinutes;
+                          print('$delTime');
+                          print('$nowTime');
+                          DateTime bakingandCurrent = DateTime.now();
+                          print(makingInMinutes);
+                          bakingandCurrent = bakingandCurrent
+                              .add(Duration(minutes: makingInMinutes));
+                          // print(bakingandCurrent);
+                          // print(bakingandCurrent.millisecondsSinceEpoch
+                          //     .toString());
+                          DateTime currentDelTime = delTime;
+                          currentDelTime = currentDelTime.add(
+                              Duration(hours: time.hour, minutes: time.minute));
+                          // print(currentDelTime);
+                          // print(
+                          //     currentDelTime.millisecondsSinceEpoch.toString());
+                          // DateTime delTimemaking =
+                          //     DateTime.parse('formattedString');
                           if (timeInMinutes >= startInMinutes &&
                               timeInMinutes <= endInMinutes) {
-                            if (delTime.day == DateTime.now().day &&
-                                delTime.month == DateTime.now().month) {
-                              if (timeInMinutes >= nowInMinutes) {
-                                setState(() {
-                                  delTime =
-                                      delTime.add(Duration(hours: time.hour));
-                                  delTime = delTime
-                                      .add(Duration(minutes: time.minute));
-                                  _time = time.format(context);
-                                });
-                              } else {
-                                showGenDialog(context,
-                                    "Please select valid time accordingly to baking the cake");
-                              }
-                            } else {
+                            if (currentDelTime.millisecondsSinceEpoch >
+                                bakingandCurrent.millisecondsSinceEpoch) {
+                              // if (timeInMinutes >= nowInMinutes) {
                               setState(() {
                                 delTime =
                                     delTime.add(Duration(hours: time.hour));
@@ -531,17 +539,17 @@ class _CartState extends State<Cart> {
                                     delTime.add(Duration(minutes: time.minute));
                                 _time = time.format(context);
                               });
+                            } else {
+                              showGenDialog(context,
+                                  "Please select valid time accordingly to baking the cake \n Baking Time is $makingTime hrs $makingInMinutes minute");
                             }
                           } else {
                             showGenDialog(context,
-                                "Please select valid time accordingly to baking the cake \n Baking Time is $makingTime hrs");
+                                "We provide service only from 10am to 10 pm only!");
                           }
                         } else {
-                          showGenDialog(context,
-                              "We provide service only from 10am to 10 pm only!");
+                          showGenDialog(context, "Please select date first");
                         }
-                      } else {
-                        showGenDialog(context, "Please select date first");
                       }
                     },
                     shape: RoundedRectangleBorder(
