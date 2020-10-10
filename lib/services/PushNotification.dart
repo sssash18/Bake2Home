@@ -102,7 +102,7 @@ class PushNotification{
          'title': title,
          'android_channel_id' : '1891',
          'icon' : 'logo.png',
-         'sound' : 'cancel.mp3'
+         'sound' : 'neworder.mp3'
        },
        'priority': 'high',
        'data': <String, dynamic>{
