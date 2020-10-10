@@ -449,8 +449,8 @@ class _CartState extends State<Cart> {
               minTime = (makingTime * 60).toInt();
             }
             print(minTime);
-            return Container(
-              height: MediaQuery.of(context).size.height / 1.5,
+            return SingleChildScrollView(
+              padding: MediaQuery.of(context).viewInsets,
               child: Column(children: <Widget>[
                 SizedBox(
                   height: MediaQuery.of(context).size.height / 20,
@@ -547,9 +547,9 @@ class _CartState extends State<Cart> {
                             showGenDialog(context,
                                 "We provide service only from 10am to 10 pm only!");
                           }
-                        } else {
-                          showGenDialog(context, "Please select date first");
                         }
+                      } else {
+                        showGenDialog(context, "Please select date first");
                       }
                     },
                     shape: RoundedRectangleBorder(
