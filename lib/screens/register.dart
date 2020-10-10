@@ -44,9 +44,7 @@ class _RegisterState extends State<Register> {
     //     new MyUser(addresses: {}, contact: '', name: '', token: '', uid: '');
     print(currentUser.addresses);
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Your Details"),
-      ),
+      
       key: registerScaffold,
       body: Container(
         decoration: BoxDecoration(
@@ -62,7 +60,7 @@ class _RegisterState extends State<Register> {
             Text(
               "Let us know you!",
               textAlign: TextAlign.center,
-              style: TextStyle(color: black, fontWeight: FontWeight.bold),
+              style: TextStyle(color: white, fontWeight: FontWeight.bold),
             ),
             divider(),
             TextFormField(
@@ -127,7 +125,26 @@ class _RegisterState extends State<Register> {
                       color: white, fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 onPressed: () async {
-                  if (formKey2.currentState.validate()) {
+                  AlertDialog ad = AlertDialog(
+                    title: Text("Terms and Conditions",style:TextStyle(fontWeight: FontWeight.bold)),
+                    content: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          gen,
+                          Text(tnc,style:TextStyle(fontSize: 10)),
+                          cancel,
+                          Text(can,style:TextStyle(fontSize: 10)),
+                        ],
+                      )
+                    ),
+                    actions: [
+                      RaisedButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(border)
+                        ),
+                      onPressed: () async{
+                        Navigator.pop(context);
+                        if (formKey2.currentState.validate()) {
                     ProgressDialog pr = ProgressDialog(context,
                         type: ProgressDialogType.Normal,
                         isDismissible: true,
@@ -161,6 +178,16 @@ class _RegisterState extends State<Register> {
                       showSnackBar(registerScaffold, "Error Encountered");
                     }
                   }
+                      },
+                      color: base,
+                      child: Text("I agree", style: TextStyle(color: white)),
+                    )
+                    ],
+                  );
+                  showDialog(context: context,builder: (context){
+                    return ad;
+                  });
+                  
                 },
               ),
             ),

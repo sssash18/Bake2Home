@@ -37,11 +37,21 @@ class _AboutState extends State<About> {
             Container(
               child: Text("freepik",style: TextStyle(fontSize: 15,color:base,fontWeight: FontWeight.bold)),
             ),
-            ListTile(
-              onTap: (){
-                launch("https://www.freepik.com/vectors/birthday");
-              },
-              title: Text("Birthday vector created by freepik - www.freepik.com",style: TextStyle(color: Colors.blue),)
+            Container(
+                height: MediaQuery.of(context).size.height/3,
+                child: ListView.builder(
+                itemCount: attr.length,
+                itemBuilder: (BuildContext context,int index){
+                  print(attr.toString());
+                  return ListTile(
+                  onTap: (){
+                    launch(attr.elementAt(index)['url']);
+                  },
+                  title: Text(attr.elementAt(index)['name'],style: TextStyle(color: Colors.blue),)
+                );
+              
+                },
+              ),
             ),
             Container(
               child: Text("LottieFiles",style: TextStyle(fontSize: 15,color:base,fontWeight: FontWeight.bold)),

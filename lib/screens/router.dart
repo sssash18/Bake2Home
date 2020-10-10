@@ -26,6 +26,8 @@ class _RouterState extends State<Router> with WidgetsBindingObserver {
   bool internetStatus = true;
   CollectionReference shopCollection =
       FirebaseFirestore.instance.collection("Shops");
+  CollectionReference attrCollection =
+      FirebaseFirestore.instance.collection("Attributions");
   CollectionReference topCollection =
       FirebaseFirestore.instance.collection("TopPicks");
   CollectionReference categoryCollection =
@@ -118,6 +120,7 @@ class _RouterState extends State<Router> with WidgetsBindingObserver {
     await getUser().then((value) => done = true).catchError((e) {
       done = false;
     });
+    await getAttr();
     await getCategories();
     await getTrending();
     getDeliveryCharges();
@@ -214,7 +217,7 @@ class _RouterState extends State<Router> with WidgetsBindingObserver {
         model.itemId = item['itemId'];
         model.minTime = item['minTime'];
         model.photoUrl = item['photoUrl'];
-        model.recipe = item['bio'];
+        model.recipe = item['recipe'];
         model.variants = item['variants'];
         model.veg = item['veg'];
         model.flavours = List<String>.from(item['flavours']);
@@ -226,6 +229,14 @@ class _RouterState extends State<Router> with WidgetsBindingObserver {
         trendingList.add(trend);
         print(trendingList.toString());
       });
+    });
+  }
+
+  Future<void> getAttr() async{
+    await attrCollection.get().then((value){
+      value.docs.forEach((element) {
+        attr.add(element.data());
+       });
     });
   }
 
@@ -251,6 +262,7 @@ class _RouterState extends State<Router> with WidgetsBindingObserver {
       advance: document.data()['advance'].toDouble(),
       cod: document.data()['cod'],
       pickup: document.data()['pickUp'],
+      customTime : document.data()['customTime'].toDouble(),    
       reviews: List<String>.from(document.data()['reviews']),
     );
   }
