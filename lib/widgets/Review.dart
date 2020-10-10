@@ -23,7 +23,8 @@ class Review extends StatefulWidget {
   _ReviewState createState() => _ReviewState();
 
   Shop shop;
-  Review({this.shop});
+  String orderId;
+  Review({this.shop,this.orderId});
 }
 
 class _ReviewState extends State<Review> with SingleTickerProviderStateMixin {
@@ -68,6 +69,7 @@ class _ReviewState extends State<Review> with SingleTickerProviderStateMixin {
                         style: TextStyle(color: base, fontSize: 15.0),
                       ),
                       RatingBar(
+                        
                         initialRating: 3.0,
                         itemBuilder: (BuildContext context, int index) {
                           return Icon(
@@ -96,7 +98,7 @@ class _ReviewState extends State<Review> with SingleTickerProviderStateMixin {
                       FlatButton(
                           color: base,
                           onPressed: () async {
-                            submitReview(review, rating, widget.shop.shopId);
+                            submitReview(review, rating, widget.shop.shopId,widget.orderId);
                             Navigator.pop(context);
                           },
                           child: Text(
@@ -133,7 +135,7 @@ class _ReviewState extends State<Review> with SingleTickerProviderStateMixin {
     );
   }
 
-  void submitReview(String review, int rating, String shopId) async {
-    await DatabaseService().submitReview(shopId, review, rating);
+  void submitReview(String review, int rating, String shopId,String orderId) async {
+    await DatabaseService().submitReview(shopId, review, rating,orderId);
   }
 }

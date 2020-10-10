@@ -52,7 +52,7 @@ class DatabaseService {
     return rs;
   }
 
-  Future<bool> submitReview(String shopId, String review, int rating) async {
+  Future<bool> submitReview(String shopId, String review, int rating,String orderId) async {
     bool rs = false;
     int nums = shopMap[shopId].reviews.length;
     shopMap[shopId].reviews.add(review);
@@ -66,6 +66,10 @@ class DatabaseService {
         })
         .then((value) => rs = true)
         .catchError((e) => rs = false);
+    await orderCollection.doc(orderId).update({
+      'rating' : rating,
+      'review' : review
+    });
     return rs;
   }
 
@@ -217,7 +221,9 @@ class DatabaseService {
           'codAmount': 0,
           'refund' : 0,
           'compensation' : 0,
-          'penalty' : 0
+          'penalty' : 0,
+          'rating' : 0,
+          'review' : ""
         
         })
         .then((value) => {rs = true, print("Order Placed")})

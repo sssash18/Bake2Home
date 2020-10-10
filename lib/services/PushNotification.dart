@@ -35,6 +35,7 @@ class PushNotification{
                         builder: (context) {
                           return Review(
                             shop: shopMap[payload['data']['shopId']],
+                            orderId: payload['data']['orderId'],
                           );
                         });
           }
@@ -46,6 +47,7 @@ class PushNotification{
                         builder: (context) {
                           return Review(
                             shop: shopMap[payload['data']['shopId']],
+                            orderId: payload['data']['orderId'],
                           );
                         });
           }
