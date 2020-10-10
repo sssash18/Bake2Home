@@ -83,19 +83,19 @@ class _RouterState extends State<Router> with WidgetsBindingObserver {
   Future<void> initDynamicLinks() async {
     final PendingDynamicLinkData link =
         await FirebaseDynamicLinks.instance.getInitialLink();
-    _handleDeepLink(link,navigatorKey.currentContext);
+    _handleDeepLink(link, navigatorKey.currentContext);
     final Uri deeplink = link?.link;
     print("LLLLL" + deeplink.toString());
     FirebaseDynamicLinks.instance.onLink(
         onSuccess: (PendingDynamicLinkData link) async {
-      _handleDeepLink(link,navigatorKey.currentContext);
+      _handleDeepLink(link, navigatorKey.currentContext);
     }, onError: (OnLinkErrorException e) async {
       print('onLinkError');
       print(e.message);
     });
   }
 
-  void _handleDeepLink(PendingDynamicLinkData link,BuildContext context) {
+  void _handleDeepLink(PendingDynamicLinkData link, BuildContext context) {
     print("link:  " + '${link?.link}');
     Uri deepLink = link?.link;
     if (deepLink != null) {
@@ -201,12 +201,14 @@ class _RouterState extends State<Router> with WidgetsBindingObserver {
     });
   }
 
-  Future<void> getTrending() async{
-    await trendCollection.get().then((value){
+  Future<void> getTrending() async {
+    await trendCollection.get().then((value) {
       CustomisedItemModel model = CustomisedItemModel();
-      value.docs.forEach((element) { 
+      value.docs.forEach((element) {
         print(element.toString());
-        Map item = shopMap[element.data()['shopId']].items[element.data()['itemCategory']][element.data()['itemType']][element.id];
+        Map item = shopMap[element.data()['shopId']]
+                .items[element.data()['itemCategory']]
+            [element.data()['itemType']][element.id];
         print(item.toString());
         model.itemName = item['itemName'];
         model.ingredients = List<String>.from(item['ingredients']);
@@ -218,11 +220,9 @@ class _RouterState extends State<Router> with WidgetsBindingObserver {
         model.variants = item['variants'];
         model.veg = item['veg'];
         model.flavours = List<String>.from(item['flavours']);
-        
-        Trending trend = Trending(
-          shopId: element.data()['shopId'],
-          model: model
-        );
+
+        Trending trend =
+            Trending(shopId: element.data()['shopId'], model: model);
         trendingList.add(trend);
         print(trendingList.toString());
       });
@@ -251,6 +251,9 @@ class _RouterState extends State<Router> with WidgetsBindingObserver {
       advance: document.data()['advance'].toDouble(),
       cod: document.data()['cod'],
       pickup: document.data()['pickUp'],
+      recent: document.data()['recent'] == null
+          ? []
+          : List.from(document.data()['recent']),
       reviews: List<String>.from(document.data()['reviews']),
     );
   }
@@ -339,9 +342,9 @@ class _RouterState extends State<Router> with WidgetsBindingObserver {
   // }
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if(state == AppLifecycleState.resumed){
-      print('state: '+ state.toString());
-      initDynamicLinks();      
+    if (state == AppLifecycleState.resumed) {
+      print('state: ' + state.toString());
+      initDynamicLinks();
     }
   }
 }

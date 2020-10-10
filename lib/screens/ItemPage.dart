@@ -420,6 +420,7 @@ class _ItemPageState extends State<ItemPage> {
                                   vid,
                                   () => {
                                         'itemName': cartItem.itemName,
+                                        'itemType': this.widget.category,
                                         'size': cartItem.size,
                                         'price': cartItem.price,
                                         'quantity': cartItem.quantity,
