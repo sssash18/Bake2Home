@@ -59,9 +59,6 @@ class _ItemPageState extends State<ItemPage> {
         child: Scaffold(
           key: _key,
           resizeToAvoidBottomInset: true,
-<<<<<<< Updated upstream
-          
-=======
           floatingActionButton:
               (widget.itemType == 'cake' && widget.category == 'customised')
                   ? FloatingActionButton(
@@ -78,7 +75,6 @@ class _ItemPageState extends State<ItemPage> {
                       },
                     )
                   : SizedBox.shrink(),
->>>>>>> Stashed changes
           body: CustomScrollView(
             slivers: <Widget>[
               SliverToBoxAdapter(
@@ -294,16 +290,11 @@ class _ItemPageState extends State<ItemPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-<<<<<<< Updated upstream
-                Icon(Icons.add_shopping_cart,color: white,),
-                Text("Add to cart", style: TextStyle(color: white),),
-=======
                 Icon(Icons.add_shopping_cart),
                 Text(
                   "Add to cart",
                   style: TextStyle(color: white),
                 ),
->>>>>>> Stashed changes
               ],
             ),
           ),
@@ -369,25 +360,12 @@ class _ItemPageState extends State<ItemPage> {
             context: context,
             isScrollControlled: true,
             builder: (builder) {
-              return Padding(
+              return SingleChildScrollView(
                 padding: MediaQuery.of(context).viewInsets,
                 child: Form(
                   child:
                       Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
                     SizedBox(height: MediaQuery.of(context).size.height / 30),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 15.0),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                            labelText: "Special Note",
-                            helperText: "* will be printed on the product",
-                            border: OutlineInputBorder()),
-                        onChanged: (val) {
-                          noteItem = val;
-                        },
-                      ),
-                    ),
-                    SizedBox(height: MediaQuery.of(context).size.height / 100),
                     Container(
                         padding: EdgeInsets.symmetric(horizontal: 15.0),
                         width: MediaQuery.of(context).size.width - 30,
@@ -405,6 +383,19 @@ class _ItemPageState extends State<ItemPage> {
                             },
                           ),
                         )),
+                    SizedBox(height: MediaQuery.of(context).size.height / 100),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 15.0),
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                            labelText: "Special Note",
+                            helperText: "* will be printed on the product",
+                            border: OutlineInputBorder()),
+                        onChanged: (val) {
+                          noteItem = val;
+                        },
+                      ),
+                    ),
                     SizedBox(height: MediaQuery.of(context).size.height / 100),
                     FlatButton.icon(
                         color: base,
