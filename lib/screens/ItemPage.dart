@@ -11,7 +11,9 @@ import 'package:bake2home/constants.dart';
 class ItemPage extends StatefulWidget {
   CustomisedItemModel model;
   String shopId;
-  ItemPage({this.shopId, this.model});
+  String itemType;
+  String category;
+  ItemPage({this.category, this.itemType, this.shopId, this.model});
 
   @override
   _ItemPageState createState() => _ItemPageState();
@@ -57,7 +59,22 @@ class _ItemPageState extends State<ItemPage> {
         child: Scaffold(
           key: _key,
           resizeToAvoidBottomInset: true,
-          
+          floatingActionButton:
+              (widget.itemType == 'cake' && widget.category == 'customised')
+                  ? FloatingActionButton(
+                      child: Icon(Icons.add, color: white),
+                      backgroundColor: base,
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AddProduct(
+                                  shop: shopMap[widget.shopId],
+                                  itemType: widget.model.itemCategory),
+                            ));
+                      },
+                    )
+                  : SizedBox.shrink(),
           body: CustomScrollView(
             slivers: <Widget>[
               SliverToBoxAdapter(
@@ -124,23 +141,28 @@ class _ItemPageState extends State<ItemPage> {
                       height: MediaQuery.of(context).size.height / 8,
                       width: MediaQuery.of(context).size.width / 1.3,
                       child: Row(
-                        //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            child: Center(
-                              child: Text(
-                                widget.model.itemName,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 25.0),
+                          //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Expanded(
+                              child: Center(
+                                child: Text(
+                                  widget.model.itemName,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 25.0),
                                 ),
+                              ),
                             ),
-                          ),
-                          Container(
-                            child: Image.asset(widget.model.veg==true ? "assets/images/veg.png" : "assets/images/noon.png",height: 20,),
-                            margin: EdgeInsets.only(right: 10),
-                          )
-                        ]
-                      ),
+                            Container(
+                              child: Image.asset(
+                                widget.model.veg == true
+                                    ? "assets/images/veg.png"
+                                    : "assets/images/noon.png",
+                                height: 20,
+                              ),
+                              margin: EdgeInsets.only(right: 10),
+                            )
+                          ]),
                     ),
                   ),
                   Positioned(
@@ -268,8 +290,11 @@ class _ItemPageState extends State<ItemPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                Icon(Icons.add_shopping_cart,color: white,),
-                Text("Add to cart", style: TextStyle(color: white),),
+                Icon(Icons.add_shopping_cart),
+                Text(
+                  "Add to cart",
+                  style: TextStyle(color: white),
+                ),
               ],
             ),
           ),
@@ -335,25 +360,12 @@ class _ItemPageState extends State<ItemPage> {
             context: context,
             isScrollControlled: true,
             builder: (builder) {
-              return Padding(
+              return SingleChildScrollView(
                 padding: MediaQuery.of(context).viewInsets,
                 child: Form(
                   child:
                       Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
                     SizedBox(height: MediaQuery.of(context).size.height / 30),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 15.0),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                            labelText: "Special Note",
-                            helperText: "* will be printed on the product",
-                            border: OutlineInputBorder()),
-                        onChanged: (val) {
-                          noteItem = val;
-                        },
-                      ),
-                    ),
-                    SizedBox(height: MediaQuery.of(context).size.height / 100),
                     Container(
                         padding: EdgeInsets.symmetric(horizontal: 15.0),
                         width: MediaQuery.of(context).size.width - 30,
@@ -371,6 +383,19 @@ class _ItemPageState extends State<ItemPage> {
                             },
                           ),
                         )),
+                    SizedBox(height: MediaQuery.of(context).size.height / 100),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 15.0),
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                            labelText: "Special Note",
+                            helperText: "* will be printed on the product",
+                            border: OutlineInputBorder()),
+                        onChanged: (val) {
+                          noteItem = val;
+                        },
+                      ),
+                    ),
                     SizedBox(height: MediaQuery.of(context).size.height / 100),
                     FlatButton.icon(
                         color: base,
@@ -395,6 +420,7 @@ class _ItemPageState extends State<ItemPage> {
                                   vid,
                                   () => {
                                         'itemName': cartItem.itemName,
+                                        'itemType': this.widget.category,
                                         'size': cartItem.size,
                                         'price': cartItem.price,
                                         'quantity': cartItem.quantity,
@@ -402,7 +428,7 @@ class _ItemPageState extends State<ItemPage> {
                                         'photoUrl': cartItem.photoUrl,
                                         'minTime': cartItem.minTime,
                                         'flavour': cartItem.flavour,
-                                        'itemCategory' : cartItem.itemCategory,
+                                        'itemCategory': cartItem.itemCategory,
                                       });
                               cartMap.putIfAbsent(
                                   'shopId', () => widget.shopId);

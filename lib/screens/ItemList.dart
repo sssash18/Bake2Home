@@ -83,8 +83,8 @@ class _ItemListState extends State<ItemList>
             ),
             CustomisedItem(
               itemType: widget.itemType,
-              shop: widget.shop,
               category: 'standard',
+              shop: widget.shop,
             ),
           ],
         ));

@@ -148,7 +148,7 @@ class _CartState extends State<Cart> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.active) {
             cartMap = Map.from(snapshot.data.data()['cart']);
-            print(cartMap);
+            print('cart Map is ------------------> $cartMap');
             if (cartMap.length == 1) {
               emptyCart();
             }
@@ -256,40 +256,22 @@ class _CartState extends State<Cart> {
                                             color: white,
                                             child: ListView.builder(
                                                 itemCount: cartMap.length - 1,
-                                                itemBuilder:
-                                                    (BuildContext context,
-                                                        int index) {
-                                                  print('mys hops uis $shop');
-
-                                                  return InkWell(
-                                                    onTap: () {
-                                                      CustomisedItemModel model = CustomisedItemModel();
-                                                      String itemId = "";
-                                                      String id = cartMap.keys
-                                                          .where((element) =>
-                                                              element !=
-                                                              'shopId')
-                                                          .elementAt(index).toString();
-                                                      itemId = id.split('-').first + "-" + id.split('-')[1];
-                                                      print(shopMap[cartMap['shopId']].items[cartMap[id]['itemCategory']].toString());
-                                                      shopMap[cartMap['shopId']].items[cartMap[id]['itemCategory']].forEach((key,value){
-                                                        print(value);
-                                                      }
-                                                      
-                                                    },
-                                                    child: CartTile(
-                                                      item: cartMap[cartMap.keys
-                                                          .where((element) =>
-                                                              element !=
-                                                              'shopId')
-                                                          .elementAt(index)],
-                                                      shop: shop,
-                                                      vid: cartMap.keys
-                                                          .where((element) =>
-                                                              element !=
-                                                              'shopId')
-                                                          .elementAt(index),
-                                                    ),
+                                                itemBuilder: (
+                                                  BuildContext context,
+                                                  int index,
+                                                ) {
+                                                  return CartTile(
+                                                    item: cartMap[cartMap.keys
+                                                        .where((element) =>
+                                                            element !=
+                                                            'shopId')
+                                                        .elementAt(index)],
+                                                    shop: shop,
+                                                    vid: cartMap.keys
+                                                        .where((element) =>
+                                                            element !=
+                                                            'shopId')
+                                                        .elementAt(index),
                                                   );
                                                 }),
                                           ),
@@ -316,7 +298,7 @@ class _CartState extends State<Cart> {
   Container finalDetails(
       double height, double width, BuildContext context, Shop shop) {
     return Container(
-      height: height * 0.18,
+      height: height * 0.185,
       width: width,
       padding: EdgeInsets.symmetric(horizontal: 10.0),
       decoration: BoxDecoration(
@@ -436,7 +418,7 @@ class _CartState extends State<Cart> {
     int minTime = 0;
     int itemCount = 0;
     showModalBottomSheet(
-      isScrollControlled: true,
+        isScrollControlled: true,
         context: context,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
@@ -445,6 +427,9 @@ class _CartState extends State<Cart> {
         isDismissible: false,
         builder: (BuildContext context) {
           return StatefulBuilder(builder: (BuildContext context, setState) {
+            makingTime = 0;
+            itemCount = 0;
+            minTime = 0;
             cartMap.forEach((key, value) {
               if (key != 'shopId') {
                 Map<String, dynamic> items = cartMap[key];
@@ -454,6 +439,7 @@ class _CartState extends State<Cart> {
             });
             print('MMMMMM' + makingTime.toString());
             print(cakeCount);
+
             if (itemCount <= 2) {
               makingTime = makingTime;
               minTime = (makingTime * 60).toInt();
@@ -465,9 +451,9 @@ class _CartState extends State<Cart> {
               minTime = (makingTime * 60).toInt();
             }
             print(minTime);
-            return Container(
-                height: MediaQuery.of(context).size.height/1.5,
-                          child: Column(children: <Widget>[
+            return SingleChildScrollView(
+              padding: MediaQuery.of(context).viewInsets,
+              child: Column(children: <Widget>[
                 SizedBox(
                   height: MediaQuery.of(context).size.height / 20,
                 ),
@@ -520,36 +506,44 @@ class _CartState extends State<Cart> {
                             context: context, initialTime: nowTime);
                         if (time != null) {
                           int timeInMinutes = time.hour * 60 + time.minute;
-                          int nowInMinutes = nowTime.hour * 60 + nowTime.minute;
+                          // int nowInMinutes = nowTime.hour * 60 + nowTime.minute;
                           int startInMinutes =
                               startTime.hour * 60 + startTime.minute;
                           int endInMinutes = endTime.hour * 60 + endTime.minute;
                           int makingInMinutes = minTime;
-                          nowInMinutes += makingInMinutes;
-                          print('$nowInMinutes  $makingInMinutes');
+                          // nowInMinutes += makingInMinutes;
+                          print('$delTime');
+                          print('$nowTime');
+                          DateTime bakingandCurrent = DateTime.now();
+                          print(makingInMinutes);
+                          bakingandCurrent = bakingandCurrent
+                              .add(Duration(minutes: makingInMinutes));
+                          // print(bakingandCurrent);
+                          // print(bakingandCurrent.millisecondsSinceEpoch
+                          //     .toString());
+                          DateTime currentDelTime = delTime;
+                          currentDelTime = currentDelTime.add(
+                              Duration(hours: time.hour, minutes: time.minute));
+                          // print(currentDelTime);
+                          // print(
+                          //     currentDelTime.millisecondsSinceEpoch.toString());
+                          // DateTime delTimemaking =
+                          //     DateTime.parse('formattedString');
                           if (timeInMinutes >= startInMinutes &&
                               timeInMinutes <= endInMinutes) {
-                            if (delTime.day == DateTime.now().day &&
-                                delTime.month == DateTime.now().month) {
-                              if (timeInMinutes >= nowInMinutes) {
-                                setState(() {
-                                  delTime =
-                                      delTime.add(Duration(hours: time.hour));
-                                  delTime =
-                                      delTime.add(Duration(minutes: time.minute));
-                                  _time = time.format(context);
-                                });
-                              } else {
-                                showGenDialog(context,
-                                    "Please select valid time accordingly to baking the cake");
-                              }
-                            } else {
+                            if (currentDelTime.millisecondsSinceEpoch >
+                                bakingandCurrent.millisecondsSinceEpoch) {
+                              // if (timeInMinutes >= nowInMinutes) {
                               setState(() {
-                                delTime = delTime.add(Duration(hours: time.hour));
+                                delTime =
+                                    delTime.add(Duration(hours: time.hour));
                                 delTime =
                                     delTime.add(Duration(minutes: time.minute));
                                 _time = time.format(context);
                               });
+                            } else {
+                              showGenDialog(context,
+                                  "Please select valid time accordingly to baking the cake \n Baking Time is $makingTime hrs $makingInMinutes minute");
                             }
                           } else {
                             showGenDialog(context,
@@ -580,15 +574,17 @@ class _CartState extends State<Cart> {
                         _selectedAddress = val;
                       });
                     }),
-               Container(
+                Container(
                   margin: EdgeInsets.all(10),
-                                child: TextFormField(
-                  decoration:
-                      InputDecoration(labelText: 'Special Baking Instructions', border: OutlineInputBorder()),
-                  onChanged: (val) {
-                    instructions = val;
-                  },),
-               ),
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                        labelText: 'Special Baking Instructions',
+                        border: OutlineInputBorder()),
+                    onChanged: (val) {
+                      instructions = val;
+                    },
+                  ),
+                ),
                 SizedBox(
                   height: MediaQuery.of(context).size.height / 40,
                 ),
@@ -667,16 +663,16 @@ class _CartState extends State<Cart> {
                               order.orderId);
                           await pr.hide();
 
-                          await Navigator.push(context,
-                              MaterialPageRoute(builder: (BuildContext context) {
+                          await Navigator.push(context, MaterialPageRoute(
+                              builder: (BuildContext context) {
                             return Checkout(order: order);
                           }));
                           Navigator.pop(context);
                         } else {
                           await pr.hide();
                           Navigator.pop(context);
-                          showSnackBar(
-                              cartKey, "Cannot Prepare Order... try again later");
+                          showSnackBar(cartKey,
+                              "Cannot Prepare Order... try again later");
                         }
                         // } else {
                         //   showGenDialog(context, "Please fill essential Details");

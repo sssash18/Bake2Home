@@ -9,7 +9,7 @@ class Order {
       comments,
       instructions,
       deliveryAddress;
-
+  String reason;
   double amount, refund = 0, delCharges;
 
   int otp;
@@ -33,6 +33,7 @@ class Order {
     this.pickUp,
     this.orderTime,
     this.deliveryTime,
+    this.reason,
     this.deliveryAddress,
     this.items,
     this.comments,

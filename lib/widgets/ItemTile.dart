@@ -7,8 +7,9 @@ import 'package:flutter/material.dart';
 class ItemTile extends StatelessWidget {
   CustomisedItemModel model;
   String shopId;
-
-  ItemTile({this.model, this.shopId});
+  String itemType;
+  String category;
+  ItemTile({this.category, this.itemType, this.model, this.shopId});
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -16,7 +17,11 @@ class ItemTile extends StatelessWidget {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => ItemPage(shopId: shopId, model: model)));
+                builder: (context) => ItemPage(
+                    itemType: itemType,
+                    category: category,
+                    shopId: shopId,
+                    model: model)));
       },
       child: Container(
         height: 120.0,
@@ -36,32 +41,36 @@ class ItemTile extends StatelessWidget {
                   color: white,
                 ),
                 child: Column(
-                  
                   children: <Widget>[
                     Container(
-                        margin: EdgeInsets.fromLTRB(0, 15.0, 0, 0),
-                        child: Text(model.itemName,
-                            textAlign: TextAlign.right,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 18.0)),
-                        ),
-                    
+                      margin: EdgeInsets.fromLTRB(0, 15.0, 0, 0),
+                      child: Text(model.itemName,
+                          textAlign: TextAlign.right,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18.0)),
+                    ),
                     Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                        Container(
-                      margin: EdgeInsets.fromLTRB(0, 10.0, 0, 0),
-                      child: Text(
-                          '\u20B9 ${model.variants[model.variants.keys.elementAt(0)]['price']}',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16.0)),
-                    ),
-                        Container(
-                        margin: EdgeInsets.fromLTRB(0, 15.0, 0, 0),
-                        child: Image.asset(model.veg==true ? "assets/images/veg.png" : "assets/images/noon.png",height: 20,width: 20,),),
-                        ]
-                    ),
-                    
+                          Container(
+                            margin: EdgeInsets.fromLTRB(0, 10.0, 0, 0),
+                            child: Text(
+                                '\u20B9 ${model.variants[model.variants.keys.elementAt(0)]['price']}',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16.0)),
+                          ),
+                          Container(
+                            margin: EdgeInsets.fromLTRB(0, 15.0, 0, 0),
+                            child: Image.asset(
+                              model.veg == true
+                                  ? "assets/images/veg.png"
+                                  : "assets/images/noon.png",
+                              height: 20,
+                              width: 20,
+                            ),
+                          ),
+                        ]),
                   ],
                 ),
                 margin: EdgeInsets.fromLTRB(90.0, 15.0, 15.0, 15.0),
