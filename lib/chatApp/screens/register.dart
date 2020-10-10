@@ -87,6 +87,7 @@ class _RegisterState extends State<Register> {
                         height: 30.0,
                       ),
                       TextFormField(
+                        
                         onChanged: (val) {
                           setState(() {
                             password = val;
@@ -100,6 +101,7 @@ class _RegisterState extends State<Register> {
                         },
                         obscureText: show,
                         decoration: InputDecoration(
+                            
                             suffixIcon: IconButton(
                               icon: showIcon,
                               onPressed: () {

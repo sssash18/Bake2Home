@@ -28,7 +28,7 @@ class ChatService {
       });
       print(shopMap[fid].token);
       await PushNotification()
-          .pushMessageChat(currentUser.name, msg, shopMap[fid].token, uniqueid);
+          .pushMessageChat('New Message from ${currentUser.name}', msg, shopMap[fid].token, uniqueid);
     } catch (e) {
       print(e.toString());
     }
@@ -68,7 +68,7 @@ class ChatService {
       });
       print('cCCCCCC');
       await PushNotification().pushMessageChat(
-          currentUser.name, "Photo", shopMap[fid].token, uniqueid);
+          'New Message from ${currentUser.name}', "Photo", shopMap[fid].token, uniqueid);
     } catch (e) {
       print(e.toString());
     }

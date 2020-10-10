@@ -57,14 +57,17 @@ class _RegisterState extends State<Register> {
         child: Form(
           key: formKey2,
           child: ListView(children: [
+            SizedBox(height:20),
             Text(
-              "Let us know you!",
+              "Let us \nknow you!",
               textAlign: TextAlign.center,
-              style: TextStyle(color: white, fontWeight: FontWeight.bold),
+              style: TextStyle(color: white, fontWeight: FontWeight.w900,fontSize: 40),
             ),
             divider(),
+            SizedBox(height:20),
             TextFormField(
-                cursorColor: base,
+                
+                cursorColor: white,
                 validator: (val) {
                   if (val.isEmpty) {
                     return "Name cannot be empty";
@@ -72,9 +75,16 @@ class _RegisterState extends State<Register> {
                     return null;
                   }
                 },
+                
                 decoration: InputDecoration(
+                  
+                  fillColor: white,
+                  focusColor: white,
+                  hoverColor: white,
                   hintText: "Your Name",
+                  hintStyle: TextStyle(color:white),
                   border: OutlineInputBorder(
+                    
                       borderRadius: BorderRadius.circular(30.0)),
                 ),
                 onChanged: (val) {
@@ -84,10 +94,12 @@ class _RegisterState extends State<Register> {
                 }),
             divider(),
             TextFormField(
-              cursorColor: base,
+              cursorColor: white,
               decoration: InputDecoration(
                 hintText: "Your Address",
+                hintStyle: TextStyle(color:white),
                 border: OutlineInputBorder(
+
                     borderRadius: BorderRadius.circular(30.0)),
               ),
               controller: addController,
