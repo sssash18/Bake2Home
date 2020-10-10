@@ -184,8 +184,8 @@ class _MainPageState extends State<MainPage> {
                             );
                           })),
                   Homeheading(
-                    heading: "Trend in Town",
-                    showAll: true,
+                    heading: "Trending in Town",
+                    showAll: false,
                     showPage: (context) {
                       Navigator.push(
                           context,
@@ -203,13 +203,14 @@ class _MainPageState extends State<MainPage> {
                         itemCount: trendingList.length,
                         itemBuilder: (BuildContext context, int index) {
                           return GestureDetector(
-                            child: PastryTile(itemName: trendingList.elementAt(index).model.itemName, photoUrl: ((trendingList.elementAt(index).model.photoUrl) !=null ? trendingList.elementAt(index).model.photoUrl : 'https://firebasestorage.googleapis.com/v0/b/bakemycake-1d1dc.appspot.com/o/Artboard%20%E2%80%93%201%20(5).png?alt=media&token=e48e0063-6727-47c7-82e8-df2d02c07b57'),),
+                            child: PastryTile(itemName: trendingList.elementAt(index).model.itemName, shopId: trendingList.elementAt(index).shopId,photoUrl: ((trendingList.elementAt(index).model.photoUrl) !=null ? trendingList.elementAt(index).model.photoUrl : 'https://firebasestorage.googleapis.com/v0/b/bakemycake-1d1dc.appspot.com/o/Artboard%20%E2%80%93%201%20(5).png?alt=media&token=e48e0063-6727-47c7-82e8-df2d02c07b57'),),
                             onTap: () {
+                              print(trendingList.elementAt(index).model.recipe );
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (BuildContext context) =>
-                                          SomeNullPage()));
+                                          ItemPage(model: trendingList.elementAt(index).model,shopId: trendingList.elementAt(index).shopId ,)));
                             },
                           );
                         }),

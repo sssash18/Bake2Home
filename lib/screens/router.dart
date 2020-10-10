@@ -214,7 +214,7 @@ class _RouterState extends State<Router> with WidgetsBindingObserver {
         model.itemId = item['itemId'];
         model.minTime = item['minTime'];
         model.photoUrl = item['photoUrl'];
-        model.recipe = item['bio'];
+        model.recipe = item['recipe'];
         model.variants = item['variants'];
         model.veg = item['veg'];
         model.flavours = List<String>.from(item['flavours']);
