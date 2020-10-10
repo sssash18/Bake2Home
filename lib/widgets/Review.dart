@@ -58,10 +58,11 @@ class _ReviewState extends State<Review> with SingleTickerProviderStateMixin {
             child: ScaleTransition(
               scale: scaleAnimation,
               child: Container(
-                height: MediaQuery.of(context).size.height / 3,
+                height: MediaQuery.of(context).size.height / 2.7,
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
+                      SizedBox(height:10),
                       Text(
                         'Rate the service of ${widget.shop.shopName}',
                         style: TextStyle(color: base, fontSize: 15.0),
@@ -96,6 +97,20 @@ class _ReviewState extends State<Review> with SingleTickerProviderStateMixin {
                           color: base,
                           onPressed: () async {
                             submitReview(review, rating, widget.shop.shopId);
+                            Navigator.pop(context);
+                          },
+                          child: Text(
+                            "Done",
+                            style: TextStyle(
+                                color: white, fontWeight: FontWeight.bold),
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(border),
+                          )),
+                      FlatButton(
+                          color: base,
+                          onPressed: () async {
+                            
                             final InAppReview app = InAppReview.instance;
                             if (await app.isAvailable()) {
                               app.openStoreListing();
