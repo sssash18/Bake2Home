@@ -11,7 +11,6 @@ import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
-
 Color base = Color(0xff654ea3);
 Color white = Colors.white;
 Color text = Color(0xff654ea3);
@@ -20,7 +19,7 @@ Color pastry = Colors.grey[200];
 Color grad1 = Color(0xffeaafc8);
 Color grad2 = Color(0xff654ea3);
 Color black = Colors.black;
-int badge1 = 0,badge2 = 0,badge = 3,badge4 = 0;
+int badge1 = 0, badge2 = 0, badge = 3, badge4 = 0;
 double head = 20.0;
 double head2 = 30.0;
 double textSize = 18.0;
@@ -44,7 +43,7 @@ List<Category> categoryList = [];
 List<Trending> trendingList = [];
 List<double> delChargesList = [];
 bool timerOver = false;
-StreamController<bool> controller = StreamController<bool>.broadcast();
+StreamController<String> controller = StreamController<String>.broadcast();
 FirebaseMessaging firebaseMessaging = FirebaseMessaging();
 String token = "";
 List<String> slidesUrl = [];

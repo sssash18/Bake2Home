@@ -27,8 +27,12 @@ class DatabaseService {
 
   DatabaseService({this.uid});
 
-  Future<void> getDeliveryToken(){
-    FirebaseFirestore.instance.collection("Delivery").doc('token').get().then((value) => deliveryToken = value.data()['token']);
+  Future<void> getDeliveryToken() {
+    FirebaseFirestore.instance
+        .collection("Delivery")
+        .doc('token')
+        .get()
+        .then((value) => deliveryToken = value.data()['token']);
   }
 
   Future<bool> updateTransaction(
@@ -52,7 +56,8 @@ class DatabaseService {
     return rs;
   }
 
-  Future<bool> submitReview(String shopId, String review, int rating,String orderId) async {
+  Future<bool> submitReview(
+      String shopId, String review, int rating, String orderId) async {
     bool rs = false;
     int nums = shopMap[shopId].reviews.length;
     shopMap[shopId].reviews.add(review);
@@ -66,10 +71,9 @@ class DatabaseService {
         })
         .then((value) => rs = true)
         .catchError((e) => rs = false);
-    await orderCollection.doc(orderId).update({
-      'rating' : rating,
-      'review' : review
-    });
+    await orderCollection
+        .doc(orderId)
+        .update({'rating': rating, 'review': review});
     return rs;
   }
 
@@ -212,19 +216,18 @@ class DatabaseService {
           'paymentType': order.paymentType,
           'deliveryAddress': order.deliveryAddress,
           'amount': order.amount,
-          'instructions' : order.instructions,
+          'instructions': order.instructions,
           'deliveryCharges': order.delCharges,
           'pickUp': order.pickUp,
           'orderTime': order.orderTime,
           'deliveryTime': order.deliveryTime,
           'items': order.items,
           'codAmount': 0,
-          'refund' : 0,
-          'compensation' : 0,
-          'penalty' : 0,
-          'rating' : 0,
-          'review' : ""
-        
+          'refund': 0,
+          'compensation': 0,
+          'penalty': 0,
+          'rating': 0,
+          'review': ""
         })
         .then((value) => {rs = true, print("Order Placed")})
         .catchError((e) {
@@ -236,8 +239,9 @@ class DatabaseService {
 
   getRefundAmount(Order order) {
     double refundAmount = 0;
-    if ((DateTime.now().day < order.deliveryTime.toDate().day )&& DateTime.now().month == order.deliveryTime.toDate().month && DateTime.now().year == order.deliveryTime.toDate().year) 
-    {
+    if ((DateTime.now().day < order.orderTime.toDate().day) &&
+        DateTime.now().month == order.orderTime.toDate().month &&
+        DateTime.now().year == order.orderTime.toDate().year) {
       refundAmount = order.amount - order.codAmount;
     } else {
       refundAmount = 0;
@@ -251,7 +255,7 @@ class DatabaseService {
         max(0, (order.amount - refundAmount) - 0.05 * order.amount);
 
     order.refund = refundAmount;
-    if(order.status!="PAID"){
+    if (order.status != "PAID") {
       compensationAmount = 0;
       refundAmount = 0;
     }
@@ -266,8 +270,7 @@ class DatabaseService {
           "Order ${order.orderId} cancelled by ${currentUser.name}",
           "Compensation Amount: \u20B9 ${compensationAmount.toInt()}",
           shopMap[order.shopId].token,
-          order.orderId)
-          ;
+          order.orderId);
     }).catchError((e) {
       print(e.toString());
       rs = false;
@@ -334,6 +337,7 @@ class DatabaseService {
             shopId: e.data()['shopId'],
             status: e.data()['status'],
             otp: e.data()['otp'],
+            reason: e.data()['reason'] == null ? '' : e.data()['reason'],
             paymentType: e.data()['paymentType'],
             amount: e.data()['amount'].toDouble(),
             delCharges: e.data()['deliveryCharges'].toDouble(),

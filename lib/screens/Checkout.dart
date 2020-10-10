@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:bake2home/services/PushNotification.dart';
 import 'package:bake2home/services/database.dart';
 import 'package:bake2home/widgets/FinalAmount.dart';
+import 'package:bake2home/widgets/OrdersList.dart';
 import 'package:http/http.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
@@ -64,12 +65,37 @@ class _CheckoutState extends State<Checkout> {
   createStream() {
     if (count == 0) {
       subs = controller.stream.listen((event) async {
-        if (event) {
-          setState(() {
-            _index = 1;
+        if (!event.contains("MISSED")) {
+          if (event.contains("REJECTED")) {
+            List<String> s = event.split('-');
+            bool v = await showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) {
+                  return AlertDialog(
+                      title: Text("Alert"),
+                      content: Text(
+                          'Sorry your order was rejected because ${s[1]} . Please try again later'),
+                      actions: [
+                        RaisedButton(
+                          onPressed: () {
+                            Navigator.pop(context, true);
+                          },
+                          color: base,
+                          child: Text("Ok", style: TextStyle(color: white)),
+                        )
+                      ]);
+                });
             subs.cancel();
-          });
+            Navigator.pop(context);
+          } else if (!event.contains("PENDING")) {
+            setState(() {
+              _index = 1;
+              subs.cancel();
+            });
+          }
         } else {
+          subs.cancel();
           bool ss = await showDialog(
               context: context,
               barrierDismissible: false,
@@ -118,6 +144,7 @@ class _CheckoutState extends State<Checkout> {
             } else {
               showSnackBar(checkoutKey, "Error Encountered");
             }
+
             Navigator.pop(context);
           }
         }
@@ -400,12 +427,10 @@ class _CheckoutState extends State<Checkout> {
                         pushNotification.pushMessagewithNewOrder(
                             "New Order", '', deliveryToken, '123');
                         Navigator.pop(context);
-                          pushNotification.pushMessage(
-
+                        pushNotification.pushMessage(
                             "Order Placed Successfully",
                             'Order Id : ${widget.order.orderId}',
-                            shopMap[widget.order.shopId].token
-                          );
+                            shopMap[widget.order.shopId].token);
                       },
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(border)),
