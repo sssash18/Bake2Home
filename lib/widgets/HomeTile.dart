@@ -69,7 +69,7 @@ class _HomeTileState extends State<HomeTile> {
   Widget _showRatingBar(){
     return RatingBar(
       ignoreGestures: true,
-      initialRating: 1.2,
+      initialRating: widget.rating,
       itemSize: 15.0,
       itemCount: 5,
       glow: true,

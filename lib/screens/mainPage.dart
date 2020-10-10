@@ -256,6 +256,7 @@ class _MainPageState extends State<MainPage> {
                                 photo:
                                     topPickMap[topPickMap.keys.elementAt(index)]
                                         .profilePhoto,
+                                rating: topPickMap[topPickMap.keys.elementAt(index)].rating,
                               ),
                               onTap: () {
                                 Navigator.push(

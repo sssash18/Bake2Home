@@ -2,6 +2,7 @@ import 'package:bake2home/functions/shop.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/constants.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class MySliverAppBar extends SliverPersistentHeaderDelegate {
   final double expandedHeight;
@@ -9,7 +10,9 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
   MySliverAppBar({@required this.expandedHeight, this.shop});
   @override
   Widget build(
+    
       BuildContext context, double shrinkOffset, bool overlapsContent) {
+        print('RRRRR' + shop.rating.toString());
     return Material(
       borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(border),
@@ -55,6 +58,20 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                             color: white,
                           ),
                         ),
+                        RatingBar(
+                            initialRating: shop.rating,
+                            itemSize: 15.0,
+                            ignoreGestures: true,
+                            itemCount: 5,
+                            glow: true,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Icon(
+                                Icons.star,
+                                color: Colors.amber,
+                              );
+                            },
+                            onRatingUpdate: (rating) {})
+                        
                       ],
                     )
                   ],
@@ -93,6 +110,19 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                               color: white,
                             ),
                           ),
+                          RatingBar(
+                            initialRating: shop.rating,
+                            itemSize: 22.0,
+                            ignoreGestures: true,
+                            itemCount: 5,
+                            glow: true,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Icon(
+                                Icons.star,
+                                color: Colors.amber,
+                              );
+                            },
+                            onRatingUpdate: (rating) {})
                         ],
                       )
                     ],
