@@ -35,7 +35,7 @@ class _CartState extends State<Cart> {
   DateTime delTime;
   String _selectedAddress;
   double subtotal;
-  bool internetStatus;
+  bool internetStatus = true;
   StreamSubscription<ConnectivityResult> subs;
   Connectivity _connectivity;
   ProgressDialog pr;
@@ -49,6 +49,22 @@ class _CartState extends State<Cart> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    final Connectivity _connectivity = Connectivity();
+    _connectivity.checkConnectivity().then((value) {
+      if (value == ConnectivityResult.none) {
+        internetStatus = false;
+      }
+    });
+    subs =
+        _connectivity.onConnectivityChanged.listen((ConnectivityResult event) {
+      setState(() {
+        if (event == ConnectivityResult.none) {
+          internetStatus = false;
+        } else {
+          internetStatus = true;
+        }
+      });
+    });
     startTime = TimeOfDay(hour: 10, minute: 00);
     endTime = TimeOfDay(hour: 22, minute: 00);
     _addresses = [];
@@ -58,7 +74,6 @@ class _CartState extends State<Cart> {
     subtotal = 0.0;
     internetStatus = true;
     cartMap.forEach((key, value) {});
-    _connectivity = Connectivity();
     currentUser.addresses.keys.forEach((element) {
       print(currentUser.addresses[element]['address']);
       _addresses.add(
@@ -245,31 +260,18 @@ class _CartState extends State<Cart> {
                                                   BuildContext context,
                                                   int index,
                                                 ) {
-                                                  return InkWell(
-                                                    onTap: () {
-                                                      String itemId = "";
-                                                      //itemId = cartMap.keys.elementAt(index).split('-').first +
-                                                      Map itemsMap = shopMap[
-                                                              cartMap['shopId']]
-                                                          .items;
-                                                      print(itemsMap);
-
-                                                      print('IIIIIII' +
-                                                          cartMap.toString());
-                                                    },
-                                                    child: CartTile(
-                                                      item: cartMap[cartMap.keys
-                                                          .where((element) =>
-                                                              element !=
-                                                              'shopId')
-                                                          .elementAt(index)],
-                                                      shop: shop,
-                                                      vid: cartMap.keys
-                                                          .where((element) =>
-                                                              element !=
-                                                              'shopId')
-                                                          .elementAt(index),
-                                                    ),
+                                                  return CartTile(
+                                                    item: cartMap[cartMap.keys
+                                                        .where((element) =>
+                                                            element !=
+                                                            'shopId')
+                                                        .elementAt(index)],
+                                                    shop: shop,
+                                                    vid: cartMap.keys
+                                                        .where((element) =>
+                                                            element !=
+                                                            'shopId')
+                                                        .elementAt(index),
                                                   );
                                                 }),
                                           ),

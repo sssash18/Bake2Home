@@ -23,7 +23,9 @@ class _ProfileOrderState extends State<ProfileOrder> {
   bool internetStatus = true;
 
   @override
-  Widget build(BuildContext context) {
+  void initState(){
+    super.initState();
+    final Connectivity _connectivity = Connectivity();
     _connectivity.checkConnectivity().then((value) {
       if (value == ConnectivityResult.none) {
         internetStatus = false;
@@ -39,6 +41,11 @@ class _ProfileOrderState extends State<ProfileOrder> {
         }
       });
     });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    
     return internetStatus
         ? Scaffold(
             key: historyKey,

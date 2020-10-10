@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:bake2home/constants.dart';
 import 'package:bake2home/screens/ItemPage.dart';
 import 'package:bake2home/screens/NoInternet.dart';
-import 'package:bake2home/screens/somenullpage.dart';
 import 'package:bake2home/services/database.dart';
 import 'package:bake2home/services/searchDelegate.dart';
 import 'package:bake2home/screens/TrendingPage.dart';
@@ -32,13 +31,13 @@ class _MainPageState extends State<MainPage> {
     color: base,
   );
 
-  final Connectivity _connectivity = Connectivity();
   StreamSubscription<ConnectivityResult> subs;
-  bool internetStatus = true;
 
-  Widget appBarTitle = Text('BakeMyCake');
-  @override
-  Widget build(BuildContext context) {
+  bool internetStatus = true;
+  @override 
+  void initState() {
+    super.initState();
+    final Connectivity _connectivity = Connectivity();
     _connectivity.checkConnectivity().then((value) {
       if (value == ConnectivityResult.none) {
         internetStatus = false;
@@ -54,6 +53,13 @@ class _MainPageState extends State<MainPage> {
         }
       });
     });
+  }
+
+  
+  Widget appBarTitle = Text('BakeMyCake');
+  @override
+  Widget build(BuildContext context) {
+    
 
     return internetStatus == true
         ? Scaffold(
@@ -249,6 +255,7 @@ class _MainPageState extends State<MainPage> {
                                 photo:
                                     topPickMap[topPickMap.keys.elementAt(index)]
                                         .profilePhoto,
+                                rating: topPickMap[topPickMap.keys.elementAt(index)].rating,
                               ),
                               onTap: () {
                                 Navigator.push(

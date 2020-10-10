@@ -23,8 +23,10 @@ class _ProfilePageState extends State<ProfilePage> {
   final Connectivity _connectivity = Connectivity();
   StreamSubscription<ConnectivityResult> subs ;
   bool internetStatus = true;
+
   @override
-  Widget build(BuildContext context) {
+  void initState(){
+    super.initState();
     _connectivity.checkConnectivity().then((value){
       if(value == ConnectivityResult.none){
         internetStatus = false;
@@ -39,6 +41,11 @@ class _ProfilePageState extends State<ProfilePage> {
         }
       });
     });
+    
+    
+  }
+  @override
+  Widget build(BuildContext context) {
     
     if (currentUser.addresses.isEmpty) {
       firstAddress = 'No address found';
@@ -65,8 +72,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 margin: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
                 alignment: Alignment.center,
                 color: white,
-                height: 180.0,
-                width: 400,
+                height: MediaQuery.of(context).size.height/4,
+                width: MediaQuery.of(context).size.width,
                 child: CircleAvatar(
                   backgroundColor: base,
                   radius: 60.0,
