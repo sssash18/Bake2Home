@@ -32,13 +32,13 @@ class _MainPageState extends State<MainPage> {
     color: base,
   );
 
-  final Connectivity _connectivity = Connectivity();
   StreamSubscription<ConnectivityResult> subs;
-  bool internetStatus = true;
 
-  Widget appBarTitle = Text('BakeMyCake');
-  @override
-  Widget build(BuildContext context) {
+  bool internetStatus = true;
+  @override 
+  void initState() {
+    super.initState();
+    final Connectivity _connectivity = Connectivity();
     _connectivity.checkConnectivity().then((value) {
       if (value == ConnectivityResult.none) {
         internetStatus = false;
@@ -54,6 +54,13 @@ class _MainPageState extends State<MainPage> {
         }
       });
     });
+  }
+
+  
+  Widget appBarTitle = Text('BakeMyCake');
+  @override
+  Widget build(BuildContext context) {
+    
 
     return internetStatus == true
         ? Scaffold(

@@ -23,8 +23,10 @@ class _ProfilePageState extends State<ProfilePage> {
   final Connectivity _connectivity = Connectivity();
   StreamSubscription<ConnectivityResult> subs ;
   bool internetStatus = true;
+
   @override
-  Widget build(BuildContext context) {
+  void initState(){
+    super.initState();
     _connectivity.checkConnectivity().then((value){
       if(value == ConnectivityResult.none){
         internetStatus = false;
@@ -39,6 +41,11 @@ class _ProfilePageState extends State<ProfilePage> {
         }
       });
     });
+    
+    
+  }
+  @override
+  Widget build(BuildContext context) {
     
     if (currentUser.addresses.isEmpty) {
       firstAddress = 'No address found';
