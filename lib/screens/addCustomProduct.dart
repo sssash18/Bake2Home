@@ -186,7 +186,6 @@ class _AddProductState extends State<AddProduct> {
                       notes: [desc.text],
                       color: null,
                       price: 0,
-                      
                       quantity: 1,
                     );
                     String timestamp =
@@ -199,11 +198,12 @@ class _AddProductState extends State<AddProduct> {
                               'price': cartItemMap.price,
                               'quantity': cartItemMap.quantity,
                               'flavour': cartItemMap.flavour,
+                              'itemType': 'customised',
                               'notes': cartItemMap.notes,
                               'photoUrl': cartItemMap.photoUrl,
                               'minTime': cartItemMap.minTime,
                               'veg': veg,
-                              'itemCategory' : cartItemMap.itemCategory,
+                              'itemCategory': cartItemMap.itemCategory,
                             });
                     cartMap.putIfAbsent('shopId', () => widget.shop.shopId);
                     await FirebaseFirestore.instance
