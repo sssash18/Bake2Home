@@ -29,6 +29,16 @@ class PushNotification{
       firebaseMessaging.requestNotificationPermissions();
       firebaseMessaging.configure(
         onMessage: (payload)async{
+          if(payload['data']['route'] == 'delivered'){
+            showDialog(
+                        context: navigatorKey.currentContext,
+                        builder: (context) {
+                          return Review(
+                            shop: shopMap[payload['data']['shopId']],
+                            orderId: payload['data']['orderId'],
+                          );
+                        });
+          }
         },
         onResume: (payload){
           if(payload['data']['route'] == 'delivered'){
@@ -37,6 +47,7 @@ class PushNotification{
                         builder: (context) {
                           return Review(
                             shop: shopMap[payload['data']['shopId']],
+                            orderId: payload['data']['orderId'],
                           );
                         });
           }

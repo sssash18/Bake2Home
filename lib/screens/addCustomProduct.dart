@@ -181,7 +181,7 @@ class _AddProductState extends State<AddProduct> {
                       itemName: name.text,
                       size: double.parse(weight.text),
                       flavour: flavour.text,
-                      minTime: 24,
+                      minTime: widget.shop.customTime,
                       photoUrl: photoUrl == '' ? null : photoUrl,
                       notes: [desc.text],
                       color: null,

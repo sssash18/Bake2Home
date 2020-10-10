@@ -4,8 +4,8 @@ import 'package:bake2home/constants.dart';
 
 
 class PastryTile extends StatefulWidget {
-  String itemName,photoUrl;
-  PastryTile({this.itemName,this.photoUrl});
+  String itemName,photoUrl,shopId;
+  PastryTile({this.itemName,this.photoUrl,this.shopId});
 
   @override
   _PastryTileState createState() => _PastryTileState();
@@ -16,8 +16,8 @@ class _PastryTileState extends State<PastryTile> {
   Widget build(BuildContext context) {
     return  Container(
       margin: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
-      height: 70.0,
-      width: 180.0,
+      height: MediaQuery.of(context).size.height/3,
+      width: MediaQuery.of(context).size.width/1.4,
       decoration: BoxDecoration(
         color: pastry,
         borderRadius: BorderRadius.circular(border),
@@ -48,12 +48,12 @@ class _PastryTileState extends State<PastryTile> {
                 fontWeight: FontWeight.bold,
                 )
               ),
-              // Text(
-              //   '\u20B9 ${widget.itemPrice}',
-              //   style: TextStyle(
-              //   color: text,
-              //   )
-              // ),
+              Text(
+                shopMap[widget.shopId].shopName,
+                style: TextStyle(
+                color: text,
+                )
+              ),
               ]
             ),
           )

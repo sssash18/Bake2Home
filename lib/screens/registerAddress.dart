@@ -27,7 +27,7 @@ class _RegisterAddressState extends State<RegisterAddress> {
   final registerMapKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
-    _height = MediaQuery.of(context).size.height / 4;
+    _height = MediaQuery.of(context).size.height / 3;
     return Scaffold(
       key: registerMapKey,
       appBar: AppBar(

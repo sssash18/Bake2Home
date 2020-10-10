@@ -52,7 +52,7 @@ class DatabaseService {
     return rs;
   }
 
-  Future<bool> submitReview(String shopId, String review, int rating) async {
+  Future<bool> submitReview(String shopId, String review, int rating,String orderId) async {
     bool rs = false;
     int nums = shopMap[shopId].reviews.length;
     shopMap[shopId].reviews.add(review);
@@ -66,6 +66,10 @@ class DatabaseService {
         })
         .then((value) => rs = true)
         .catchError((e) => rs = false);
+    await orderCollection.doc(orderId).update({
+      'rating' : rating,
+      'review' : review
+    });
     return rs;
   }
 
@@ -217,7 +221,9 @@ class DatabaseService {
           'codAmount': 0,
           'refund' : 0,
           'compensation' : 0,
-          'penalty' : 0
+          'penalty' : 0,
+          'rating' : 0,
+          'review' : ""
         
         })
         .then((value) => {rs = true, print("Order Placed")})
@@ -230,7 +236,7 @@ class DatabaseService {
 
   getRefundAmount(Order order) {
     double refundAmount = 0;
-    if ((DateTime.now().day < order.orderTime.toDate().day )&& DateTime.now().month == order.orderTime.toDate().month && DateTime.now().year == order.orderTime.toDate().year) 
+    if ((DateTime.now().day < order.deliveryTime.toDate().day )&& DateTime.now().month == order.deliveryTime.toDate().month && DateTime.now().year == order.deliveryTime.toDate().year) 
     {
       refundAmount = order.amount - order.codAmount;
     } else {

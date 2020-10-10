@@ -59,6 +59,7 @@ class VendorTile extends StatelessWidget {
                     initialRating: 3.2,
                     itemSize: 15.0,
                     itemCount: 5,
+                    ignoreGestures: true,
                     glow: true,
                     itemBuilder: (BuildContext context, int index){
                       return Icon(

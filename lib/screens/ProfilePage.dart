@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:bake2home/constants.dart';
 import 'package:bake2home/screens/UserDetails.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'about.dart';
@@ -56,7 +57,6 @@ class _ProfilePageState extends State<ProfilePage> {
               style: TextStyle(
                 color: text,
               )),
-          centerTitle: true,
           backgroundColor: white,
         ),
         body: SingleChildScrollView(
@@ -146,6 +146,21 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         title: Text(
                           "About",
+                        )),
+                    ListTile(
+                        onTap: () async{
+                          final InAppReview app = InAppReview.instance;
+                            if (await app.isAvailable()) {
+                              app.openStoreListing();
+                            }
+                        },
+                        leading: Icon(
+                          Icons.star,
+                          color: base,
+                          size: 30.0,
+                        ),
+                        title: Text(
+                          "Rate Us on Play Store",
                         )),
                     ListTile(
                         leading: Icon(
