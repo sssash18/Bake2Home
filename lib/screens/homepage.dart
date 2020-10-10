@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:bake2home/functions/shop.dart';
+import 'package:bake2home/screens/NoInternet.dart';
 import 'package:bake2home/screens/ProfileOrders.dart';
 import 'package:bake2home/screens/ProfilePage.dart';
 import 'package:bake2home/screens/mainPage.dart';
 import 'package:bake2home/services/PushNotification.dart';
 import 'package:bake2home/services/database.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -26,10 +30,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     });
   }
 
+
   void initState() {
     super.initState();
     pushNotification.init();
     WidgetsBinding.instance.addObserver(this);
+    
   }
 
   final List<Widget> _children = [

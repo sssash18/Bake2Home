@@ -24,20 +24,20 @@ class ItemTile extends StatelessWidget {
                     model: model)));
       },
       child: Container(
-        height: 120.0,
+        height: MediaQuery.of(context).size.height/6,
         decoration: BoxDecoration(
           gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [Color(0xffeaafc8), Color(0xff654ea3)]),
-          borderRadius: BorderRadius.circular(50.0),
+          borderRadius: BorderRadius.circular(50),
         ),
         margin: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 0.0),
         child: Stack(
           children: <Widget>[
             Container(
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50.0),
+                  borderRadius: BorderRadius.circular(MediaQuery.of(context).size.height/8),
                   color: white,
                 ),
                 child: Column(
@@ -73,7 +73,7 @@ class ItemTile extends StatelessWidget {
                         ]),
                   ],
                 ),
-                margin: EdgeInsets.fromLTRB(90.0, 15.0, 15.0, 15.0),
+                margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width/5, 15.0, 15.0, 15.0),
                 height: 100.0,
                 width: double.infinity),
             Container(

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:bake2home/constants.dart';
 import 'package:bake2home/screens/ItemPage.dart';
 import 'package:bake2home/screens/NoInternet.dart';
-import 'package:bake2home/screens/somenullpage.dart';
 import 'package:bake2home/services/database.dart';
 import 'package:bake2home/services/searchDelegate.dart';
 import 'package:bake2home/screens/TrendingPage.dart';

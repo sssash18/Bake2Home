@@ -13,7 +13,7 @@ class VendorTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 150.0,
+      height: MediaQuery.of(context).size.height/5,
       decoration: BoxDecoration(
         gradient: LinearGradient(
                 begin: Alignment.topCenter,
@@ -73,8 +73,8 @@ class VendorTile extends StatelessWidget {
               ],
             ),
             margin: EdgeInsets.fromLTRB(90.0, 15.0, 15.0, 15.0),
-            height: 120.0,
-            width: double.infinity
+            height: MediaQuery.of(context).size.height/5.5,
+            width: MediaQuery.of(context).size.width
           ),
           Container(
               margin: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 15.0),
@@ -83,7 +83,7 @@ class VendorTile extends StatelessWidget {
                 shop.profilePhoto,
                 
               ) : AssetImage("assets/images/cake.jpeg"),
-              radius: 60.0,
+              radius: MediaQuery.of(context).size.width/6,
             ),
           ),
           
