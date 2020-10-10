@@ -22,7 +22,11 @@ class _OrderPendingState extends State<OrderPending> {
     if (orders.isNotEmpty) {
       order = orders[0];
       if (order.status != "PENDING") {
-        controller.sink.add(true);
+        if (order.status == 'REJECTED') {
+          controller.sink.add('${order.status}-${order.reason}');
+        } else {
+          controller.sink.add(order.status);
+        }
       }
     }
 
@@ -45,9 +49,9 @@ class _OrderPendingState extends State<OrderPending> {
                 Order order = orders[0];
                 if (order.status == 'PENDING') {
                   order.status = 'MISSED';
-                  controller.sink.add(false);
+                  controller.sink.add('MISSED');
                 } else {
-                  controller.sink.add(true);
+                  controller.sink.add('PENDING');
                 }
               },
             ));
