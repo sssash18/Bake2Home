@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.bake2home">
+    package="com.bmc.bakemycake">
     <!-- io.flutter.app.FlutterApplication is an android.app.Application that
          calls FlutterMain.startInitialization(this); in its onCreate method.
          In most cases you can leave this as-is, but you if you want to provide
@@ -9,7 +9,7 @@
 
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="bake2home"
+        android:label="BakeMyCake"
         android:icon="@drawable/logo">
         <meta-data android:name="com.google.android.geo.API_KEY"
                android:value="AIzaSyB2gny3mTCJalqWkJDcC4-4CIGAQe8guho"/>

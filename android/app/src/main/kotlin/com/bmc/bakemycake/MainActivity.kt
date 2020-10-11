@@ -1,4 +1,4 @@
-package com.example.bake2home
+package com.bmc.bakemycake
 
 import io.flutter.embedding.android.FlutterActivity
 

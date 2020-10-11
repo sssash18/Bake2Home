@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "336904239445",
-    "firebase_url": "https://bakemycake-1d1dc.firebaseio.com",
-    "project_id": "bakemycake-1d1dc",
-    "storage_bucket": "bakemycake-1d1dc.appspot.com"
+    "project_number": "578959425576",
+    "firebase_url": "https://bakemycake-644c5.firebaseio.com",
+    "project_id": "bakemycake-644c5",
+    "storage_bucket": "bakemycake-644c5.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:336904239445:android:6360ea980fa07ee5a357dc",
+        "mobilesdk_app_id": "1:578959425576:android:8194d2a07db6f6a0fab51d",
         "android_client_info": {
-          "package_name": "com.example.bake2home"
+          "package_name": "com.bmc.bakemycake"
         }
       },
       "oauth_client": [
         {
-          "client_id": "336904239445-1ris0vmdt3hvsr9dq7bigtaspg3hbu1q.apps.googleusercontent.com",
+          "client_id": "578959425576-m61utc3l34p14vborbfcovl26hqeo6oe.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyC3fHT-Qjf8-FSVyMAvCv1tj6ZL92Tm9ZU"
+          "current_key": "AIzaSyA7srOP_niKINdNhvS3fvWXJjtt2duEwcg"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "336904239445-1ris0vmdt3hvsr9dq7bigtaspg3hbu1q.apps.googleusercontent.com",
+              "client_id": "578959425576-m61utc3l34p14vborbfcovl26hqeo6oe.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

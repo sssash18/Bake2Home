@@ -10,9 +10,8 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
   MySliverAppBar({@required this.expandedHeight, this.shop});
   @override
   Widget build(
-    
       BuildContext context, double shrinkOffset, bool overlapsContent) {
-        print('RRRRR' + shop.rating.toString());
+    print('RRRRR' + shop.rating.toString());
     return Material(
       borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(border),
@@ -71,7 +70,6 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                               );
                             },
                             onRatingUpdate: (rating) {})
-                        
                       ],
                     )
                   ],
@@ -111,18 +109,18 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                             ),
                           ),
                           RatingBar(
-                            initialRating: shop.rating,
-                            itemSize: 22.0,
-                            ignoreGestures: true,
-                            itemCount: 5,
-                            glow: true,
-                            itemBuilder: (BuildContext context, int index) {
-                              return Icon(
-                                Icons.star,
-                                color: Colors.amber,
-                              );
-                            },
-                            onRatingUpdate: (rating) {})
+                              initialRating: shop.rating,
+                              itemSize: 22.0,
+                              ignoreGestures: true,
+                              itemCount: 5,
+                              glow: true,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Icon(
+                                  Icons.star,
+                                  color: Colors.amber,
+                                );
+                              },
+                              onRatingUpdate: (rating) {})
                         ],
                       )
                     ],
@@ -152,10 +150,8 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                           style: TextStyle(
                             fontSize: 18.0,
                           )),
-                      SizedBox(height: 10.0),
-                      Container(
-                        margin: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0),
-                        alignment: Alignment.center,
+                      SizedBox(height: 5.0),
+                      SizedBox(
                         child: Text('${shop.bio}'),
                       ),
                     ]),

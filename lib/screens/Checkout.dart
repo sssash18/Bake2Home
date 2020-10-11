@@ -66,7 +66,7 @@ class _CheckoutState extends State<Checkout> {
                   return AlertDialog(
                       title: Text("Alert"),
                       content: Text(
-                          'Sorry your order was rejected because ${s[1]} . Please try again later'),
+                          'Sorry your order was denied by the baker. Please try again later \n Reason : ${s[1]} '),
                       actions: [
                         RaisedButton(
                           onPressed: () {
@@ -150,18 +150,18 @@ class _CheckoutState extends State<Checkout> {
       DropdownMenuItem(
           value: "full",
           child: Text(
-            "Full Payment(\u20B9 ${finalAmount.toInt()})",
+            "Full Payment(\u20B9 ${widget.order.amount.toInt()})",
           )),
       DropdownMenuItem(
           value: "partial",
           child: Text(
-              "Partial COD(\u20B9 ${((100 - shopMap[widget.order.shopId].advance) * finalAmount / 100).toInt()})"))
+              "Partial COD(\u20B9 ${((100 - shopMap[widget.order.shopId].advance) * widget.order.amount / 100).toInt()})"))
     ];
     if (_selectedOption == "full") {
       codAmount = 0;
     } else {
       codAmount =
-          ((100 - shopMap[widget.order.shopId].advance) * finalAmount);
+          ((100 - shopMap[widget.order.shopId].advance) * widget.order.amount);
     }
   }
 
@@ -296,7 +296,6 @@ class _CheckoutState extends State<Checkout> {
                         style: TextStyle(
                           color: white,
                         )),
-
                     content: FinalAmount(myOrder: widget.order),
                     isActive: _index == 1 ? true : false,
                     state:
@@ -322,7 +321,6 @@ class _CheckoutState extends State<Checkout> {
                                 border: Border.all(color: black),
                                 borderRadius: BorderRadius.circular(10.0)),
                             padding: EdgeInsets.symmetric(horizontal: 5.0),
-
                             child: paymentDropdown(),
                           ),
                           Expanded(
@@ -348,7 +346,7 @@ class _CheckoutState extends State<Checkout> {
                                     color: white,
                                     onPressed: () async {
                                       _response = await initiateTransaction(
-                                          finalAmount - codAmount,
+                                          widget.order.amount - codAmount,
                                           widget.order.orderId,
                                           apps[index].app);
 

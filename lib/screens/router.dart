@@ -123,7 +123,7 @@ class _RouterState extends State<Router> with WidgetsBindingObserver {
     await getAttr();
     await getCategories();
     await getTrending();
-    getDeliveryCharges();
+    await getDeliveryCharges();
     // await getCardDetails();
 
     (_auth.currentUser != null && done)
@@ -217,7 +217,7 @@ class _RouterState extends State<Router> with WidgetsBindingObserver {
         model.ingredients = List<String>.from(item['ingredients']);
         model.itemCategory = item['itemCategory'];
         model.itemId = item['itemId'];
-        model.minTime = item['minTime'];
+        model.minTime = item['minTime'].toDouble();
         model.photoUrl = item['photoUrl'];
         model.recipe = item['recipe'];
         model.variants = item['variants'];
@@ -232,11 +232,11 @@ class _RouterState extends State<Router> with WidgetsBindingObserver {
     });
   }
 
-  Future<void> getAttr() async{
-    await attrCollection.get().then((value){
+  Future<void> getAttr() async {
+    await attrCollection.get().then((value) {
       value.docs.forEach((element) {
         attr.add(element.data());
-       });
+      });
     });
   }
 
@@ -265,7 +265,7 @@ class _RouterState extends State<Router> with WidgetsBindingObserver {
       recent: document.data()['recent'] == null
           ? []
           : List.from(document.data()['recent']),
-      customTime : document.data()['customTime'].toDouble(),    
+      customTime: document.data()['customTime'].toDouble(),
       reviews: List<String>.from(document.data()['reviews']),
     );
   }
@@ -286,8 +286,7 @@ class _RouterState extends State<Router> with WidgetsBindingObserver {
         uriPrefix: 'https://bakemycakevendor.page.link',
         link: Uri.parse(
             'https://bakemycakevendor/profile?Id=mDjoKJMdRZT7x3NN5bj9bJiUBFZ2'),
-        androidParameters:
-            AndroidParameters(packageName: 'com.example.bake2home'),
+        androidParameters: AndroidParameters(packageName: 'com.bmc.bakemycake'),
         socialMetaTagParameters: SocialMetaTagParameters(
           title: "Find me at",
           description: 'Find my profile at bmc',
