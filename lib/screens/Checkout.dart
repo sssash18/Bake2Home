@@ -66,7 +66,7 @@ class _CheckoutState extends State<Checkout> {
                   return AlertDialog(
                       title: Text("Alert"),
                       content: Text(
-                          'Sorry your order was rejected because ${s[1]} . Please try again later'),
+                          'Sorry your order was denied by the baker. Please try again later \n Reason : ${s[1]} '),
                       actions: [
                         RaisedButton(
                           onPressed: () {
