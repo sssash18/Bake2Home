@@ -286,8 +286,7 @@ class _RouterState extends State<Router> with WidgetsBindingObserver {
         uriPrefix: 'https://bakemycakevendor.page.link',
         link: Uri.parse(
             'https://bakemycakevendor/profile?Id=mDjoKJMdRZT7x3NN5bj9bJiUBFZ2'),
-        androidParameters:
-            AndroidParameters(packageName: 'com.example.bake2home'),
+        androidParameters: AndroidParameters(packageName: 'com.bmc.bakemycake'),
         socialMetaTagParameters: SocialMetaTagParameters(
           title: "Find me at",
           description: 'Find my profile at bmc',
