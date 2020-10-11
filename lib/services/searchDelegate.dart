@@ -97,6 +97,9 @@ class searchDelegate extends SearchDelegate<Shop> {
               photoUrl: itemList[index - shopSearch.length]['photoUrl'],
               recipe: itemList[index - shopSearch.length]['recipe'],
               veg: itemList[index - shopSearch.length]['veg'],
+              itemCategory: itemList[index - shopSearch.length]['itemCategory'],
+               itemType: itemList[index - shopSearch.length]['itemType'],
+              flavours: List<String>.from(itemList[index - shopSearch.length]['flavours']),
               variants: itemList[index - shopSearch.length]['variants']);
           return ListTile(
             onTap: () {
@@ -106,6 +109,9 @@ class searchDelegate extends SearchDelegate<Shop> {
                       builder: (BuildContext context) => ItemPage(
                             shopId: shopId,
                             model: item,
+                            itemType: item.itemType,
+                            category: item.itemCategory,
+                            
                           )));
             },
             title: Text(itemList[index - shopSearch.length]['itemName']),

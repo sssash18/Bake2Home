@@ -312,7 +312,7 @@ class _ItemPageState extends State<ItemPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                Icon(Icons.add_shopping_cart),
+                Icon(Icons.add_shopping_cart,color: white,),
                 Text(
                   "Add to cart",
                   style: TextStyle(color: white),
