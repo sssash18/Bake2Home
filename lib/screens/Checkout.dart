@@ -3,6 +3,7 @@ import 'package:bake2home/services/PushNotification.dart';
 import 'package:bake2home/services/database.dart';
 import 'package:bake2home/widgets/FinalAmount.dart';
 import 'package:bake2home/widgets/OrdersList.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
@@ -36,17 +37,7 @@ class _CheckoutState extends State<Checkout> {
   @override
   void initState() {
     super.initState();
-    paymentOptions = [
-      DropdownMenuItem<String>(
-          value: "full",
-          child: Text(
-            "Full Payment(\u20B9 ${widget.order.amount.truncate()})",
-          )),
-      DropdownMenuItem<String>(
-          value: "partial",
-          child: Text(
-              "Partial COD(Now \u20B9 ${((shopMap[widget.order.shopId].advance) * widget.order.amount / 100).truncate()})"))
-    ];
+
     _selectedOption = "full";
     _upiIndia.getAllUpiApps().then((value) {
       setState(() {
@@ -153,23 +144,24 @@ class _CheckoutState extends State<Checkout> {
     } else {
       //subs.cancel();
     }
+
     String _selectedOption = "full";
-    List<DropdownMenuItem> paymentOptions = [
+    paymentOptions = [
       DropdownMenuItem(
           value: "full",
           child: Text(
-            "Full Payment(\u20B9 ${widget.order.amount.toInt()})",
+            "Full Payment(\u20B9 ${finalAmount.toInt()})",
           )),
       DropdownMenuItem(
           value: "partial",
           child: Text(
-              "Partial COD(\u20B9 ${((100 - shopMap[widget.order.shopId].advance) * widget.order.amount / 100).toInt()})"))
+              "Partial COD(\u20B9 ${((100 - shopMap[widget.order.shopId].advance) * finalAmount / 100).toInt()})"))
     ];
     if (_selectedOption == "full") {
       codAmount = 0;
     } else {
       codAmount =
-          ((100 - shopMap[widget.order.shopId].advance) * widget.order.amount);
+          ((100 - shopMap[widget.order.shopId].advance) * finalAmount);
     }
   }
 
@@ -304,7 +296,7 @@ class _CheckoutState extends State<Checkout> {
                         style: TextStyle(
                           color: white,
                         )),
-                    content: FinalAmount(),
+                    content: FinalAmount(statorder: widget.order),
                     isActive: _index == 1 ? true : false,
                     state:
                         _index <= 1 ? StepState.indexed : StepState.complete),
@@ -343,7 +335,7 @@ class _CheckoutState extends State<Checkout> {
                                                     shopMap[widget.order.shopId]
                                                         .advance) /
                                                 100) *
-                                            widget.order.amount;
+                                            finalAmount;
                                       }
                                     });
                                     print(_selectedOption);
@@ -373,7 +365,7 @@ class _CheckoutState extends State<Checkout> {
                                     color: white,
                                     onPressed: () async {
                                       _response = await initiateTransaction(
-                                          widget.order.amount - codAmount,
+                                          finalAmount - codAmount,
                                           widget.order.orderId,
                                           apps[index].app);
 

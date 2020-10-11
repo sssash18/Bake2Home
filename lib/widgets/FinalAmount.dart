@@ -6,13 +6,16 @@ import '../constants.dart';
 
 class FinalAmount extends StatelessWidget {
   Function callBackToPrice;
-  FinalAmount({this.callBackToPrice});
+  Order statorder;
+  FinalAmount({this.callBackToPrice,this.statorder});
   @override
   Widget build(BuildContext context) {
     List<Order> orderList = Provider.of<List<Order>>(context) ?? [];
     Order order;
     if (orderList.isNotEmpty) {
       order = orderList[0];
+      statorder.amount = order.amount;
+      finalAmount = order.amount;
       // callBackToPrice(order.amount);
       print(order.amount);
       print(order.codAmount);

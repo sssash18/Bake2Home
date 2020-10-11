@@ -47,6 +47,7 @@ StreamController<String> controller = StreamController<String>.broadcast();
 FirebaseMessaging firebaseMessaging = FirebaseMessaging();
 String token = "";
 List<String> slidesUrl = [];
+double finalAmount = 0;
 
 String readTimestamp(Timestamp timestamp) {
   DateTime date = timestamp.toDate();

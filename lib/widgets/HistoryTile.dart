@@ -114,7 +114,7 @@ class _HistoryTileState extends State<HistoryTile> {
         }else{
           bool rs = await genDialog(
             context,
-            "Are you sure to cancel the order \n Amount to be refunded is $refundAmount",
+            "Are you sure to cancel the order \n Amount to be refunded is\n \u20B9 ${refundAmount.round()}",
             "Yes",
             "No");
             if (rs) {
