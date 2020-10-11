@@ -198,6 +198,27 @@ class _ItemPageState extends State<ItemPage> {
                     Container(
                         margin: EdgeInsets.fromLTRB(15.0, 45.0, 0, 0),
                         alignment: Alignment.topLeft,
+                        child: Text("Baking Time",
+                            style: TextStyle(
+                              color: white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: head2,
+                            ))),
+                    Container(
+                        alignment: Alignment.topLeft,
+                        margin: EdgeInsets.fromLTRB(15.0, 15.0, 0, 0),
+                                          child: Text(
+
+                        '${widget.model.minTime} hours',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                        color: white,
+                        fontSize: textSize,
+                      )),
+                    ),
+                    Container(
+                        margin: EdgeInsets.fromLTRB(15.0, 45.0, 0, 0),
+                        alignment: Alignment.topLeft,
                         child: Text("Ingredients",
                             style: TextStyle(
                               color: white,
