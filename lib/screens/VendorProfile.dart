@@ -13,6 +13,11 @@ class VendorProfile extends StatelessWidget {
   VendorProfile({this.shop});
   @override
   Widget build(BuildContext context) {
+    double exp = (double.parse(shop.experience) / 12);
+    String experience = exp.toStringAsFixed(1);
+    if (exp < 1) {
+      experience = '0.5';
+    }
     final Shop args = ModalRoute.of(context).settings.arguments;
     if (shop == null) {
       shop = args;
@@ -22,7 +27,9 @@ class VendorProfile extends StatelessWidget {
       child: CustomScrollView(
         slivers: <Widget>[
           SliverPersistentHeader(
-            delegate: MySliverAppBar(expandedHeight: MediaQuery.of(context).size.height/2, shop: shop),
+            delegate: MySliverAppBar(
+                expandedHeight: MediaQuery.of(context).size.height / 2,
+                shop: shop),
             pinned: true,
           ),
           SliverToBoxAdapter(
@@ -33,7 +40,7 @@ class VendorProfile extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Container(
-                            height: MediaQuery.of(context).size.height/4,
+                            height: MediaQuery.of(context).size.height / 4,
                             width: MediaQuery.of(context).size.width / 4 + 5,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(border),
@@ -50,17 +57,14 @@ class VendorProfile extends StatelessWidget {
                                   5.0, 10.0, 5.0, 10.0),
                               child: Column(children: <Widget>[
                                 Text(
-                                  'Experience\n(In months)',
-                                  style: TextStyle(
-                                    color: white,
-                                    fontSize: 10
-                                  ),
+                                  'Experience\n(In Years)',
+                                  style: TextStyle(color: white, fontSize: 10),
                                 ),
                                 Expanded(
                                   child: Container(
                                     alignment: Alignment.center,
                                     child: Text(
-                                      shop.experience.toString(),
+                                      experience.toString(),
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                           color: white,
@@ -72,7 +76,7 @@ class VendorProfile extends StatelessWidget {
                               ]),
                             )),
                         Container(
-                            height: MediaQuery.of(context).size.height/4,
+                            height: MediaQuery.of(context).size.height / 4,
                             width: MediaQuery.of(context).size.width / 4 + 5,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(border),
@@ -110,7 +114,7 @@ class VendorProfile extends StatelessWidget {
                               ]),
                             )),
                         Container(
-                            height: MediaQuery.of(context).size.height/4,
+                            height: MediaQuery.of(context).size.height / 4,
                             width: MediaQuery.of(context).size.width / 4 + 5,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(border),
@@ -186,7 +190,7 @@ class VendorProfile extends StatelessWidget {
                 },
                 child: Container(
                   margin: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 0),
-                  height: MediaQuery.of(context).size.height/3.7,
+                  height: MediaQuery.of(context).size.height / 3.7,
                   decoration: BoxDecoration(
                       image: DecorationImage(
                           image: categoryList
@@ -278,7 +282,7 @@ class VendorProfile extends StatelessWidget {
     print(recentList);
     return SliverToBoxAdapter(
         child: Container(
-            height: MediaQuery.of(context).size.height/4.6,
+            height: MediaQuery.of(context).size.height / 4.6,
             child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: recentList.length,

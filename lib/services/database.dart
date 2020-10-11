@@ -28,8 +28,8 @@ class DatabaseService {
 
   DatabaseService({this.uid});
 
-  Future<void> getDeliveryToken() {
-    FirebaseFirestore.instance
+  Future<void> getDeliveryToken() async {
+    await FirebaseFirestore.instance
         .collection("Delivery")
         .doc('token')
         .get()
@@ -238,15 +238,16 @@ class DatabaseService {
     return rs;
   }
 
- Future<double> getRefundAmount(Order order) async{
+  Future<double> getRefundAmount(Order order) async {
     double refundAmount = 0;
     DateTime now = await NTP.now();
     if ((now.day < order.deliveryTime.toDate().day) &&
         now.month == order.deliveryTime.toDate().month &&
         now.year == order.deliveryTime.toDate().year) {
-      refundAmount =  order.amount - order.codAmount;
+      refundAmount = order.amount - order.codAmount;
     } else {
-      refundAmount = (order.amount * (1 - (shopMap[order.shopId].advance/100)));
+      refundAmount =
+          (order.amount * (1 - (shopMap[order.shopId].advance / 100)));
     }
     return refundAmount;
   }

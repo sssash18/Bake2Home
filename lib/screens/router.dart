@@ -232,11 +232,11 @@ class _RouterState extends State<Router> with WidgetsBindingObserver {
     });
   }
 
-  Future<void> getAttr() async{
-    await attrCollection.get().then((value){
+  Future<void> getAttr() async {
+    await attrCollection.get().then((value) {
       value.docs.forEach((element) {
         attr.add(element.data());
-       });
+      });
     });
   }
 
@@ -265,7 +265,7 @@ class _RouterState extends State<Router> with WidgetsBindingObserver {
       recent: document.data()['recent'] == null
           ? []
           : List.from(document.data()['recent']),
-      customTime : document.data()['customTime'].toDouble(),    
+      customTime: document.data()['customTime'].toDouble(),
       reviews: List<String>.from(document.data()['reviews']),
     );
   }
