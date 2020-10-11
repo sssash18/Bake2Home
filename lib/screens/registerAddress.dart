@@ -214,7 +214,7 @@ class _RegisterAddressState extends State<RegisterAddress> {
               //     2759.630859375) {
               setState(() {
                 _loading = true;
-                currentUser.addresses.clear();
+                // currentUser.addresses.clear();
                 currentUser.addresses.putIfAbsent(
                     Timestamp.now().microsecondsSinceEpoch.toString(),
                     () => newAddress);
