@@ -59,22 +59,6 @@ class _ItemPageState extends State<ItemPage> {
         child: Scaffold(
           key: _key,
           resizeToAvoidBottomInset: true,
-          floatingActionButton:
-              (widget.itemType == 'cake' && widget.category == 'customised')
-                  ? FloatingActionButton(
-                      child: Icon(Icons.add, color: white),
-                      backgroundColor: base,
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AddProduct(
-                                  shop: shopMap[widget.shopId],
-                                  itemType: widget.model.itemCategory),
-                            ));
-                      },
-                    )
-                  : SizedBox.shrink(),
           body: CustomScrollView(
             slivers: <Widget>[
               SliverToBoxAdapter(
@@ -205,16 +189,14 @@ class _ItemPageState extends State<ItemPage> {
                               fontSize: head2,
                             ))),
                     Container(
-                        alignment: Alignment.topLeft,
-                        margin: EdgeInsets.fromLTRB(15.0, 15.0, 0, 0),
-                                          child: Text(
-
-                        '${widget.model.minTime} hours',
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                        color: white,
-                        fontSize: textSize,
-                      )),
+                      alignment: Alignment.topLeft,
+                      margin: EdgeInsets.fromLTRB(15.0, 15.0, 0, 0),
+                      child: Text('${widget.model.minTime} hours',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            color: white,
+                            fontSize: textSize,
+                          )),
                     ),
                     Container(
                         margin: EdgeInsets.fromLTRB(15.0, 45.0, 0, 0),
@@ -312,7 +294,10 @@ class _ItemPageState extends State<ItemPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                Icon(Icons.add_shopping_cart,color: white,),
+                Icon(
+                  Icons.add_shopping_cart,
+                  color: white,
+                ),
                 Text(
                   "Add to cart",
                   style: TextStyle(color: white),
@@ -330,7 +315,8 @@ class _ItemPageState extends State<ItemPage> {
     dropDownList.forEach((element) {
       list.add(DropdownMenuItem<double>(
         value: element,
-        child: Text("$element  ${widget.model.itemCategory == "cake" ? 'pounds' : 'KG'}  \u20B9 ${priceMap[element]}",
+        child: Text(
+            "$element  ${widget.model.itemCategory == "cake" ? 'pounds' : 'KG'}  \u20B9 ${priceMap[element]}",
             style: TextStyle(color: black)),
       ));
     });

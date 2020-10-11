@@ -60,19 +60,21 @@ class _ItemListState extends State<ItemList>
             controller: tabController,
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-            child: Icon(Icons.add, color: white),
-            backgroundColor: base,
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AddProduct(
-                        shop: shopMap[widget.shop.shopId],
-                        itemType: widget.itemType),
-                  ));
-            },
-          ),
+        floatingActionButton: (widget.itemType == 'cake')
+            ? FloatingActionButton(
+                child: Icon(Icons.add, color: white),
+                backgroundColor: base,
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AddProduct(
+                            shop: shopMap[widget.shop.shopId],
+                            itemType: widget.itemType),
+                      ));
+                },
+              )
+            : SizedBox.shrink(),
         body: TabBarView(
           controller: tabController,
           children: <Widget>[

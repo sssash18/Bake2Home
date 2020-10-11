@@ -263,14 +263,12 @@ class _CartState extends State<Cart> {
                                                   return CartTile(
                                                     item: cartMap[cartMap.keys
                                                         .where((element) =>
-                                                            element !=
-                                                            'shopId')
+                                                            element != 'shopId')
                                                         .elementAt(index)],
                                                     shop: shop,
                                                     vid: cartMap.keys
                                                         .where((element) =>
-                                                            element !=
-                                                            'shopId')
+                                                            element != 'shopId')
                                                         .elementAt(index),
                                                   );
                                                 }),
@@ -543,7 +541,7 @@ class _CartState extends State<Cart> {
                               });
                             } else {
                               showGenDialog(context,
-                                  "Please select valid time accordingly to baking the cake \n Baking Time is $makingTime hrs $makingInMinutes minute");
+                                  "Please select valid time accordingly to baking the cake \n Baking Time is $makingTime hrs");
                             }
                           } else {
                             showGenDialog(context,
