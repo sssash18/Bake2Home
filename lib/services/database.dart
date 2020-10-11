@@ -238,7 +238,7 @@ class DatabaseService {
     return rs;
   }
 
-  getRefundAmount(Order order) async{
+ Future<double> getRefundAmount(Order order) async{
     double refundAmount = 0;
     DateTime now = await NTP.now();
     if ((now.day < order.deliveryTime.toDate().day) &&
@@ -252,7 +252,7 @@ class DatabaseService {
   }
 
   Future<bool> cancelOrder(Order order) async {
-    double refundAmount = getRefundAmount(order);
+    double refundAmount = await getRefundAmount(order);
     double compensationAmount =
         max(0, (order.amount - refundAmount) - 0.05 * order.amount);
 

@@ -50,10 +50,10 @@ class VendorProfile extends StatelessWidget {
                                   5.0, 10.0, 5.0, 10.0),
                               child: Column(children: <Widget>[
                                 Text(
-                                  'Experience\n(In years)',
+                                  'Experience\n(In months)',
                                   style: TextStyle(
                                     color: white,
-                                    fontSize: 12
+                                    fontSize: 10
                                   ),
                                 ),
                                 Expanded(

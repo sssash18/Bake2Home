@@ -98,7 +98,7 @@ class _ReviewState extends State<Review> with SingleTickerProviderStateMixin {
                       FlatButton(
                           color: base,
                           onPressed: () async {
-                            submitReview(review, rating, widget.shop.shopId,widget.orderId);
+                            await submitReview(review, rating, widget.shop.shopId, widget.orderId);
                             Navigator.pop(context);
                           },
                           child: Text(
@@ -135,7 +135,7 @@ class _ReviewState extends State<Review> with SingleTickerProviderStateMixin {
     );
   }
 
-  void submitReview(String review, int rating, String shopId,String orderId) async {
+  Future<void> submitReview(String review, int rating, String shopId,String orderId) async {
     await DatabaseService().submitReview(shopId, review, rating,orderId);
   }
 }
