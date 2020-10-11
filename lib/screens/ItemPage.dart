@@ -330,7 +330,7 @@ class _ItemPageState extends State<ItemPage> {
     dropDownList.forEach((element) {
       list.add(DropdownMenuItem<double>(
         value: element,
-        child: Text("$element pounds  \u20B9 ${priceMap[element]}",
+        child: Text("$element  ${widget.model.itemCategory == "cake" ? 'pounds' : 'KG'}  \u20B9 ${priceMap[element]}",
             style: TextStyle(color: black)),
       ));
     });
