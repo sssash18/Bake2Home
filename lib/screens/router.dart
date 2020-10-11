@@ -123,7 +123,7 @@ class _RouterState extends State<Router> with WidgetsBindingObserver {
     await getAttr();
     await getCategories();
     await getTrending();
-    getDeliveryCharges();
+    await getDeliveryCharges();
     // await getCardDetails();
 
     (_auth.currentUser != null && done)
@@ -217,7 +217,7 @@ class _RouterState extends State<Router> with WidgetsBindingObserver {
         model.ingredients = List<String>.from(item['ingredients']);
         model.itemCategory = item['itemCategory'];
         model.itemId = item['itemId'];
-        model.minTime = item['minTime'];
+        model.minTime = item['minTime'].toDouble();
         model.photoUrl = item['photoUrl'];
         model.recipe = item['recipe'];
         model.variants = item['variants'];
