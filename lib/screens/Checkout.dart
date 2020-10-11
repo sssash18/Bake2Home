@@ -296,7 +296,8 @@ class _CheckoutState extends State<Checkout> {
                         style: TextStyle(
                           color: white,
                         )),
-                    content: FinalAmount(statorder: widget.order),
+
+                    content: FinalAmount(myOrder: widget.order),
                     isActive: _index == 1 ? true : false,
                     state:
                         _index <= 1 ? StepState.indexed : StepState.complete),
@@ -321,26 +322,8 @@ class _CheckoutState extends State<Checkout> {
                                 border: Border.all(color: black),
                                 borderRadius: BorderRadius.circular(10.0)),
                             padding: EdgeInsets.symmetric(horizontal: 5.0),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton(
-                                  value: _selectedOption,
-                                  items: paymentOptions,
-                                  onChanged: (val) {
-                                    setState(() {
-                                      _selectedOption = val;
-                                      if (_selectedOption == "full") {
-                                        codAmount = 0;
-                                      } else {
-                                        codAmount = ((100 -
-                                                    shopMap[widget.order.shopId]
-                                                        .advance) /
-                                                100) *
-                                            finalAmount;
-                                      }
-                                    });
-                                    print(_selectedOption);
-                                  }),
-                            ),
+
+                            child: paymentDropdown(),
                           ),
                           Expanded(
                             child: ListView.builder(
@@ -436,6 +419,38 @@ class _CheckoutState extends State<Checkout> {
           ),
         ),
       ),
+    );
+  }
+
+  DropdownButtonHideUnderline paymentDropdown() {
+    paymentOptions = [
+      DropdownMenuItem<String>(
+          value: "full",
+          child: Text(
+            "Full Payment(\u20B9 ${widget.order.amount.truncate()})",
+          )),
+      DropdownMenuItem<String>(
+          value: "partial",
+          child: Text(
+              "Partial COD(Now \u20B9 ${((shopMap[widget.order.shopId].advance) * widget.order.amount / 100).truncate()})"))
+    ];
+    return DropdownButtonHideUnderline(
+      child: DropdownButton(
+          value: _selectedOption,
+          items: paymentOptions,
+          onChanged: (val) {
+            setState(() {
+              _selectedOption = val;
+              if (_selectedOption == "full") {
+                codAmount = 0;
+              } else {
+                codAmount =
+                    ((100 - shopMap[widget.order.shopId].advance) / 100) *
+                        widget.order.amount;
+              }
+            });
+            print(_selectedOption);
+          }),
     );
   }
 }

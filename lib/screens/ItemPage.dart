@@ -208,7 +208,7 @@ class _ItemPageState extends State<ItemPage> {
                         alignment: Alignment.topLeft,
                         margin: EdgeInsets.fromLTRB(15.0, 15.0, 0, 0),
                                           child: Text(
-                          
+
                         '${widget.model.minTime} hours',
                         textAlign: TextAlign.left,
                         style: TextStyle(
