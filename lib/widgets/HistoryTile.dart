@@ -108,7 +108,7 @@ class _HistoryTileState extends State<HistoryTile> {
     return InkWell(
       onTap: () async {
         double refundAmount =
-            DatabaseService().getRefundAmount(this.widget.order);
+            await DatabaseService().getRefundAmount(this.widget.order);
         if(DateTime.now().hour < 10 || DateTime.now().hour > 21){
           showGenDialog(context, "Cancellation of Orders is allowed only between 10 AM and 10 PM");
         }else{

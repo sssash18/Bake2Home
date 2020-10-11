@@ -340,8 +340,8 @@ class _AddProductState extends State<AddProduct> {
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       counterText: '',
-                      labelText: "Size & Tier",
-                      hintText: '3 pounds - 2 tier',
+                      labelText: "Size",
+                      hintText: '3 pounds',
                       prefixIcon: Icon(Icons.description, color: base),
                       border: OutlineInputBorder(),
                     ),
