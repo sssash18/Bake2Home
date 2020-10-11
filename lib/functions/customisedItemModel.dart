@@ -6,6 +6,7 @@ class CustomisedItemModel {
   String photoUrl;
   double minTime;
   String itemCategory;
+  String itemType;
   String recipe;
   List<String> ingredients, flavours;
   Map<String, dynamic> variants;
@@ -20,6 +21,7 @@ class CustomisedItemModel {
       this.recipe,
       this.flavours,
       this.itemCategory,
+      this.itemType,
       this.veg,
       this.variants});
 }

@@ -12,6 +12,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:bake2home/functions/user.dart' as LocalUser;
 import 'package:bake2home/functions/order.dart';
 import 'package:http/http.dart';
+import 'package:ntp/ntp.dart';
 import 'package:upi_india/upi_response.dart';
 
 class DatabaseService {
@@ -219,7 +220,7 @@ class DatabaseService {
           'instructions': order.instructions,
           'deliveryCharges': order.delCharges,
           'pickUp': order.pickUp,
-          'orderTime': order.orderTime,
+          'orderTime': await NTP.now(),
           'deliveryTime': order.deliveryTime,
           'items': order.items,
           'codAmount': 0,
@@ -237,14 +238,15 @@ class DatabaseService {
     return rs;
   }
 
-  getRefundAmount(Order order) {
+  getRefundAmount(Order order) async{
     double refundAmount = 0;
-    if ((DateTime.now().day < order.orderTime.toDate().day) &&
-        DateTime.now().month == order.orderTime.toDate().month &&
-        DateTime.now().year == order.orderTime.toDate().year) {
-      refundAmount = order.amount - order.codAmount;
+    DateTime now = await NTP.now();
+    if ((now.day < order.deliveryTime.toDate().day) &&
+        now.month == order.deliveryTime.toDate().month &&
+        now.year == order.deliveryTime.toDate().year) {
+      refundAmount =  order.amount - order.codAmount;
     } else {
-      refundAmount = 0;
+      refundAmount = (order.amount * (1 - (shopMap[order.shopId].advance/100)));
     }
     return refundAmount;
   }
@@ -393,6 +395,7 @@ class DatabaseService {
             minTime: value['minTime'].toDouble(),
             variants: variants,
             veg: value['veg'],
+            itemType: value['itemType'],
             flavours: List<String>.from(value['flavours']));
         list.add(model);
       });

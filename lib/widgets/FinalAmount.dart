@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../constants.dart';
 
 class FinalAmount extends StatelessWidget {
+
   Order myOrder;
   FinalAmount({this.myOrder});
   @override
@@ -13,6 +14,7 @@ class FinalAmount extends StatelessWidget {
     Order order;
     if (orderList.isNotEmpty) {
       order = orderList[0];
+
       print('------------------->${order.amount}');
       myOrder.amount = order.amount;
       print('------------------->${myOrder.amount}');

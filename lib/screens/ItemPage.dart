@@ -253,6 +253,7 @@ class _ItemPageState extends State<ItemPage> {
                             ))),
                     Container(
                         margin: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 0),
+                        alignment: Alignment.topLeft,
                         child: Text(
                           widget.model.recipe,
                           style: TextStyle(color: white, fontSize: textSize),
@@ -311,7 +312,7 @@ class _ItemPageState extends State<ItemPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                Icon(Icons.add_shopping_cart),
+                Icon(Icons.add_shopping_cart,color: white,),
                 Text(
                   "Add to cart",
                   style: TextStyle(color: white),
