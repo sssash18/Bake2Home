@@ -13,15 +13,16 @@ class VendorProfile extends StatelessWidget {
   VendorProfile({this.shop});
   @override
   Widget build(BuildContext context) {
-    double exp = (double.parse(shop.experience) / 12);
-    print(exp);
-    String experience = exp.toStringAsFixed(1);
-    if (exp < 1) {
-      experience = '0.5';
-    }
+    // double exp = (double.parse(shop.experience) / 12);
+    // print(exp);
+     String experience = '1'; //exp.toStringAsFixed(1);
+    // if (exp < 1) {
+    //   experience = '0.5';
+    // }
     final Shop args = ModalRoute.of(context).settings.arguments;
     if (shop == null) {
       shop = args;
+      print('AAAAA' + args.toString());
     }
     return SafeArea(
         child: Material(

@@ -32,12 +32,12 @@ class _MainPageState extends State<MainPage> {
   );
 
   StreamSubscription<ConnectivityResult> subs;
-
+  Connectivity _connectivity;
   bool internetStatus = true;
   @override 
   void initState() {
     super.initState();
-    final Connectivity _connectivity = Connectivity();
+    _connectivity = Connectivity();
     _connectivity.checkConnectivity().then((value) {
       if (value == ConnectivityResult.none) {
         internetStatus = false;

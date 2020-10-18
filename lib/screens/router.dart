@@ -55,7 +55,7 @@ class _RouterState extends State<Router> with WidgetsBindingObserver {
       });
     });
     getThings();
-    //createDynamicLink();
+    createDynamicLink();
   }
 
   @override
@@ -102,10 +102,10 @@ class _RouterState extends State<Router> with WidgetsBindingObserver {
     Uri deepLink = link?.link;
     if (deepLink != null) {
       final String param = deepLink.queryParameters['Id'];
-      print(param);
-      Shop shop = shopMap[param];
-      print(shop.shopName);
-      print(deepLink.path);
+      print('PPPPP'+param);
+      Shop shop = shopMap['e7gfCAG9lrfZT3LaqhDBrzO8cdS2'];
+      print('SSSSSS'+shop.experience);
+      print('DDDDDDD' + deepLink.path);
       Navigator.of(context).pushNamed(deepLink.path, arguments: shop);
       print('cant Handle');
     }
@@ -283,15 +283,15 @@ class _RouterState extends State<Router> with WidgetsBindingObserver {
     final DynamicLinkParameters parameters = DynamicLinkParameters(
         navigationInfoParameters:
             NavigationInfoParameters(forcedRedirectEnabled: true),
-        uriPrefix: 'https://bakemycakevendor.page.link',
+        uriPrefix: 'https://bakemycake.page.link',
         link: Uri.parse(
-            'https://bakemycakevendor/profile?Id=mDjoKJMdRZT7x3NN5bj9bJiUBFZ2'),
+            'https://bakemycake/profile?Id=lcoC9IM7JCg2ahfB6kRZM5cJN8g2'),
         androidParameters: AndroidParameters(packageName: 'com.bmc.bakemycake'),
         socialMetaTagParameters: SocialMetaTagParameters(
-          title: "Find me at",
-          description: 'Find my profile at bmc',
+          title: "Dessert Garden Bakery",
+          description: 'Find us at BakeMyCake',
           imageUrl: Uri.parse(
-              'https://firebasestorage.googleapis.com/v0/b/bakemycake-1d1dc.appspot.com/o/atom.png?alt=media&token=789c85bc-5234-4fb9-a317-957f98bb0abe'),
+              'https://firebasestorage.googleapis.com/v0/b/bakemycake-644c5.appspot.com/o/Dessert%20Garden%20Cakery%2Fprofile.png?alt=media&token=a211969d-bd6f-4d57-9457-8a9854e4ddd1'),
         ));
     final ShortDynamicLink shortLink = await parameters.buildShortLink();
     print('linkkkkkkkkk' +
