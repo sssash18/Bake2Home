@@ -223,7 +223,7 @@ class _CheckoutState extends State<Checkout> {
             await Future.delayed(Duration(seconds: 1));
           });
           Navigator.pop(context);
-          return true;
+          return Future.value(true);
         }
       },
       child: Scaffold(
@@ -396,14 +396,46 @@ class _CheckoutState extends State<Checkout> {
                             fontSize: 15)),
                     content: FlatButton.icon(
                       onPressed: () async {
-                        DatabaseService(uid: currentUserID).emptyCart();
-                        pushNotification.pushMessagewithNewOrder(
-                            "New Order", '', deliveryToken, '123');
+                        ProgressDialog pr2 = ProgressDialog(context,
+                            type: ProgressDialogType.Normal,
+                            isDismissible: true,
+                            showLogs: true);
+                        pr.style(
+                            message: 'Finishing order....',
+                            borderRadius: 10.0,
+                            backgroundColor: Colors.white,
+                            progressWidget:
+                                Center(child: CircularProgressIndicator()),
+                            elevation: 10.0,
+                            insetAnimCurve: Curves.easeInOut,
+                            progress: 0.0,
+                            maxProgress: 100.0,
+                            progressTextStyle: TextStyle(
+                                color: Colors.black,
+                                fontSize: 13.0,
+                                fontWeight: FontWeight.w400),
+                            messageTextStyle: TextStyle(
+                                color: Colors.black,
+                                fontSize: 19.0,
+                                fontWeight: FontWeight.w600));
+                        await pr2.show();
+                        await emptyCart();
+                        await pushNotification
+                            .pushMessagewithNewOrder(
+                                "New Order", '', deliveryToken, '123')
+                            .catchError((e) async {
+                          await pr2.hide();
+                        });
                         Navigator.pop(context);
-                        pushNotification.pushMessage(
-                            "Order Placed Successfully",
-                            'Order Id : ${widget.order.orderId}',
-                            shopMap[widget.order.shopId].token);
+                        await pushNotification
+                            .pushMessage(
+                                "Order Placed Successfully",
+                                'Order Id : ${widget.order.orderId}',
+                                shopMap[widget.order.shopId].token)
+                            .catchError((e) async {
+                          await pr2.hide();
+                        });
+                        await pr2.hide();
                       },
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(border)),
@@ -418,6 +450,15 @@ class _CheckoutState extends State<Checkout> {
         ),
       ),
     );
+  }
+
+  Future<void> emptyCart() async {
+    await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(currentUser.uid)
+        .update({'cart': {}});
+    currentShopId = 'null';
+    cartMap.clear();
   }
 
   DropdownButtonHideUnderline paymentDropdown() {

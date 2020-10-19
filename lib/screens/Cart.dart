@@ -126,7 +126,6 @@ class _CartState extends State<Cart> {
   }
 
   emptyCart() async {
-
     await FirebaseFirestore.instance
         .collection('Users')
         .doc(currentUser.uid)
@@ -153,7 +152,9 @@ class _CartState extends State<Cart> {
             if (cartMap.length == 1) {
               emptyCart();
             }
-            currentShopId = cartMap['shopId'];
+            currentShopId =
+                cartMap['shopId'] == null ? 'null' : cartMap['shopId'];
+            print(currentShopId);
             delCharges = 0.0;
             cakeQuantity = 0;
             cakeCount = 0;

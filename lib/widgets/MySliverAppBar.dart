@@ -95,7 +95,7 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                             '${shop.shopName}',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: 30.0,
+                              fontSize: 15.0,
                               color: white,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Sora',
@@ -152,7 +152,9 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                           )),
                       SizedBox(height: 5.0),
                       SizedBox(
-                        child: Text('${shop.bio}'),
+                        child: shop.bio.isEmpty
+                            ? Text('No Description Provided')
+                            : Text('${shop.bio}'),
                       ),
                     ]),
                   ),
