@@ -279,8 +279,10 @@ class _MainPageState extends State<MainPage> {
                                     MaterialPageRoute(
                                         builder: (BuildContext context) =>
                                             VendorProfile(
-                                              shop: shopMap[shopMap.keys
-                                                  .elementAt(index)],
+                                              shop: shopMap[topPickMap[
+                                                      topPickMap.keys
+                                                          .elementAt(index)]
+                                                  .shopId],
                                             )));
                               },
                             );

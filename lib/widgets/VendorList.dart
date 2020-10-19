@@ -13,20 +13,34 @@ class VendorList extends StatefulWidget {
 }
 
 class _VendorListState extends State<VendorList> {
-  Map<String, Shop> shopList = Map();
+  List<Shop> list = new List();
   @override
   Widget build(BuildContext context) {
-    shopMap.keys.forEach((element) {
-      if (shopMap[element].items.keys.contains(widget.category)) {
-        shopList.putIfAbsent(element, () => shopMap[element]);
+    list.clear();
+
+    if (widget.rated) {
+      shopMap.keys.forEach((element) {
+        list.add(shopMap[element]);
+      });
+    } else {
+      shopMap.keys.forEach((element) {
+        if (shopMap[element].items.keys.contains(widget.category)) {
+          list.add(shopMap[element]);
+        }
+      });
+    }
+
+    list.sort((a, b) {
+      if (a.rating > b.rating) {
+        return -1;
+      } else if (a.rating == b.rating) {
+        return 0;
+      } else {
+        return 1;
       }
     });
-    
-    if (widget.rated) {
-      shopList = shopMap;
-    }
     return ListView.builder(
-        itemCount: shopList.length,
+        itemCount: list.length,
         itemBuilder: (BuildContext context, int index) {
           return InkWell(
               onTap: () {
@@ -34,11 +48,11 @@ class _VendorListState extends State<VendorList> {
                     context,
                     MaterialPageRoute(
                       builder: (BuildContext context) =>
-                          VendorProfile(shop: shopList.values.elementAt(index)),
+                          VendorProfile(shop: list[index]),
                     ));
               },
               child: VendorTile(
-                shop: shopList.values.elementAt(index),
+                shop: list[index],
               ));
         });
   }
