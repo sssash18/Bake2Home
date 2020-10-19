@@ -21,6 +21,7 @@ class _VendorListState extends State<VendorList> {
         shopList.putIfAbsent(element, () => shopMap[element]);
       }
     });
+    
     if (widget.rated) {
       shopList = shopMap;
     }
