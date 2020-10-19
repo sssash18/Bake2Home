@@ -289,6 +289,7 @@ class _RouterState extends State<Router> with WidgetsBindingObserver {
       });
       print("DDDDDD ${delChargesList.toString()}");
     });
+    delChargesList.sort();
   }
 
   Future<void> createDynamicLink() async {
