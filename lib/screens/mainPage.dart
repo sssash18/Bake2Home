@@ -32,12 +32,12 @@ class _MainPageState extends State<MainPage> {
   );
 
   StreamSubscription<ConnectivityResult> subs;
-
+  Connectivity _connectivity;
   bool internetStatus = true;
-  @override 
+  @override
   void initState() {
     super.initState();
-    final Connectivity _connectivity = Connectivity();
+    _connectivity = Connectivity();
     _connectivity.checkConnectivity().then((value) {
       if (value == ConnectivityResult.none) {
         internetStatus = false;
@@ -55,12 +55,9 @@ class _MainPageState extends State<MainPage> {
     });
   }
 
-  
   Widget appBarTitle = Text('BakeMyCake');
   @override
   Widget build(BuildContext context) {
-    
-
     return internetStatus == true
         ? Scaffold(
             appBar: AppBar(
@@ -103,18 +100,17 @@ class _MainPageState extends State<MainPage> {
                   ),
                   CarouselSlider(
                     options: CarouselOptions(
-                      height: MediaQuery.of(context).size.height / 3,
-                      enableInfiniteScroll: true,
-                      autoPlay: true,
-                      autoPlayInterval: Duration(seconds: 3),
-                      enlargeCenterPage: true
-                    ),
+                        height: MediaQuery.of(context).size.height / 3,
+                        enableInfiniteScroll: true,
+                        autoPlay: true,
+                        autoPlayInterval: Duration(seconds: 3),
+                        enlargeCenterPage: true),
                     items: slidesUrl.map((i) {
                       return Builder(
                         builder: (BuildContext context) {
                           return Material(
-                              elevation: 0,
-                                                      child: Container(
+                            elevation: 0,
+                            child: Container(
                               width: MediaQuery.of(context).size.width,
                               margin: EdgeInsets.symmetric(horizontal: 5.0),
                               decoration: BoxDecoration(
@@ -209,14 +205,32 @@ class _MainPageState extends State<MainPage> {
                         itemCount: trendingList.length,
                         itemBuilder: (BuildContext context, int index) {
                           return GestureDetector(
-                            child: PastryTile(itemName: trendingList.elementAt(index).model.itemName, shopId: trendingList.elementAt(index).shopId,photoUrl: ((trendingList.elementAt(index).model.photoUrl) !=null ? trendingList.elementAt(index).model.photoUrl : 'https://firebasestorage.googleapis.com/v0/b/bakemycake-1d1dc.appspot.com/o/Artboard%20%E2%80%93%201%20(5).png?alt=media&token=e48e0063-6727-47c7-82e8-df2d02c07b57'),),
+                            child: PastryTile(
+                              itemName:
+                                  trendingList.elementAt(index).model.itemName,
+                              shopId: trendingList.elementAt(index).shopId,
+                              photoUrl: ((trendingList
+                                          .elementAt(index)
+                                          .model
+                                          .photoUrl) !=
+                                      null
+                                  ? trendingList.elementAt(index).model.photoUrl
+                                  : 'https://firebasestorage.googleapis.com/v0/b/bakemycake-1d1dc.appspot.com/o/Artboard%20%E2%80%93%201%20(5).png?alt=media&token=e48e0063-6727-47c7-82e8-df2d02c07b57'),
+                            ),
                             onTap: () {
-                              print(trendingList.elementAt(index).model.recipe );
+                              print(trendingList.elementAt(index).model.recipe);
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (BuildContext context) =>
-                                          ItemPage(model: trendingList.elementAt(index).model,shopId: trendingList.elementAt(index).shopId ,)));
+                                          ItemPage(
+                                            model: trendingList
+                                                .elementAt(index)
+                                                .model,
+                                            shopId: trendingList
+                                                .elementAt(index)
+                                                .shopId,
+                                          )));
                             },
                           );
                         }),
@@ -255,7 +269,9 @@ class _MainPageState extends State<MainPage> {
                                 photo:
                                     topPickMap[topPickMap.keys.elementAt(index)]
                                         .profilePhoto,
-                                rating: topPickMap[topPickMap.keys.elementAt(index)].rating,
+                                rating:
+                                    topPickMap[topPickMap.keys.elementAt(index)]
+                                        .rating,
                               ),
                               onTap: () {
                                 Navigator.push(
@@ -269,8 +285,6 @@ class _MainPageState extends State<MainPage> {
                               },
                             );
                           })),
-                  
-                  
                 ],
               ),
             ),

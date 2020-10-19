@@ -355,14 +355,15 @@ class _ItemPageState extends State<ItemPage> {
     String shopId;
     String flavourSelected = flavourDrop[0].value;
     if (cartMap['shopId'] == null) {
-      shopId = 'null';
+      currentShopId = 'null';
     } else {
-      shopId = cartMap['shopId'];
+      currentShopId = cartMap['shopId'];
     }
     flavourDrop.forEach((element) {
       print('++++++++++++++${element.value}');
     });
-    if (shopId == 'null' || this.widget.shopId == shopId) {
+    if (currentShopId == 'null' || this.widget.shopId == currentShopId) {
+      currentShopId = this.widget.shopId;
       if (note) {
         showModalBottomSheet(
             context: context,
@@ -470,6 +471,7 @@ class _ItemPageState extends State<ItemPage> {
           'Clear Cart',
           'Cancel');
       if (rs) {
+        currentShopId = 'null';
         cartMap.clear();
       }
     }
@@ -526,6 +528,10 @@ class _ItemPageState extends State<ItemPage> {
                       cartMap[vid]['notes'].removeLast();
                       if (cartMap[vid]['quantity'] == 0) {
                         cartMap.remove(vid);
+                      }
+                      if (cartMap.length == 1) {
+                        cartMap.remove('shopId');
+                        currentShopId = 'null';
                       }
                     });
                   },
