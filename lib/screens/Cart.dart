@@ -47,9 +47,8 @@ class _CartState extends State<Cart> {
   Shop shop;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    final Connectivity _connectivity = Connectivity();
+    _connectivity = Connectivity();
     _connectivity.checkConnectivity().then((value) {
       if (value == ConnectivityResult.none) {
         internetStatus = false;
@@ -127,10 +126,12 @@ class _CartState extends State<Cart> {
   }
 
   emptyCart() async {
+
     await FirebaseFirestore.instance
         .collection('Users')
         .doc(currentUser.uid)
         .update({'cart': {}});
+    currentShopId = 'null';
   }
 
   @override
@@ -152,6 +153,7 @@ class _CartState extends State<Cart> {
             if (cartMap.length == 1) {
               emptyCart();
             }
+            currentShopId = cartMap['shopId'];
             delCharges = 0.0;
             cakeQuantity = 0;
             cakeCount = 0;

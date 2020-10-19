@@ -363,6 +363,7 @@ class _ItemPageState extends State<ItemPage> {
       print('++++++++++++++${element.value}');
     });
     if (shopId == 'null' || this.widget.shopId == shopId) {
+      currentShopId == this.widget.shopId;
       if (note) {
         showModalBottomSheet(
             context: context,
@@ -470,6 +471,7 @@ class _ItemPageState extends State<ItemPage> {
           'Clear Cart',
           'Cancel');
       if (rs) {
+        currentShopId = 'null';
         cartMap.clear();
       }
     }
