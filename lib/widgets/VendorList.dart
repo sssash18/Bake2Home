@@ -17,6 +17,7 @@ class _VendorListState extends State<VendorList> {
   @override
   Widget build(BuildContext context) {
     list.clear();
+
     if (widget.rated) {
       shopMap.keys.forEach((element) {
         list.add(shopMap[element]);
