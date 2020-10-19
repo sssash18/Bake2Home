@@ -54,7 +54,7 @@ class VendorTile extends StatelessWidget {
                       style: TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 10.0)),
                   RatingBar(
-                      initialRating: 3.2,
+                      initialRating: shop.rating,
                       itemSize: 15.0,
                       itemCount: 5,
                       ignoreGestures: true,
