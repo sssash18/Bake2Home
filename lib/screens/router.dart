@@ -102,9 +102,9 @@ class _RouterState extends State<Router> with WidgetsBindingObserver {
     Uri deepLink = link?.link;
     if (deepLink != null) {
       final String param = deepLink.queryParameters['Id'];
-      print('PPPPP'+param);
+      print('PPPPP' + param);
       Shop shop = shopMap['e7gfCAG9lrfZT3LaqhDBrzO8cdS2'];
-      print('SSSSSS'+shop.experience);
+      print('SSSSSS' + shop.experience);
       print('DDDDDDD' + deepLink.path);
       Navigator.of(context).pushNamed(deepLink.path, arguments: shop);
       print('cant Handle');
@@ -197,37 +197,55 @@ class _RouterState extends State<Router> with WidgetsBindingObserver {
 
   Future<void> getTopPick() async {
     await topCollection.get().then((value) {
+      List<Shop> list = List();
       value.docs.forEach((element) {
         Shop shop = shopMap[element.data()['shopId']];
-        topPickMap.putIfAbsent(shop.shopId, () => shop);
+        list.add(shop);
+      });
+      list.sort((a, b) {
+        if (a.rating > b.rating) {
+          return -1;
+        } else if (a.rating == b.rating) {
+          return 0;
+        } else {
+          return 1;
+        }
+      });
+      list.forEach((element) {
+        topPickMap.putIfAbsent(element.shopId, () => element);
       });
     });
   }
 
   Future<void> getTrending() async {
+    trendingList.clear();
     await trendCollection.get().then((value) {
-      CustomisedItemModel model = CustomisedItemModel();
       value.docs.forEach((element) {
         print(element.toString());
         Map item = shopMap[element.data()['shopId']]
                 .items[element.data()['itemCategory']]
             [element.data()['itemType']][element.id];
         print(item.toString());
-        model.itemName = item['itemName'];
-        model.ingredients = List<String>.from(item['ingredients']);
-        model.itemCategory = item['itemCategory'];
-        model.itemId = item['itemId'];
-        model.minTime = item['minTime'].toDouble();
-        model.photoUrl = item['photoUrl'];
-        model.recipe = item['recipe'];
-        model.variants = item['variants'];
-        model.veg = item['veg'];
-        model.flavours = List<String>.from(item['flavours']);
-
+        CustomisedItemModel model = CustomisedItemModel(
+          itemName: item['itemName'],
+          ingredients: List<String>.from(item['ingredients']),
+          itemCategory: item['itemCategory'],
+          itemId: item['itemId'],
+          minTime: item['minTime'].toDouble(),
+          photoUrl: item['photoUrl'],
+          recipe: item['recipe'],
+          variants: item['variants'],
+          veg: item['veg'],
+          flavours: List<String>.from(item['flavours']),
+        );
         Trending trend =
             Trending(shopId: element.data()['shopId'], model: model);
         trendingList.add(trend);
-        print(trendingList.toString());
+      });
+    }).then((value) {
+      trendingList.forEach((element) {
+        print(
+            '**************${element.shopId}**************${element.model.itemName}');
       });
     });
   }
