@@ -12,6 +12,10 @@ class ItemTile extends StatelessWidget {
   ItemTile({this.category, this.itemType, this.model, this.shopId});
   @override
   Widget build(BuildContext context) {
+    String itemName = model.itemName;
+    if (itemName.length > 15) {
+      itemName = '${itemName.substring(0, 15)}...';
+    }
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -24,7 +28,7 @@ class ItemTile extends StatelessWidget {
                     model: model)));
       },
       child: Container(
-        height: MediaQuery.of(context).size.height/6,
+        height: MediaQuery.of(context).size.height / 6,
         decoration: BoxDecoration(
           gradient: LinearGradient(
               begin: Alignment.topCenter,
@@ -37,14 +41,15 @@ class ItemTile extends StatelessWidget {
           children: <Widget>[
             Container(
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(MediaQuery.of(context).size.height/8),
+                  borderRadius: BorderRadius.circular(
+                      MediaQuery.of(context).size.height / 8),
                   color: white,
                 ),
                 child: Column(
                   children: <Widget>[
                     Container(
                       margin: EdgeInsets.fromLTRB(0, 15.0, 0, 0),
-                      child: Text(model.itemName,
+                      child: Text('$itemName',
                           textAlign: TextAlign.right,
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 18.0)),
@@ -73,7 +78,8 @@ class ItemTile extends StatelessWidget {
                         ]),
                   ],
                 ),
-                margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width/5, 15.0, 15.0, 15.0),
+                margin: EdgeInsets.fromLTRB(
+                    MediaQuery.of(context).size.width / 5, 15.0, 15.0, 15.0),
                 height: 100.0,
                 width: double.infinity),
             Container(

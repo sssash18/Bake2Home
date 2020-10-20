@@ -206,6 +206,7 @@ class DatabaseService {
       'counter': FieldValue.increment(1),
     });
     order.orderId = orderId;
+    order.codAmount = 0.0;
     await orderCollection
         .doc(orderId)
         .set({
@@ -223,7 +224,7 @@ class DatabaseService {
           'orderTime': await NTP.now(),
           'deliveryTime': order.deliveryTime,
           'items': order.items,
-          'codAmount': 0,
+          'codAmount': 0.0,
           'refund': 0,
           'compensation': 0,
           'penalty': 0,
@@ -253,6 +254,7 @@ class DatabaseService {
   }
 
   Future<bool> cancelOrder(Order order) async {
+    print('********************************${order.amount}');
     double refundAmount = await getRefundAmount(order);
     double compensationAmount =
         max(0, (order.amount - refundAmount) - 0.05 * order.amount);

@@ -16,7 +16,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:in_app_update/in_app_update.dart';
 
-
 class Router extends StatefulWidget {
   @override
   _RouterState createState() => _RouterState();
@@ -44,15 +43,13 @@ class _RouterState extends State<Router> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    InAppUpdate.checkForUpdate().then(
-      (value){
-        if(value.updateAvailable == true){
-          InAppUpdate.performImmediateUpdate().catchError((e){
-            print("Error");
-          });
-        }
-      } 
-    );
+    InAppUpdate.checkForUpdate().then((value) {
+      if (value.updateAvailable == true) {
+        InAppUpdate.performImmediateUpdate().catchError((e) {
+          print("Error");
+        });
+      }
+    });
     WidgetsBinding.instance.addObserver(this);
     _connectivity = Connectivity();
     subs =
@@ -77,7 +74,6 @@ class _RouterState extends State<Router> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       body: internetStatus
           ? Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [

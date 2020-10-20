@@ -210,8 +210,9 @@ class _CheckoutState extends State<Checkout> {
                   color: Colors.black,
                   fontSize: 19.0,
                   fontWeight: FontWeight.w600));
-
           await pr.show();
+          print('********************************${widget.order.amount}');
+          print('********************************${widget.order.codAmount}');
           await DatabaseService().cancelOrder(widget.order).then((value) async {
             await pr.hide();
             showSnackBar(checkoutKey, "Order cancelled ..");

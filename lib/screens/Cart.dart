@@ -649,6 +649,7 @@ class _CartState extends State<Cart> {
                             instructions: instructions,
                             amount: subtotal + delCharges,
                             delCharges: delCharges,
+                            codAmount: 0.0,
                             pickUp: pickupValue,
                             orderTime: Timestamp.now(),
                             deliveryTime: Timestamp.fromDate(delTime),
@@ -656,6 +657,8 @@ class _CartState extends State<Cart> {
                             items: cartMap);
                         await pr.show();
                         bool rs = await DatabaseService().createOrder(order);
+                        print(
+                            '+++++++++++++++++++++++++++++++${order.codAmount}');
                         if (rs) {
                           await pushNotification.pushMessagewithNewOrder(
                               'New Order Request',
@@ -663,7 +666,6 @@ class _CartState extends State<Cart> {
                               shop.token,
                               order.orderId);
                           await pr.hide();
-
                           await Navigator.push(context, MaterialPageRoute(
                               builder: (BuildContext context) {
                             return Checkout(order: order);
