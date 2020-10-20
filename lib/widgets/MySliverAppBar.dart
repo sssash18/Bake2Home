@@ -127,7 +127,7 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                   ),
                 )),
             Positioned(
-              top: (expandedHeight / 1 - shrinkOffset) - expandedHeight / 6,
+              top: (expandedHeight / 1 - shrinkOffset) - expandedHeight / 3,
               left: MediaQuery.of(context).size.width / 26,
               child: Opacity(
                 opacity: (1 - shrinkOffset / expandedHeight),
