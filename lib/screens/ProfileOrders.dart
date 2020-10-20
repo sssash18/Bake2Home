@@ -45,7 +45,6 @@ class _ProfileOrderState extends State<ProfileOrder> {
 
   @override
   Widget build(BuildContext context) {
-    
     return internetStatus
         ? Scaffold(
             key: historyKey,

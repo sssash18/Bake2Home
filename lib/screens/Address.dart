@@ -190,7 +190,7 @@ class _AddressState extends State<Address> {
                                   typed = true;
                                 });
                                 await Geolocator()
-                                    .placemarkFromAddress('$addTyped ratlam')
+                                    .placemarkFromAddress('$addTyped')
                                     .then((position) {
                                   setState(() {
                                     locationPresent = true;
