@@ -28,8 +28,28 @@ class _ItemPageState extends State<ItemPage> {
   Map<double, double> priceMap = new Map();
   Map<double, String> vidMap = new Map();
   double selectedSize = 0.0, price, tt;
+  String category = "KG";
   @override
   Widget build(BuildContext context) {
+    
+    switch(widget.model.itemCategory){
+      case 'cupcakes' : category = "pieces";
+      break;
+      case 'cake jars' : category = 'jars';
+      break;
+      case 'cake pops' : category = 'pieces';
+      break;
+      case 'cake shots' : category = 'pieces';
+      break;
+      case 'muffins' : category = 'pieces';
+      break;
+      case 'pudding' : category = 'pieces';
+      break;
+      case 'pizza base' : category = 'packet';
+      break;
+      case 'hampers' : category = 'hamper';
+      break;
+    } 
     vidMap.clear();
     priceMap.clear();
     dropDownList.clear();
@@ -316,7 +336,7 @@ class _ItemPageState extends State<ItemPage> {
       list.add(DropdownMenuItem<double>(
         value: element,
         child: Text(
-            "$element  ${widget.model.itemCategory == "cake" ? 'pounds' : 'KG'}  \u20B9 ${priceMap[element]}",
+            "$element  ${category}  \u20B9 ${priceMap[element]}",
             style: TextStyle(color: black)),
       ));
     });
