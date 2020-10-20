@@ -70,7 +70,7 @@ class _ReviewState extends State<Review> with SingleTickerProviderStateMixin {
                       ),
                       RatingBar(
                         
-                        initialRating: 3.0,
+                        initialRating: 5.0,
                         itemBuilder: (BuildContext context, int index) {
                           return Icon(
                             Icons.star,
