@@ -63,7 +63,7 @@ class _RouterState extends State<Router> with WidgetsBindingObserver {
       });
     });
     getThings();
-    //createDynamicLink();
+    createDynamicLink();
   }
 
   @override
@@ -111,7 +111,7 @@ class _RouterState extends State<Router> with WidgetsBindingObserver {
     if (deepLink != null) {
       final String param = deepLink.queryParameters['Id'];
       print('PPPPP' + param);
-      Shop shop = shopMap['e7gfCAG9lrfZT3LaqhDBrzO8cdS2'];
+      Shop shop = shopMap[param];
       print('SSSSSS' + shop.experience);
       print('DDDDDDD' + deepLink.path);
       Navigator.of(context).pushNamed(deepLink.path, arguments: shop);
@@ -312,13 +312,13 @@ class _RouterState extends State<Router> with WidgetsBindingObserver {
             NavigationInfoParameters(forcedRedirectEnabled: true),
         uriPrefix: 'https://bakemycake.page.link',
         link: Uri.parse(
-            'https://bakemycake/profile?Id=lcoC9IM7JCg2ahfB6kRZM5cJN8g2'),
+            'https://bakemycake/profile?Id=3OTiCunQ1lNPmk1qqVIrGVNQmnD2'),
         androidParameters: AndroidParameters(packageName: 'com.bmc.bakemycake'),
         socialMetaTagParameters: SocialMetaTagParameters(
-          title: "Dessert Garden Bakery",
+          title: "Arya's Cake",
           description: 'Find us at BakeMyCake',
           imageUrl: Uri.parse(
-              'https://firebasestorage.googleapis.com/v0/b/bakemycake-644c5.appspot.com/o/Dessert%20Garden%20Cakery%2Fprofile.png?alt=media&token=a211969d-bd6f-4d57-9457-8a9854e4ddd1'),
+              'https://firebasestorage.googleapis.com/v0/b/bakemycake-644c5.appspot.com/o/Arya\'s%20Cakes%2Fprofile.jpeg?alt=media&token=84edbbe5-c552-4624-a613-b4bc6489660f'),
         ));
     final ShortDynamicLink shortLink = await parameters.buildShortLink();
     print('linkkkkkkkkk' +
